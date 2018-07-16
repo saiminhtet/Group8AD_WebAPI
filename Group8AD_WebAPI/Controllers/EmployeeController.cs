@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Group8AD_WebAPI.Models;
+using Group8AD_WebAPI.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,33 +9,54 @@ using System.Web.Http;
 
 namespace Group8AD_WebAPI.Controllers
 {
+ 
     public class EmployeeController : ApiController
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Employee/")]
+        public HttpResponseMessage GetEmployeebyList()
         {
-            return new string[] { "value1", "value2" };
+            List<EmployeeVM> employee = BusinessLogic.EmployeeBL.GetAllEmp();
+
+
+            if (employee == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, employee);
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Employee/{id}")]
+        public HttpResponseMessage GetEmployeebyID(int id)
         {
-            return "value";
+            EmployeeVM employee = BusinessLogic.EmployeeBL.GetEmp(id);
+
+
+            if (employee == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, employee);
         }
 
-        // POST api/<controller>
-        public void Post([FromBody]string value)
-        {
-        }
 
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Employee/{id}/DepartmentCode")]
+        public HttpResponseMessage GetDepartmentCode(int id)
         {
-        }
+          
+            string DeptCode = BusinessLogic.EmployeeBL.GetDeptCode(id);
 
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
+            if (DeptCode == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, DeptCode);
         }
     }
 }
