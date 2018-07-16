@@ -23,7 +23,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     SuppCtcName = s.SuppCtcName,
                     SuppCtcNo = s.SuppCtcNo,
                     SuppFaxNo = s.SuppFaxNo,
-                    SuppAddr = s.SuppAddr
+                    SuppAddr = s.SuppAddr,
+                    Items = s.Items
                 }).ToList<SupplierVM>();
             }
             return supplists;
