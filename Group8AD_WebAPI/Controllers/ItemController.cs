@@ -4,36 +4,25 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Group8AD_WebAPI.Models;
 
 namespace Group8AD_WebAPI.Controllers
 {
     public class ItemController : ApiController
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+        [HttpPost]
+        public Item GetItems(string cat, string desc)
         {
-            return new string[] { "value1", "value2" };
+            return Item.GetItems(cat, desc);
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        [HttpPost]
+        public RequestDetail GetCurrReqDets(int empId)
         {
-            return "value";
+            return GetCurrReqDets(empId);
         }
 
-        // POST api/<controller>
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
-        }
     }
+
+    
 }

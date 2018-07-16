@@ -34,12 +34,14 @@ namespace Group8AD_WebAPI.Models
 
         public virtual Employee Employee1 { get; set; }
 
+        //Returns a list of unread notifications for the given employee id
         public static List<Notification> GetEmpUnreadNoti(int empId)
         {
             string sqlquery = String.Format("SELECT * FROM [Notification] " +
                 "WHERE ToEmp = '{0}'", empId);
             return Query(sqlquery);
         }
+
         public static List<Notification> Query(string sqlquery)
         {
             using (var context = new SA46Team08ADProjectContext())

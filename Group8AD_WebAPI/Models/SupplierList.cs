@@ -50,10 +50,13 @@ namespace Group8AD_WebAPI.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Item> Item2 { get; set; }
 
+        //Returns a list of Supplier found in the Supplier table
         public static List<SupplierList> GetAll()
         {
             return Query("SELECT * FROM SupplierList");
         }
+
+
         public static List<SupplierList> Query(string sqlquery)
         {
             using (var context = new SA46Team08ADProjectContext())

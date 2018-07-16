@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace Group8AD_WebAPI.Controllers
 {
-    public class DisbursementController : ApiController
+    public class SupplierListController : ApiController
     {
         // GET api/<controller>
         public IEnumerable<string> Get()
@@ -35,7 +35,5 @@ namespace Group8AD_WebAPI.Controllers
         public void Delete(int id)
         {
         }
-
-
     }
 }

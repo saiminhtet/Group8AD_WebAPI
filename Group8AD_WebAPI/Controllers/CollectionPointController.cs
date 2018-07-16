@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace Group8AD_WebAPI.Controllers
 {
-    public class ReportController : ApiController
+    public class CollectionPointController : ApiController
     {
         // GET api/<controller>
         public IEnumerable<string> Get()

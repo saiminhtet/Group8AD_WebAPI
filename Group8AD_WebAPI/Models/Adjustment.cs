@@ -39,11 +39,13 @@ namespace Group8AD_WebAPI.Models
 
         public virtual Item Item { get; set; }
 
+        //Returns the list of all adjustments
         public static List<Adjustment> GetAll()
         {
             return Query("SELECT * FROM Adjustment");
         }
 
+        //Returns the list of adjustments made by the given employee id
         public static List<Adjustment> GetAdjByEmp(int empId)
         {
             string sqlquery = String.Format("SELECT * FROM Adjustment " +
@@ -51,6 +53,7 @@ namespace Group8AD_WebAPI.Models
             return Query(sqlquery);
         }
 
+        //Returns the list of all status found in adjustment
         public static List<string> GetStatusList()
         {
             using (var context = new SA46Team08ADProjectContext())
@@ -59,7 +62,6 @@ namespace Group8AD_WebAPI.Models
                 return query.Result;
             }
         }
-
 
         public static List<Adjustment> Query(string sqlquery)
         {
@@ -71,12 +73,7 @@ namespace Group8AD_WebAPI.Models
         }
 
         //Dummy methods
-
-        public static Boolean ReceiveItem(ItemQty itemQty, string suppCode)
-        {
-            return true;
-        }
-
+        //Approve/Reject a adjustment for the given voucher number
         public static Boolean ApproveAdj(string voucherNo, Boolean isApprove)
         {
             return true;
