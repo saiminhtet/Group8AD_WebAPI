@@ -79,26 +79,30 @@ namespace Group8AD_WebAPI.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Request> Request1 { get; set; }
 
-        public static List<Employee> GetDeptEmps(int empId)
+        //Return a list of employees belonging to the department for the given department head id
+        public static List<Employee> GetDeptEmps(int deptHeadId)
         {
             string sqlquery = String.Format("SELECT * FROM Employee WHERE DeptCode IN (" +
-                "SELECT DeptCode FROM Department WHERE DeptHeadId = '{0}')", empId);
+                "SELECT DeptCode FROM Department WHERE DeptHeadId = '{0}')", deptHeadId);
             return Query(sqlquery);
         }
 
-        public static Employee GetDel(int empHeadId)
+        //Returns the delegate employee belonging to the department for the given department head id
+        public static Employee GetDel(int deptHeadId)
         {
             string sqlquery = String.Format("SELECT * FROM Employee WHERE EmpId IN (SELECT DelegateApproverId FROM Department " +
-                "WHERE DeptCode IN (SELECT DeptCode FROM Employee WHERE EmpId = '{0}'))", empHeadId);
+                "WHERE DeptCode IN (SELECT DeptCode FROM Employee WHERE EmpId = '{0}'))", deptHeadId);
             return QueryFirst(sqlquery);
         }
 
-        public static Employee GetRep(int empHeadId)
+        //Returns the representative employee belonging to the department for the given department head id
+        public static Employee GetRep(int deptHeadId)
         {
             string sqlquery = String.Format("SELECT * FROM Employee WHERE EmpId IN (SELECT DeptRepId FROM Department " +
-                "WHERE DeptCode IN (SELECT DeptCode FROM Employee WHERE EmpId = '{0}'))", empHeadId);
+                "WHERE DeptCode IN (SELECT DeptCode FROM Employee WHERE EmpId = '{0}'))", deptHeadId);
             return QueryFirst(sqlquery);
         }
+
         public static List<Employee> Query(string sqlquery)
         {
             using (var context = new SA46Team08ADProjectContext())

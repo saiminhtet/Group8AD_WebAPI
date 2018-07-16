@@ -31,37 +31,24 @@ namespace Group8AD_WebAPI.Models
         [StringLength(4)]
         public string SuppCode { get; set; }
 
-        public static List<DeptCBVol> GetCBMthYearGroupByDept(int mth, int year)
+        //Returns list of DeptCBVol{DeptCode, ChargeBack, Volume} for the given month and year grouped by department
+        public static List<DeptCBVol> GetMthYrDeptCBVol(int mth, int year)
         {
-            string sqlquery = String.Format("SELECT DeptCode, SUM(UnitPrice * QtyChange) AS ChargeBack FROM [Transaction] " +
+            string sqlquery = String.Format("SELECT DeptCode, SUM(UnitPrice * QtyChange) AS ChargeBack, SUM(QtyChange) AS Volume FROM [Transaction] " +
                 "WHERE MONTH(TranDateTime) = '{0}' AND YEAR(TranDateTime) = '{1}' AND [Desc] = 'Disbursement' Group By DeptCode", mth, year);
             return QueryDeptCBVolList(sqlquery);
         }
 
-        public static List<DeptCBVol> GetCBDateRangeGroupByDept(DateTime fromDate, DateTime toDate)
+        //Returns list of DeptCBVol{DeptCode, ChargeBack, Volume} between the given dates grouped by department
+        public static List<DeptCBVol> GetDateRangeDeptCBVol(DateTime fromDate, DateTime toDate)
         {
             string fromDateFormat = fromDate.ToString("yyyy-MM-dd");
             string toDateFormat = toDate.ToString("yyyy-MM-dd");
-            string sqlquery = String.Format("SELECT DeptCode, SUM(UnitPrice * QtyChange) AS ChargeBack FROM [Transaction] " +
+            string sqlquery = String.Format("SELECT DeptCode, SUM(UnitPrice * QtyChange) AS ChargeBack, SUM(QtyChange) AS Volume FROM [Transaction] " +
                 "WHERE TranDateTime BETWEEN '{0}' AND '{1}' AND [Desc] = 'Disbursement' Group By DeptCode", fromDateFormat, toDateFormat);
             return QueryDeptCBVolList(sqlquery);
         }
 
-        public static List<DeptCBVol> GetVolMthYearGroupByDept(int mth, int year)
-        {
-            string sqlquery = String.Format("SELECT DeptCode, SUM(QtyChange) AS Volume FROM [Transaction] " +
-                "WHERE MONTH(TranDateTime) = '{0}' AND YEAR(TranDateTime) = '{1}' AND [Desc] = 'Disbursement' GROUP BY DeptCode", mth, year);
-            return QueryDeptCBVolList(sqlquery);
-        }
-
-        public static List<DeptCBVol> GetVolDateRangeGroupByDept(DateTime fromDate, DateTime toDate)
-        {
-            string fromDateFormat = fromDate.ToString("yyyy-MM-dd");
-            string toDateFormat = toDate.ToString("yyyy-MM-dd");
-            string sqlquery = String.Format("SELECT DeptCode, SUM(QtyChange) AS Volume FROM [Transaction] " +
-                "WHERE TranDateTime BETWEEN '{0}' AND '{1}' AND [Desc] = 'Disbursement' GROUP BY DeptCode", fromDateFormat, toDateFormat);
-            return QueryDeptCBVolList(sqlquery);
-        }
         public static List<DeptCBVol> QueryDeptCBVolList(string sqlquery)
         {
             using (var context = new SA46Team08ADProjectContext())
@@ -78,6 +65,13 @@ namespace Group8AD_WebAPI.Models
                 var query = context.Database.SqlQuery<DeptCBVol>(sqlquery).FirstAsync();
                 return query.Result;
             }
+        }
+
+        //Dummy methods
+        //Inserts a transaction object into the transaction table
+        public static Boolean AddTransaction(Transaction transaction)
+        {
+            return true;
         }
     }
 }

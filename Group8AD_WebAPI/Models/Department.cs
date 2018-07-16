@@ -52,10 +52,12 @@ namespace Group8AD_WebAPI.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Employee> Employee3 { get; set; }
 
+        //Returns the list of all department
         public static List<Department> GetAll()
         {
             return Query("SELECT * FROM Department");
         }
+
         public static List<Department> Query(string sqlquery)
         {
             using (var context = new SA46Team08ADProjectContext())
@@ -66,16 +68,19 @@ namespace Group8AD_WebAPI.Models
         }
 
         //--Dummy methods
+        //Updates the department's delegate approver for the given employee id and date range
         public static Boolean UpdateDel(int empId, DateTime fromDate, DateTime toDate)
         {
             return true;
         }
 
+        //Updates the department's representative for the given employee id
         public static Boolean UpdateRep(int empId)
         {
             return true;
         }
 
+        //Removes the delegate from the department for the given employee id
         public static Boolean RemoveDel(int empId)
         {
             return true;

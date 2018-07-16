@@ -16,10 +16,12 @@ namespace Group8AD_WebAPI.Models
         [StringLength(100)]
         public string Location { get; set; }
 
+        //Returns the list of all collection points
         public static List<CollectionPoint> GetAll()
         {
             return Query("SELECT * FROM CollectionPoint");
         }
+
         public static List<CollectionPoint> Query(string sqlquery)
         {
             using (var context = new SA46Team08ADProjectContext())

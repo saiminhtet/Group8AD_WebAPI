@@ -33,6 +33,7 @@ namespace Group8AD_WebAPI.Models
 
         public virtual Request Request { get; set; }
 
+        //Returns a list of request detail belonging to the UNSUBMITTED request for the given employee id
         public static List<RequestDetail> GetCurrReqDets(int empId)
         {
             string sqlquery = String.Format("SELECT * FROM RequestDetail WHERE ReqId IN (SELECT ReqId FROM Request WHERE " +
@@ -40,11 +41,13 @@ namespace Group8AD_WebAPI.Models
             return Query(sqlquery);
         }
 
+        //Returns a list of request details belong to the given request id
         public static List<RequestDetail> GetReqDetByReqId(int reqId)
         {
             string sqlquery = String.Format("SELECT * FROM RequestDetail WHERE ReqId = '{0}'", reqId);
             return Query(sqlquery);
         }
+
 
         public static List<RequestDetail> Query(string sqlquery)
         {
@@ -56,15 +59,20 @@ namespace Group8AD_WebAPI.Models
         }
 
         //--dummy methods
+        //inserts ItemQty{ItemCode, Qty} into request detail into the UNSUBMITTED request belonging to the given employee id
+        //inserts a new Request with status unsubmitted if there is no unsubmitted request belonging to the given employee id
         public static Boolean AddCurrReqDet(int empId, ItemQty itemQty)
         {
             return true;
         }
-        public static Boolean RemoveCurrReqDet(int empId, int lineNo)
+
+        //removes the request detail for the given item code in the UNSUBMITTED request belonging to the given employee id
+        public static Boolean RemoveCurrReqDet(int empId, string itemCode)
         {
             return true;
         }
 
+        //updates a submitted request based on the list ItemQty{ItemCode, Qty} for the given request id
         public static Boolean UpdateSubmittedReq(int reqId, List<ItemQty> reqDetQty)
         {
             return true;
