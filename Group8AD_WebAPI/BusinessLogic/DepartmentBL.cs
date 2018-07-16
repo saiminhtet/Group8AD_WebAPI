@@ -14,7 +14,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 //var department = entities.Department.FirstOrDefault(d => d.DeptCode == deptCode);
-                var department = entities.Departments.Where(d => d.DeptCode == deptCode).First<Department>();
+                var department = entities.Departments.Where(d => d.DeptCode == deptCode).FirstOrDefault();
                 if (department != null)
                 {
                     entities.Departments.Remove(department);
@@ -29,8 +29,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var department = entities.Departments.Where(d => d.DeptCode == deptCode && d.DelegateFromDate == fromDate && d.DelegateToDate == toDate && d.DeptRepId == empId).First<Department>();
-                //var department = entities.Department.FirstOrDefault(d => d.DeptCode == deptCode && d.DelegateFromDate == fromDate && d.DelegateToDate == toDate && d.DeptRepId == empId);
+                var department = entities.Departments.Where(d => d.DeptCode == deptCode && d.DelegateFromDate == fromDate && d.DelegateToDate == toDate && d.DeptRepId == empId).FirstOrDefault();
                 if (department != null)
                 {
                     department.DeptCode = deptCode;
@@ -38,8 +37,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                     department.DelegateToDate = toDate;
                     department.Employee.EmpId = empId;
                     entities.SaveChanges();
-                    //entities.Department.Add(department);
-                    //entities.SaveChanges();
                 }
 
             }
@@ -50,16 +47,13 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var department = entities.Departments.Where(d => d.DeptCode == deptCode && d.DeptRepId == fromEmpId && d.DeptRepId == toEmpId).First<Department>();
-                //var department = entities.Department.FirstOrDefault(d => d.DeptCode == deptCode && d.DeptRepId == fromEmpId && d.DeptRepId == toEmpId);
+                var department = entities.Departments.Where(d => d.DeptCode == deptCode && d.DeptRepId == fromEmpId && d.DeptRepId == toEmpId).FirstOrDefault();
                 if (department != null)
                 {
                     department.DeptCode = deptCode;
                     department.Employee1.EmpId = fromEmpId;
                     department.Employee2.EmpId = toEmpId;
                     entities.SaveChanges();
-                    //entities.Department.Add(department);
-                    //entities.SaveChanges();
                 }
             }
         }
@@ -69,8 +63,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var department = entities.Departments.Where(d => d.DeptCode == deptCode && d.DeptRepId == fromEmpId).First<Department>();
-                //var department = entities.Department.FirstOrDefault(d => d.DeptCode == deptCode && d.DeptRepId == fromEmpId);
+                var department = entities.Departments.Where(d => d.DeptCode == deptCode && d.DeptRepId == fromEmpId).FirstOrDefault();
                 if (department != null)
                 {
                     entities.Departments.Remove(department);
@@ -80,23 +73,28 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
-        //get collection point list 
-        public static List<CollectionPoint> GetCollPtList()
+        public static List<string> GetCollPtList()
         {
+            List<string> collList = new List<string>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<CollectionPoint> collectionpoint = entities.CollectionPoints.ToList<CollectionPoint>();
-                return collectionpoint;
+                var collPtList = entities.Departments.Select(d => d.ColPtId);
+                foreach (var v in collPtList)
+                {
+                    collList.Add(v.ToString());
+                }
             }
+            return collList;
         }
+
 
         //get CollPt by DepartmentCode 
         public static string GetCollPt(string deptCode)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var department = entities.Departments.Select(d => d.DeptCode == deptCode).ToString();
-                return department;
+                var collPt = entities.Departments.Where(d => d.DeptCode == deptCode).Select(d => d.ColPtId).ToString();
+                return collPt;
             }
         }
 
@@ -105,13 +103,11 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                //var department = entities.Department.FirstOrDefault(d => d.DeptCode == deptCode && d.ColPtId == collPt);
-                var department = entities.Departments.Where(d => d.DeptCode == deptCode && d.ColPtId == collPt).First<Department>();               
-                if (department != null)
+                var collPoint = entities.Departments.Where(d => d.DeptCode == deptCode && d.ColPtId == collPt).FirstOrDefault();
+                if (collPoint != null)
                 {
-                    department.DeptCode = deptCode;
-                    department.ColPtId = collPt;
-                    //entities.Department.Add(department);
+                    collPoint.DeptCode = deptCode;
+                    collPoint.ColPtId = collPt;
                     entities.SaveChanges();
                 }
             }
@@ -120,16 +116,17 @@ namespace Group8AD_WebAPI.BusinessLogic
         //get department code 
         public static List<string> GetDeptCodes()
         {
+            List<string> list = new List<string>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<string> list = new List<string>();
+
                 var departmentList = entities.Departments.Select(d => d.DeptCode);
                 foreach (var v in departmentList)
                 {
                     list.Add(v.ToString());
                 }
-                return list;
             }
+            return list;
         }
     }
 }
