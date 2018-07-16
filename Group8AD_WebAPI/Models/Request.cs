@@ -67,11 +67,23 @@ namespace Group8AD_WebAPI.Models
             }
         }
 
+        //
         public static List<Request> GetEmpReqs(int empId)
         {
             string sqlquery = String.Format("SELECT * FROM Request WHERE EmpId = '{0}'", empId);
             return Query(sqlquery);
         }
+
+        public static List<Request> GetDeptReqs(int empId)
+        {
+            string sqlquery = String.Format("SELECT * FROM Request WHERE EmpId IN (SELECT EmpId FROM Employee WHERE DeptCode IN " +
+                "(SELECT DeptCode FROM Department WHERE DeptHeadId = '{0}'))", empId);
+            return Query(sqlquery);
+        }
+
+
+
+        //
 
         public static Request GetReqDets(int reqId)
         {
