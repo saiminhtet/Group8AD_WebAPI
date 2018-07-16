@@ -58,5 +58,21 @@ namespace Group8AD_WebAPI.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, DeptCode);
         }
+
+
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Employee/{id}/Role")]
+        public HttpResponseMessage GetEmpRole(int id)
+        {
+
+            string Role = BusinessLogic.EmployeeBL.GetRole(id);
+
+            if (Role == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, Role);
+        }
     }
 }
