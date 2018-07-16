@@ -59,7 +59,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                string role = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.Role).First();
+                var role = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.Role).ToString();
                 return role;
             }
         }
