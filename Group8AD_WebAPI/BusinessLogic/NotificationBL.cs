@@ -22,7 +22,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<Notification> notifications = entities.Notification.Where(n => n.FromEmp == empId).ToList<Notification>();
+                List<Notification> notifications = entities.Notifications.Where(n => n.FromEmp == empId).ToList<Notification>();
                 return notifications;
             }
         }

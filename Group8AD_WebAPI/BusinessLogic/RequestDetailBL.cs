@@ -13,8 +13,8 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var req_det = from req_detail in entities.RequestDetail.Where(d => d.ReqId == reqDet.ReqId)
-                              from req in entities.Request
+                var req_det = from req_detail in entities.RequestDetails.Where(d => d.ReqId == reqDet.ReqId)
+                              from req in entities.Requests
                               where req_detail.ReqId == req.ReqId && req.EmpId == empId && req.Status ==status
                               select new { RequestDetail = req_detail, Request = req };
 
@@ -32,10 +32,10 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var req_det = entities.RequestDetail.Where(d => d.ReqId == reqId).First<RequestDetail>();
+                var req_det = entities.RequestDetails.Where(d => d.ReqId == reqId).First<RequestDetail>();
                 if (req_det != null)
                 {
-                    entities.RequestDetail.Add(req_det);
+                    entities.RequestDetails.Add(req_det);
                     entities.SaveChanges();
                 }
             }
@@ -47,7 +47,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var req_det = entities.RequestDetail.Where(d => d.ReqId == reqId).First<RequestDetail>();
+                var req_det = entities.RequestDetails.Where(d => d.ReqId == reqId).First<RequestDetail>();
                 //RequestDetail requestDetail = reqDet;
                 entities.SaveChanges();
 
@@ -63,11 +63,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //                from req in entities.Request
                 //                where req_detail.ReqId == req.ReqId && req.EmpId == empId //&& req.Status == status
                 //                select new { RequestDetail = req_detail, Request = req.Status };
-                var req_det = entities.RequestDetail.Where(d => d.ReqId == empId).First<RequestDetail>();
+                var req_det = entities.RequestDetails.Where(d => d.ReqId == empId).First<RequestDetail>();
                 if (req_det != null)
                 {
                     req_det.ItemCode = itemCode;
-                    entities.RequestDetail.Remove(req_det);
+                    entities.RequestDetails.Remove(req_det);
                     entities.SaveChanges();
                 }
 
@@ -79,11 +79,11 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var req_det = entities.RequestDetail.Where(d => d.ReqId == reqId).First<RequestDetail>();
+                var req_det = entities.RequestDetails.Where(d => d.ReqId == reqId).First<RequestDetail>();
                 if (req_det != null)
                 {
                     req_det.ItemCode = itemCode;
-                    entities.RequestDetail.Remove(req_det);
+                    entities.RequestDetails.Remove(req_det);
                     entities.SaveChanges();
                 }
 
@@ -104,7 +104,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-               List<RequestDetail> requestDetailslist = entities.RequestDetail.ToList<RequestDetail>();
+               List<RequestDetail> requestDetailslist = entities.RequestDetails.ToList<RequestDetail>();
                 
                 return requestDetailslist;
             }
@@ -115,7 +115,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var req_det = entities.RequestDetail.Where(d => d.ReqId == reqId).First<RequestDetail>();
+                var req_det = entities.RequestDetails.Where(d => d.ReqId == reqId).First<RequestDetail>();
                 if (req_det != null)
                 {
                     req_det.AwaitQty = awaitQty;
@@ -140,7 +140,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var req_det = entities.RequestDetail.Where(d => d.ReqId == reqId).First<RequestDetail>();
+                var req_det = entities.RequestDetails.Where(d => d.ReqId == reqId).First<RequestDetail>();
                 if (req_det != null)
                 {
                     req_det.FulfilledQty = fulfilledQty;

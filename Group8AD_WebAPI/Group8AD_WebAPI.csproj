@@ -53,6 +53,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -229,42 +230,73 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="BusinessLogic\DepartmentBL.cs" />
     <Compile Include="BusinessLogic\EmployeeBL.cs" />
+    <Compile Include="BusinessLogic\ItemBL.cs" />
     <Compile Include="BusinessLogic\NotificationBL.cs" />
     <Compile Include="BusinessLogic\RequestDetailBL.cs" />
     <Compile Include="BusinessLogic\SupplierBL.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdjustmentController.cs" />
-    <Compile Include="Controllers\ApprovalController.cs" />
+    <Compile Include="Controllers\CollectionPointController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
-    <Compile Include="Controllers\DisbursementController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
-    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
+    <Compile Include="Controllers\SupplierListController.cs" />
+    <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Adjustment.cs" />
-    <Compile Include="Models\CollectionPoint.cs" />
-    <Compile Include="Models\Department.cs" />
-    <Compile Include="Models\DeptCBVol.cs" />
-    <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\Adjustment.cs">
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CollectionPoint.cs">
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Department.cs">
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Employee.cs">
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\Item.cs" />
-    <Compile Include="Models\ItemQty.cs" />
-    <Compile Include="Models\Notification.cs" />
-    <Compile Include="Models\PrefSupp.cs" />
-    <Compile Include="Models\ReqReqDet.cs" />
-    <Compile Include="Models\Request.cs" />
-    <Compile Include="Models\RequestDetail.cs" />
-    <Compile Include="Models\SA46Team08ADProjectContext.cs" />
-    <Compile Include="Models\SuppCost.cs" />
-    <Compile Include="Models\SupplierList.cs" />
-    <Compile Include="Models\Transaction.cs" />
+    <Compile Include="Models\Item.cs">
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Notification.cs">
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Request.cs">
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RequestDetail.cs">
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SA46Team08ADProjectContext.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SA46Team08ADProjectContext.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SA46Team08ADProjectContext.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SA46Team08ADProjectContext.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SA46Team08ADProjectContext.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Supplier.cs">
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Transaction.cs">
+      <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ViewModels\EmployeeVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
@@ -284,6 +316,16 @@
     <Content Include="Images\Employees\11.png" />
     <Content Include="Images\Employees\12.png" />
     <Content Include="Images\Employees\13.png" />
+    <Content Include="Models\SA46Team08ADProjectContext.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SA46Team08ADProjectContext.edmx</DependentUpon>
+      <LastGenOutput>SA46Team08ADProjectContext.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\SA46Team08ADProjectContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SA46Team08ADProjectContext.edmx</DependentUpon>
+      <LastGenOutput>SA46Team08ADProjectContext.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -307,6 +349,13 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EntityDeploy Include="Models\SA46Team08ADProjectContext.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SA46Team08ADProjectContext.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\SA46Team08ADProjectContext.edmx.diagram">
+      <DependentUpon>SA46Team08ADProjectContext.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -336,7 +385,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -350,6 +398,9 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -365,7 +416,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56117</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

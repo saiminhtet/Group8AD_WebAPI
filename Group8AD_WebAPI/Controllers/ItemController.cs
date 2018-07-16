@@ -10,17 +10,17 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class ItemController : ApiController
     {
-        [HttpPost]
-        public Item GetItems(string cat, string desc)
-        {
-            return Item.GetItems(cat, desc);
-        }
+        //[HttpPost]
+        //public Item GetItems(string cat, string desc)
+        //{
+        //    return Item.GetItems(cat, desc);
+        //}
 
-        [HttpPost]
-        public RequestDetail GetCurrReqDets(int empId)
-        {
-            return GetCurrReqDets(empId);
-        }
+        //[HttpPost]
+        //public RequestDetail GetCurrReqDets(int empId)
+        //{
+        //    return GetCurrReqDets(empId);
+        //}
 
     }
 
