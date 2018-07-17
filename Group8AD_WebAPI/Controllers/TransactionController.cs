@@ -9,6 +9,11 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class TransactionController : ApiController
     {
+        [AcceptVerbs("POST")]
+        [HttpGet]
+        [Route("api/Transaction/")]
+
+
         // GET api/<controller>
         public IEnumerable<string> Get()
         {

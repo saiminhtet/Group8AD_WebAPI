@@ -143,8 +143,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                         entities.SaveChanges();
                     }
                 }
-
             }
+            return;
         }
 
         // remove request by reqId
@@ -158,8 +158,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     entities.Requests.Remove(request);
                     entities.SaveChanges();
                 }
-
             }
+            return;
         }
 
         // dummy
