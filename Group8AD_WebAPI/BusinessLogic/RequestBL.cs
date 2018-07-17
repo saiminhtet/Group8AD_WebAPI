@@ -105,8 +105,14 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static RequestVM AddReq(int empId, string status)
         {
             RequestVM request = new RequestVM();
+            //Request req = new Request();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
+                //req.EmpId = empId;
+                //req.Status = status;
+                //entities.Requests.Add(req);
+                //entities.SaveChanges();
+
                 request = entities.Requests.Select(r => new RequestVM()
                 {
                     ReqId = r.ReqId,
@@ -158,8 +164,16 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // dummy
         // submit request
-        public static RequestVM SubmitReq( int empId, List<RequestDetailVM> reqDetList, string status)
+        public static RequestVM SubmitReq(int empId, List<RequestDetailVM> reqDetList, string status)
         {
+            // This is only to explain code steps at Web Api service
+            // Call GetReq(empId, “Unsubmitted”)
+            // Call UpdateReqDet(reqId, reqDet) for each reqDet in reqDetLst
+            // Set reqDateTime for currReq object to DateTime.Now()
+            // Set status for currReq to “Submitted”
+            // Call UpdateReq(currReq) to persist at db
+            // Return currReq object
+
             RequestVM request = new RequestVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -179,40 +193,43 @@ namespace Group8AD_WebAPI.BusinessLogic
             return request;
         }
 
+        // dummy
         // update request
-        public static Request UpdateReq(Request req)
+        public static RequestVM UpdateReq(Request req)
         {
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                var request = entities.Requests.Where(r => r.ReqId == req.ReqId).FirstOrDefault();
-                request.ReqId = req.ReqId;
-                request.EmpId = req.EmpId;
-                request.ApproverId = req.ApproverId;
-                request.ApproverComment = req.ApproverComment;                    //ReqDateTime = r.ReqDateTime,
-                request.ApprovedDateTime = req.ApprovedDateTime;
-                request.CancelledDateTime = req.CancelledDateTime;
-                request.FulfilledDateTime = req.FulfilledDateTime;
-                request.Status = req.Status;
-                entities.SaveChanges();
-                return request;
-            }
-            //RequestVM request = new RequestVM();
             //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             //{
-            //    request = entities.Requests.Select(r => new RequestVM()
-            //    {
-            //        ReqId = r.ReqId,
-            //        EmpId = r.EmpId,
-            //        //ApproverId = r.ApproverId,
-            //        ApproverComment = r.ApproverComment,
-            //        //ReqDateTime = r.ReqDateTime,
-            //        //ApprovedDateTime = r.ApprovedDateTime,
-            //        //CancelledDateTime = r.CancelledDateTime,
-            //        //FulfilledDateTime = r.FulfilledDateTime,
-            //        Status = r.Status
-            //    }).First<RequestVM>();
+            //    var request = entities.Requests.Where(r => r.ReqId == req.ReqId).FirstOrDefault();
+            //    request.ReqId = req.ReqId;
+            //    request.EmpId = req.EmpId;
+            //    request.ApproverId = req.ApproverId;
+            //    request.ApproverComment = req.ApproverComment;
+            //    request.ReqDateTime = req.ReqDateTime;
+            //    request.ApprovedDateTime = req.ApprovedDateTime;
+            //    request.CancelledDateTime = req.CancelledDateTime;
+            //    request.FulfilledDateTime = req.FulfilledDateTime;
+            //    request.Status = req.Status;
+            //    entities.SaveChanges();
+            //    return request;
             //}
-            //return request;
+
+            RequestVM request = new RequestVM();
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                request = entities.Requests.Select(r => new RequestVM()
+                {
+                    ReqId = r.ReqId,
+                    EmpId = r.EmpId,
+                    //ApproverId = r.ApproverId,
+                    ApproverComment = r.ApproverComment,
+                    //ReqDateTime = r.ReqDateTime,
+                    //ApprovedDateTime = r.ApprovedDateTime,
+                    //CancelledDateTime = r.CancelledDateTime,
+                    //FulfilledDateTime = r.FulfilledDateTime,
+                    Status = r.Status
+                }).First<RequestVM>();
+            }
+            return request;
         }
 
         // accept request
@@ -242,6 +259,14 @@ namespace Group8AD_WebAPI.BusinessLogic
         // update fulfilled request status
         public static void UpdateFulfilledRequestStatus()
         {
+            // int openCount = 0;
+            // foreach(RequestDetail rd in r) {
+            //  int shortQty = 
+            //      (rd.ReqQty - rd.FulfilledQty);
+            //  openCount += shortQty;}
+            // if (openCount == 0)
+            //  r.Status = “Fulfilled”;
+            // Save Changes for this Request object 
             return;
         }
     }
