@@ -12,6 +12,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         // dummy code
 
         // get a list of request by empId and status
+        // not dummy
         public static List<RequestVM> GetReq(int empId, string status)
         {
             List<RequestVM> reqlist = new List<RequestVM>();
@@ -34,6 +35,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get a list of request by status
+        // not dummy
         public static List<RequestVM> GetReq(string status)
         {
             List<RequestVM> reqlist = new List<RequestVM>();
@@ -57,6 +59,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // dummy, hope can add "deptCode" into "Request" table
         // get a list of request by deptCode and status
+        // dummy
         public static List<RequestVM> GetReq(string deptCode, string status)
         {
             List<RequestVM> reqlist = new List<RequestVM>();
@@ -79,6 +82,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get request by reqId
+        // not dummy
         public static RequestVM GetReq(int reqId)
         {
             RequestVM request = new RequestVM();
@@ -129,6 +133,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             return request;
         }
 
+        // dummy
         // remove request by empId and status
         public static void RemoveReq(int empId, string status)
         {
@@ -147,6 +152,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             return;
         }
 
+        // not dummy, referential integrity issue
         // remove request by reqId
         public static void RemoveReq(int reqId)
         {
@@ -232,6 +238,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             return request;
         }
 
+        // dummy
         // accept request
         public static void AcceptRequest(int reqId, int empId, string cmt)
         {
@@ -244,6 +251,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             return;
         }
 
+        // dummy
         // reject request
         public static void RejectRequest(int reqId, int empId,string cmt)
         {
@@ -256,6 +264,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             return;
         }
 
+        // dummy
         // update fulfilled request status
         public static void UpdateFulfilledRequestStatus()
         {

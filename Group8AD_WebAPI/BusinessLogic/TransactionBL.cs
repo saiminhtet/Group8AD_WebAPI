@@ -11,6 +11,7 @@ namespace Group8AD_WebAPI.BusinessLogic
     {
         // dummy code
 
+        // not dummy, difficult to pass in Transaction object to test
         // add a transaction
         public static TransactionVM AddTran(Transaction t)
         {
