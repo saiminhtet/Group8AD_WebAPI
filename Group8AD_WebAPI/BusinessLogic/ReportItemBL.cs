@@ -117,14 +117,14 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // show cost report
-        public void ShowCostReport(string dept1, string dept2, string supp1, string supp2,
+        public static void ShowCostReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
             return;
         }
 
         // show volume report
-        void ShowVolumeReport(string dept1, string dept2, string supp1, string supp2, 
+        public static void ShowVolumeReport(string dept1, string dept2, string supp1, string supp2, 
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
             return;

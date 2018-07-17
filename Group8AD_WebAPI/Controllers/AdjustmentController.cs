@@ -13,7 +13,7 @@ namespace Group8AD_WebAPI.Controllers
     //Controllers
     public class AdjustmentController : ApiController
     {
-        [Route("api/adjustment/add")]
+        [Route("api/Adjustment/add")]
         public HttpResponseMessage AddAdjustment(Adjustment adj)
         {
             AdjustmentVM adjustment = AdjustmentBL.AddAdj(adj);
@@ -26,7 +26,7 @@ namespace Group8AD_WebAPI.Controllers
 
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/adjustment/{voucherNo}")]
+        [Route("api/Adjustment/{voucherNo}")]
         public HttpResponseMessage GetAdjustment(string voucherNo)
         {
             AdjustmentVM adjustment = AdjustmentBL.GetAdj(voucherNo);
@@ -39,7 +39,7 @@ namespace Group8AD_WebAPI.Controllers
 
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/adjustment/{status}")]
+        [Route("api/Adjustment/{status}")]
         public HttpResponseMessage GetAdjustmentList(string status)
         {
             List<AdjustmentVM> adjlist = AdjustmentBL.GetAdjList(status);
@@ -50,7 +50,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
-        [Route("api/adjustment/raise")]
+        [Route("api/Adjustment/raise")]
         public HttpResponseMessage RaiseAdjustment(int empId, List<AdjustmentVM> iList)
         {
             List<AdjustmentVM> adjlist = AdjustmentBL.RaiseAdjustments(empId, iList);
@@ -61,14 +61,14 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
-        [Route("api/adjustment/accept")]
+        [Route("api/Adjustment/accept")]
         public HttpResponseMessage AcceptRequest(string voucherNo, int empId, string cmt)
         {
             AdjustmentBL.AcceptRequest(voucherNo, empId, cmt);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/adjustment/rejct")]
+        [Route("api/Adjustment/reject")]
         public HttpResponseMessage RejectRequest(string voucherNo, int empId, string cmt)
         {
             AdjustmentBL.RejectRequest(voucherNo, empId, cmt);
