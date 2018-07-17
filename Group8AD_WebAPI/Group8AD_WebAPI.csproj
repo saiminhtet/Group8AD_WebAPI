@@ -235,6 +235,7 @@
     <Compile Include="BusinessLogic\NotificationBL.cs" />
     <Compile Include="BusinessLogic\RequestDetailBL.cs" />
     <Compile Include="BusinessLogic\SupplierBL.cs" />
+    <Compile Include="BusinessLogic\TransactionBL.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdjustmentController.cs" />
     <Compile Include="Controllers\CollectionPointController.cs" />
