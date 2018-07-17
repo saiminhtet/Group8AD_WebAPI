@@ -13,7 +13,7 @@ namespace Group8AD_WebAPI.Controllers
     //Controllers
     public class AdjustmentController : ApiController
     {
-        [Route("api/Adjustment/add/{adj}")]
+        [Route("api/Adjustment/add")]
         public HttpResponseMessage AddAdjustment(Adjustment adj)
         {
             AdjustmentVM adjustment = AdjustmentBL.AddAdj(adj);
@@ -52,7 +52,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
-        [Route("api/Adjustment/raise/{empId}/{iList}")]
+        [Route("api/Adjustment/raise")]
         public HttpResponseMessage RaiseAdjustment(int empId, List<AdjustmentVM> iList)
         {
             List<AdjustmentVM> adjlist = AdjustmentBL.RaiseAdjustments(empId, iList);
@@ -64,7 +64,7 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         // test done
-        [Route("api/Adjustment/accept/{voucherNo}/{empId}/{cmt}")]
+        [Route("api/Adjustment/accept")]
         public HttpResponseMessage AcceptRequest(string voucherNo, int empId, string cmt)
         {
             AdjustmentBL.AcceptRequest(voucherNo, empId, cmt);
@@ -72,7 +72,7 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         // test done
-        [Route("api/Adjustment/reject/{voucherNo}/{empId}/{cmt}")]
+        [Route("api/Adjustment/reject")]
         public HttpResponseMessage RejectRequest(string voucherNo, int empId, string cmt)
         {
             AdjustmentBL.RejectRequest(voucherNo, empId, cmt);
