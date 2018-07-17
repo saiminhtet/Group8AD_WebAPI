@@ -15,5 +15,6 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public string SuppAddr { get; set; }
         //public virtual ICollection<Item> Items { get; set; }
         public virtual Item Item { get; set; }
+        public string ItemCode { get; set; }
     }
 }

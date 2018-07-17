@@ -29,7 +29,6 @@ namespace Group8AD_WebAPI.BusinessLogic
             return supplists;
         }
         //SupplierList GetAllSupp
-        //api_tested
         public static List<SupplierVM> GetAllSupp()
         {
             List<SupplierVM> supplists = new List<SupplierVM>();

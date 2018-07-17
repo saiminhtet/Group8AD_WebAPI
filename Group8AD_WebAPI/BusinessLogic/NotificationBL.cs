@@ -32,7 +32,6 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //get Notifiction list 
-        //api_tested
         public static List<NotificationVM> GetNotifications(int empId)
         {
             List<NotificationVM> notilists = new List<NotificationVM>();
@@ -63,6 +62,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 if (lowStkNoti != null)
                 {
                     lowStkNoti.Employee.EmpId = empId;
+                    Item item = i;
                     entities.Notifications.Add(lowStkNoti);
                     entities.SaveChanges();
                 }
@@ -90,10 +90,10 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var acptNoti = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
+                Notification acptNoti = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
                 if (acptNoti != null)
                 {
-                    acptNoti.Employee.EmpId = repId;
+                    acptNoti.Employee.Department.DeptRepId = repId;
                     entities.Notifications.Add(acptNoti);
                     entities.SaveChanges();
                 }
@@ -101,7 +101,6 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //Notification NotifyManager with notfication
-        //api_tested
         public static NotificationVM NotifyManager(NotificationVM nn)
         {
             NotificationVM notiManager = new NotificationVM();
@@ -122,7 +121,6 @@ namespace Group8AD_WebAPI.BusinessLogic
             return notiManager;
         }
         //Notification NotifySupervisor with notfication
-        //api_tested
         public static NotificationVM NotifySupervisor(NotificationVM nn)
         {
             NotificationVM notiSupervisor = new NotificationVM();
@@ -147,13 +145,13 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var adjApprNoti = entities.Notifications.Where(nn => nn.FromEmp == fromEmpId && nn.ToEmp == toEmpId && nn.NotificationId == n.NotificationId).FirstOrDefault();
+                var adjApprNoti = entities.Notifications.FirstOrDefault();
                 if (adjApprNoti != null)
                 {
                     adjApprNoti.FromEmp = fromEmpId;
                     adjApprNoti.ToEmp = toEmpId;
-                    adjApprNoti.NotificationId = n.NotificationId;
-                    //entities.Notifications.Add(adjApprNoti);
+                    Notification notification = n;
+                    entities.Notifications.Add(adjApprNoti);
                     entities.SaveChanges();
                 }
             }
