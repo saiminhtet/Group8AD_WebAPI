@@ -246,7 +246,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
-    <Compile Include="Controllers\SupplierListController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -301,12 +301,15 @@
       <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModels\AdjustmentVM.cs" />
+    <Compile Include="Models\ViewModels\DepartmentVM.cs" />
     <Compile Include="Models\ViewModels\EmployeeVM.cs" />
     <Compile Include="Models\ViewModels\ItemVM.cs" />
     <Compile Include="Models\ViewModels\NotificationVM.cs" />
     <Compile Include="Models\ViewModels\ReportItemVM.cs" />
     <Compile Include="Models\ViewModels\RequestDetailVM.cs" />
     <Compile Include="Models\ViewModels\RequestVM.cs" />
+    <Compile Include="Models\ViewModels\SetDelegateVM.cs" />
+    <Compile Include="Models\ViewModels\SetRepVM.cs" />
     <Compile Include="Models\ViewModels\SupplierVM.cs" />
     <Compile Include="Models\ViewModels\TransactionVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
