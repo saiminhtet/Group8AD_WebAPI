@@ -43,14 +43,14 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //need to clearify return type and model
-        //public static string GetHeadId(int empId)
-        //{
-        //    using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-        //    {
-        //        var DeptH = from dept in entities.Employee.Where(e => e.EmpId == empId).Select(e => e.).ToString();
-        //        return employee;
-        //    }
-        //}
+        public static string GetHeadId(int empId)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {                
+                string DeptHeadId = entities.Departments.Where(e => e.DeptHeadId == empId).ToString();
+                return DeptHeadId;
+            }
+        }
 
 
 

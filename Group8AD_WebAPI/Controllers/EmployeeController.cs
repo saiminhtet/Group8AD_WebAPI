@@ -58,5 +58,20 @@ namespace Group8AD_WebAPI.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, DeptCode);
         }
+
+
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Employee/{id}/DepartmentCode")]
+        public HttpResponseMessage GetDepartmentHead(int id)
+        {
+            string DeptHead = BusinessLogic.EmployeeBL.GetDeptCode(id);
+
+            if (DeptHead == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, DeptHead);
+        }
     }
 }
