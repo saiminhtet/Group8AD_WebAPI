@@ -13,7 +13,7 @@ namespace Group8AD_WebAPI.Controllers
     //Controllers
     public class AdjustmentController : ApiController
     {
-        [Route("api/Adjustment/add")]
+        [Route("api/Adjustment/add/{adj}")]
         public HttpResponseMessage AddAdjustment(Adjustment adj)
         {
             AdjustmentVM adjustment = AdjustmentBL.AddAdj(adj);
@@ -24,9 +24,10 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjustment);
         }
 
+        // cannot test as vohcherNo contain "/" character
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Adjustment/{voucherNo}")]
+        [Route("api/Adjustment/voucher/{voucherNo}")]
         public HttpResponseMessage GetAdjustment(string voucherNo)
         {
             AdjustmentVM adjustment = AdjustmentBL.GetAdj(voucherNo);
@@ -37,9 +38,10 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjustment);
         }
 
+        // test done
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Adjustment/{status}")]
+        [Route("api/Adjustment/status/{status}")]
         public HttpResponseMessage GetAdjustmentList(string status)
         {
             List<AdjustmentVM> adjlist = AdjustmentBL.GetAdjList(status);
@@ -50,7 +52,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
-        [Route("api/Adjustment/raise")]
+        [Route("api/Adjustment/raise/{empId}/{iList}")]
         public HttpResponseMessage RaiseAdjustment(int empId, List<AdjustmentVM> iList)
         {
             List<AdjustmentVM> adjlist = AdjustmentBL.RaiseAdjustments(empId, iList);
@@ -61,14 +63,16 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
-        [Route("api/Adjustment/accept")]
+        // test done
+        [Route("api/Adjustment/accept/{voucherNo}/{empId}/{cmt}")]
         public HttpResponseMessage AcceptRequest(string voucherNo, int empId, string cmt)
         {
             AdjustmentBL.AcceptRequest(voucherNo, empId, cmt);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/Adjustment/reject")]
+        // test done
+        [Route("api/Adjustment/reject/{voucherNo}/{empId}/{cmt}")]
         public HttpResponseMessage RejectRequest(string voucherNo, int empId, string cmt)
         {
             AdjustmentBL.RejectRequest(voucherNo, empId, cmt);

@@ -64,7 +64,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/add")]
+        [Route("api/Request/add/{empId}/{status}")]
         public HttpResponseMessage AddRequest(int empId, string status)
         {
             RequestVM request = RequestBL.AddReq(empId, status);
@@ -75,25 +75,21 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [AcceptVerbs("DELETE")]
-        [HttpDelete]
         [Route("api/Request/remove/{empId}/{status}")]
-        public HttpResponseMessage RemoveRequestByEmpIdStatus(int empId, string status)
+        public HttpResponseMessage DeleteRequestByEmpIdStatus(int empId, string status)
         {
             RequestBL.RemoveReq(empId, status);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [AcceptVerbs("DELETE")]
-        [HttpDelete]
         [Route("api/Request/remove/{reqId}")]
-        public HttpResponseMessage RemoveRequestByReqId(int reqId)
+        public HttpResponseMessage DeleteRequestByReqId(int reqId)
         {
             RequestBL.RemoveReq(reqId);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/Request/submit")]
+        [Route("api/Request/submit/{empId}/{reqDetList}/{status}")]
         public HttpResponseMessage SubmitRequest(int empId, List<RequestDetailVM> reqDetList, string status)
         {
             RequestVM request = RequestBL.SubmitReq(empId, reqDetList, status);
@@ -104,7 +100,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/update")]
+        [Route("api/Request/update/{req}")]
         public HttpResponseMessage UpdateRequest(Request req)
         {
             RequestVM request = RequestBL.UpdateReq(req);
@@ -115,14 +111,14 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/accept")]
+        [Route("api/Request/accept/{reqId}/{empId}/{cmt}")]
         public HttpResponseMessage AcceptRequest(int reqId, int empId, string cmt)
         {
             RequestBL.AcceptRequest(reqId, empId, cmt);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/Request/reject")]
+        [Route("api/Request/reject/{reqId}/{empId}/{cmt}")]
         public HttpResponseMessage RejectRequest(int reqId, int empId, string cmt)
         {
             RequestBL.RejectRequest(reqId, empId, cmt);

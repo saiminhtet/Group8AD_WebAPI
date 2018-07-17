@@ -12,7 +12,7 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class TransactionController : ApiController
     {
-        [Route("api/Transaction/add")]
+        [Route("api/Transaction/add/{t}")]
         public HttpResponseMessage AddTransaction(Transaction t)
         {
             TransactionVM transaction = TransactionBL.AddTran(t);
@@ -23,7 +23,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, transaction);
         }
 
-        [Route("api/Transaction/CBMonth")]
+        [Route("api/Transaction/CBMonth/{deptCode}/{fromDate}/{toDate}")]
         public HttpResponseMessage GetCBByMth(string deptCode, DateTime fromDate, DateTime toDate)
         {
             List<TransactionVM> translist = ReportItemBL.GetCBByMth(deptCode, fromDate, toDate);
@@ -34,7 +34,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        [Route("api/Transaction/CBRange")]
+        [Route("api/Transaction/CBRange/{deptCode}/{fromDate}/{toDate}")]
         public HttpResponseMessage GetCBByRng(string deptCode, DateTime fromDate, DateTime toDate)
         {
             List<TransactionVM> translist = ReportItemBL.GetCBByRng(deptCode, fromDate, toDate);
@@ -45,7 +45,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        [Route("api/Transaction/{itemCode}")]
+        [Route("api/Transaction/itemCode/{itemCode}")]
         public HttpResponseMessage GetLastTenTrans(string itemCode)
         {
             List<TransactionVM> translist = ReportItemBL.GetLastTenTrans(itemCode);
@@ -56,7 +56,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        [Route("api/Transaction/CBAnnual")]
+        [Route("api/Transaction/CBAnnual/{toDate}")]
         public HttpResponseMessage GetCBAnnual(DateTime toDate)
         {
             List<TransactionVM> translist = ReportItemBL.GetCBAnnual(toDate);
@@ -67,7 +67,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        [Route("api/Transaction/VolAnnual")]
+        [Route("api/Transaction/VolAnnual/{toDate}")]
         public HttpResponseMessage GetVolAnnual(DateTime toDate)
         {
             List<TransactionVM> translist = ReportItemBL.GetVolAnnual(toDate);
@@ -78,7 +78,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        [Route("api/Transaction/costReport")]
+        [Route("api/Transaction/costReport/{dept1}/{dept2}/{supp1}/{supp2}/{cat}/{type}/{dates}/{byMonth}")]
         public HttpResponseMessage ShowCostReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
@@ -86,7 +86,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/Transaction/columeReport")]
+        [Route("api/Transaction/columeReport/{dept1}/{dept2}/{supp1}/{supp2}/{cat}/{type}/{dates}/{byMonth}")]
         public HttpResponseMessage ShowVolumeReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
