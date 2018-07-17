@@ -14,7 +14,7 @@ namespace Group8AD_WebAPI.Controllers
     {
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Request/empid/{empId}/{status}")]
+        [Route("api/Request/getEmployeeRequests/{empId}/{status}")]
         public HttpResponseMessage GetRequestByIdStatus(int empId, string status)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(empId, status);
@@ -27,7 +27,7 @@ namespace Group8AD_WebAPI.Controllers
 
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Request/status/{status}")]
+        [Route("api/Request/getRequests/{status}")]
         public HttpResponseMessage GetRequestByStatus(string status)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(status);
@@ -40,7 +40,7 @@ namespace Group8AD_WebAPI.Controllers
 
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Request/deptcodestatus/{deptCode}/{status}")]
+        [Route("api/Request/getDepartmentRequests/{deptCode}/{status}")]
         public HttpResponseMessage GetRequestByDeptCodeStatus(string deptCode, string status)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(deptCode, status);
@@ -53,7 +53,7 @@ namespace Group8AD_WebAPI.Controllers
 
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Request/reqid/{reqId}")]
+        [Route("api/Request/getRequest/{reqId}")]
         public HttpResponseMessage GetRequestByReqId(int reqId)
         {
             RequestVM request = RequestBL.GetReq(reqId);
@@ -64,6 +64,8 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Request/add")]
         public HttpResponseMessage AddRequest(int empId, string status)
         {
@@ -75,20 +77,26 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/removebyempid")]
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/removeRequest/{empId}/{status}")]
         public HttpResponseMessage DeleteRequestByEmpIdStatus(int empId, string status)
         {
             RequestBL.RemoveReq(empId, status);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/Request/removebyrqid")]
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/removeRequest/{reqId}")]
         public HttpResponseMessage DeleteRequestByReqId(int reqId)
         {
             RequestBL.RemoveReq(reqId);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Request/submit")]
         public HttpResponseMessage SubmitRequest(int empId, List<RequestDetailVM> reqDetList, string status)
         {
@@ -100,6 +108,8 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Request/update")]
         public HttpResponseMessage UpdateRequest(Request req)
         {
@@ -111,6 +121,8 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Request/accept")]
         public HttpResponseMessage AcceptRequest(int reqId, int empId, string cmt)
         {
@@ -118,6 +130,8 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Request/reject")]
         public HttpResponseMessage RejectRequest(int reqId, int empId, string cmt)
         {
@@ -125,6 +139,8 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Request/updatefulfilled")]
         public HttpResponseMessage UpdateFulfilledStatus()
         {
