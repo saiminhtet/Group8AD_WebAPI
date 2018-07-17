@@ -13,6 +13,7 @@ namespace Group8AD_WebAPI.Controllers
     //Controllers
     public class AdjustmentController : ApiController
     {
+        // difficult to pass in Adjustment object to test
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/add")]
@@ -26,6 +27,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjustment);
         }
 
+        // unable to test because "voucherNo" contain "/" character
         [AcceptVerbs("GET")]
         [HttpGet]
         [Route("api/Adjustment/getAdjustment/{voucherNo}")]
@@ -39,6 +41,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjustment);
         }
 
+        // tested
         [AcceptVerbs("GET")]
         [HttpGet]
         [Route("api/Adjustment/getAdjustments/{status}")]
@@ -52,6 +55,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
+        // tested, dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/raise")]
@@ -65,6 +69,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
+        // tested, dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/accept")]
@@ -74,6 +79,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
+        // tested, dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/reject")]

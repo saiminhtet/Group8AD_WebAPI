@@ -12,6 +12,7 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class RequestController : ApiController
     {
+        // tested
         [AcceptVerbs("GET")]
         [HttpGet]
         [Route("api/Request/getEmployeeRequests/{empId}/{status}")]
@@ -25,6 +26,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, reqlist);
         }
 
+        // tested
         [AcceptVerbs("GET")]
         [HttpGet]
         [Route("api/Request/getRequests/{status}")]
@@ -38,6 +40,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, reqlist);
         }
 
+        // tested, dummy
         [AcceptVerbs("GET")]
         [HttpGet]
         [Route("api/Request/getDepartmentRequests/{deptCode}/{status}")]
@@ -51,6 +54,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, reqlist);
         }
 
+        // tested
         [AcceptVerbs("GET")]
         [HttpGet]
         [Route("api/Request/getRequest/{reqId}")]
@@ -64,6 +68,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
+        // tested, dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/add")]
@@ -77,6 +82,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
+        // tested, dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/removeRequest/{empId}/{status}")]
@@ -86,6 +92,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
+        // tested, referential integrity issue
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/removeRequest/{reqId}")]
@@ -95,6 +102,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
+        // tested, dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/submit")]
@@ -108,6 +116,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
+        // tested, dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/update")]
@@ -121,6 +130,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
+        // tested, dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/accept")]
@@ -130,6 +140,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
+        // tested, dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/reject")]
@@ -139,6 +150,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
+        // tested, dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/updatefulfilled")]
