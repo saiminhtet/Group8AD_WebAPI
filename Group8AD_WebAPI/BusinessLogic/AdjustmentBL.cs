@@ -12,6 +12,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         // dummy code
 
         // add an adjustment
+        // not dummy, revise
         public static AdjustmentVM AddAdj(Adjustment adj)
         {
             AdjustmentVM adjustment = new AdjustmentVM();
@@ -36,6 +37,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get an adjustment by voucher number
+        // not dummy, revise
         public static AdjustmentVM GetAdj(string voucherNo)
         {
             AdjustmentVM adjustment = new AdjustmentVM();
@@ -58,6 +60,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get a list of adjustment by status
+        // not dummy
         public static List<AdjustmentVM> GetAdjList(string status)
         {
             List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
@@ -81,7 +84,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // raise adjustment
-
+        // dummy
         public static List<AdjustmentVM> RaiseAdjustments(int empId, List<AdjustmentVM> iList)
         {
             List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
@@ -129,6 +132,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // reject adjustment request
+        // dummy
         public static void RejectRequest(string voucherNo, int empId, string cmt)
         {
             // Call GetAdj(voucherNo)
@@ -142,6 +146,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // accept adjustment request
+        // dummy
         public static void AcceptRequest(string voucherNo, int empId, string cmt)
         {
             // Call GetAdj(empId)
