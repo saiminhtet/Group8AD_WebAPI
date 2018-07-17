@@ -62,7 +62,7 @@ namespace Group8AD_WebAPI.Controllers
 
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]
-        [Route("api/Employee/{id}/DepartmentCode")]
+        [Route("api/Employee/{id}/DepartmentHead")]
         public HttpResponseMessage GetDepartmentHead(int id)
         {
             string DeptHead = BusinessLogic.EmployeeBL.GetDeptCode(id);
