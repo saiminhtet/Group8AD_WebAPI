@@ -10,101 +10,61 @@ namespace Group8AD_WebAPI.BusinessLogic
     public static class DepartmentBL
     {
         //remove Delegate by DepartmentCode
-        //instead void
-        public static DepartmentVM removeDelegate(string deptCode)
-        {            
-            DepartmentVM remDeleGate = new DepartmentVM();
+        public static void removeDelegate(string deptCode)
+        {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                remDeleGate = entities.Departments.Where(d => d.DeptCode == deptCode).Select(d => new DepartmentVM()
+                Department department = entities.Departments.Where(d => d.DeptCode == deptCode).First<Department>();
                 {
-                    DeptCode = d.DeptCode,
-                    DeptName = d.DeptName,
-                    DeptCtcNo = d.DeptCtcNo,
-                    DeptFaxNo = d.DeptFaxNo,
-                    ColPtId = d.ColPtId,
-                    DeptHeadId = d.DeptHeadId,
-                    DeptRepId = d.DeptRepId,
-                    DelegateApproverId = d.DelegateApproverId,
-                    DelegateFromDate = d.DelegateFromDate,
-                    DelegateToDate = d.DelegateToDate
-                }).First<DepartmentVM>();
-                entities.SaveChanges();
+                    department.DelegateApproverId = null;
+                    department.DelegateFromDate = null;
+                    department.DelegateToDate = null;
+                    entities.SaveChanges();
+                };
             }
-            return remDeleGate;
         }
 
         //set Delegate by DepartmentCode , fromDate , toDate and empId
-        //instead void
-        public static DepartmentVM setDelegate(string deptCode, DateTime fromDate, DateTime toDate, int empId)
+        public static void setDelegate(string deptCode, DateTime fromDate, DateTime toDate, int empId)
         {
-            DepartmentVM deleGate = new DepartmentVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {                
-                deleGate = entities.Departments.Where(d => d.DeptCode == deptCode && d.Employee.EmpId == empId).Select(d => new DepartmentVM()
+            {
+                Department department = entities.Departments.Where(d => d.DeptCode == deptCode).First<Department>();
                 {
-                    DeptCode = d.DeptCode,
-                    DeptName = d.DeptName,
-                    DeptCtcNo =d.DeptCtcNo,
-                    DeptFaxNo =d.DeptFaxNo,
-                    ColPtId = d.ColPtId,
-                    DeptHeadId = d.DeptHeadId,
-                    DeptRepId = d.DeptRepId,
-                    DelegateApproverId = d.DelegateApproverId,
-                    DelegateFromDate = d.DelegateFromDate,
-                    DelegateToDate =d.DelegateToDate
-                }).First<DepartmentVM>();
-                entities.SaveChanges();
-        }
-            return deleGate;
+                    department.DelegateApproverId = empId;
+                    department.DelegateFromDate = fromDate;
+                    department.DelegateToDate = toDate;
+                    entities.SaveChanges();                    
+                };
+            }            
         }
 
         //set Rep by DepartmentCode , fromEmpId and toEmpId
-        public static DepartmentVM setRep(string deptCode, int fromEmpId, int toEmpId)
+        public static void setRep(string deptCode, int fromEmpId, int toEmpId)
         {
-            DepartmentVM rep = new DepartmentVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                rep = entities.Departments.Where(d => d.DeptCode == deptCode).Select(d => new DepartmentVM()
+                Department department = entities.Departments.Where(d => d.DeptCode == deptCode).First<Department>();
                 {
-                    DeptCode = d.DeptCode,
-                    DeptName = d.DeptName,
-                    DeptCtcNo = d.DeptCtcNo,
-                    DeptFaxNo = d.DeptFaxNo,
-                    ColPtId = d.ColPtId,
-                    DeptHeadId = d.DeptHeadId,
-                    DeptRepId = d.DeptRepId,
-                    DelegateApproverId = d.DelegateApproverId,
-                    DelegateFromDate = d.DelegateFromDate,
-                    DelegateToDate = d.DelegateToDate
-                }).First<DepartmentVM>();
-                entities.SaveChanges();
+                    department.DeptRepId = fromEmpId;
+                    entities.SaveChanges();
+                };
             }
-            return rep;
         }
 
         //remove Rep by deptCode and fromEmpId 
-        public static DepartmentVM removeRep(string deptCode, int fromEmpId)
+        public static void removeRep(string deptCode, int fromEmpId)
         {
-            DepartmentVM remRep = new DepartmentVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                remRep = entities.Departments.Where(d => d.DeptCode == deptCode && d.Employee.EmpId == fromEmpId).Select(d => new DepartmentVM()
+            {               
+                Department department = entities.Departments.Where(d => d.DeptCode == deptCode).First<Department>();
                 {
-                    DeptCode = d.DeptCode,
-                    DeptName = d.DeptName,
-                    DeptCtcNo = d.DeptCtcNo,
-                    DeptFaxNo = d.DeptFaxNo,
-                    ColPtId = d.ColPtId,
-                    DeptHeadId = d.DeptHeadId,
-                    DeptRepId = d.DeptRepId,
-                    DelegateApproverId = d.DelegateApproverId,
-                    DelegateFromDate = d.DelegateFromDate,
-                    DelegateToDate = d.DelegateToDate
-                }).First<DepartmentVM>();
-                entities.SaveChanges();
+                    department.DeptRepId = null;
+                    department.DelegateFromDate = null;
+                    department.DelegateToDate = null;
+                    entities.SaveChanges();
+                };
             }
-            return remRep;
         }
 
         public static List<string> GetCollPtList()
@@ -112,7 +72,6 @@ namespace Group8AD_WebAPI.BusinessLogic
             List<string> list = new List<string>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-
                 var departmentList = entities.Departments.Select(d => d.ColPtId);
                 foreach (var v in departmentList)
                 {
@@ -121,8 +80,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             return list;
         }
-
-
+        
         //get CollPt by DepartmentCode 
         public static string GetCollPt(string deptCode)
         {
@@ -148,9 +106,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     ColPtId = d.ColPtId,
                     DeptHeadId = d.DeptHeadId,
                     DeptRepId = d.DeptRepId,
-                    DelegateApproverId = d.DelegateApproverId,
-                    DelegateFromDate = d.DelegateFromDate,
-                    DelegateToDate = d.DelegateToDate
+                    DelegateApproverId = d.DelegateApproverId
                 }).First<DepartmentVM>();
                 entities.SaveChanges();
             }
