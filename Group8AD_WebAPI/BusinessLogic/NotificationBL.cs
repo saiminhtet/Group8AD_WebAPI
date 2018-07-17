@@ -10,29 +10,36 @@ namespace Group8AD_WebAPI.BusinessLogic
     public static class NotificationBL
     {
         //add Newreqnotification with empId and currReq
-        public static void AddNewReqNotification(int empId, int currReq)
+        public static NotificationVM AddNewReqNotification(int empId, int currReq)//what is currReq 
         {
+            NotificationVM reqNoti = new NotificationVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var reqNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId && n.NotificationId == currReq).FirstOrDefault();
-                if (reqNoti != null)
+                reqNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId && n.NotificationId == currReq).Select(n => new NotificationVM()
                 {
-                    reqNoti.NotificationId = currReq;
-                    reqNoti.Employee.EmpId = empId;
-                    entities.Notifications.Add(reqNoti);
-                    entities.SaveChanges();
-                }
+                    NotificationId = n.NotificationId,
+                    NotificationDateTime = n.NotificationDateTime,
+                    FromEmp = n.FromEmp,
+                    ToEmp = n.ToEmp,
+                    Type = n.Type,
+                    RouteUri = n.RouteUri,
+                    Content = n.Content,
+                    IsRead = n.IsRead
+            }).First<NotificationVM>();
+                entities.SaveChanges();
             }
+            return reqNoti;
         }
 
         //get Notifiction list 
+        //api_tested
         public static List<NotificationVM> GetNotifications(int empId)
         {
             List<NotificationVM> notilists = new List<NotificationVM>();
 
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                notilists = entities.Notifications.Select(n => new NotificationVM()
+                notilists = entities.Notifications.Where(n => n.Employee.EmpId == empId).Select(n => new NotificationVM()
                 {
                     NotificationId = n.NotificationId,
                     NotificationDateTime = n.NotificationDateTime,
@@ -67,10 +74,11 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var fulFillNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId).FirstOrDefault();
+                var fulFillNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId && n.Employee.Department.DeptRepId == repId).FirstOrDefault();
                 if (fulFillNoti != null)
                 {
                     fulFillNoti.Employee.EmpId = empId;
+                    fulFillNoti.Employee.Department.DeptRepId = repId;
                     entities.Notifications.Add(fulFillNoti);
                     entities.SaveChanges();
                 }
@@ -82,7 +90,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var acptNoti = entities.Notifications.Where(n => n.Employee.EmpId == repId).FirstOrDefault();
+                var acptNoti = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
                 if (acptNoti != null)
                 {
                     acptNoti.Employee.EmpId = repId;
@@ -93,12 +101,13 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //Notification NotifyManager with notfication
-        public static NotificationVM NotifyManager(Notification n)
+        //api_tested
+        public static NotificationVM NotifyManager(NotificationVM nn)
         {
             NotificationVM notiManager = new NotificationVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                notiManager = entities.Notifications.Where(nn => nn.NotificationId == n.NotificationId).Select(nn => new NotificationVM()
+                notiManager = entities.Notifications.Where(n => n.Employee.Role == "Store Manager").Select(n => new NotificationVM()
                 {
                     NotificationId = n.NotificationId,
                     NotificationDateTime = n.NotificationDateTime,
@@ -113,12 +122,13 @@ namespace Group8AD_WebAPI.BusinessLogic
             return notiManager;
         }
         //Notification NotifySupervisor with notfication
-        public static NotificationVM NotifySupervisor(Notification n)
+        //api_tested
+        public static NotificationVM NotifySupervisor(NotificationVM nn)
         {
             NotificationVM notiSupervisor = new NotificationVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                notiSupervisor = entities.Notifications.Where(nn => nn.NotificationId == n.NotificationId).Select(nn => new NotificationVM()
+                notiSupervisor = entities.Notifications.Where(n => n.Employee.Role == "Store Supervisor").Select(n => new NotificationVM()
                 {
                     NotificationId = n.NotificationId,
                     NotificationDateTime = n.NotificationDateTime,
@@ -143,7 +153,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     adjApprNoti.FromEmp = fromEmpId;
                     adjApprNoti.ToEmp = toEmpId;
                     adjApprNoti.NotificationId = n.NotificationId;
-                    entities.Notifications.Add(adjApprNoti);
+                    //entities.Notifications.Add(adjApprNoti);
                     entities.SaveChanges();
                 }
             }
