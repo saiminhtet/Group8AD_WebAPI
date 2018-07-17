@@ -13,6 +13,8 @@ namespace Group8AD_WebAPI.Controllers
     //Controllers
     public class AdjustmentController : ApiController
     {
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Adjustment/add")]
         public HttpResponseMessage AddAdjustment(Adjustment adj)
         {
@@ -24,10 +26,9 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjustment);
         }
 
-        // cannot test as vohcherNo contain "/" character
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Adjustment/voucher/{voucherNo}")]
+        [Route("api/Adjustment/getAdjustment/{voucherNo}")]
         public HttpResponseMessage GetAdjustment(string voucherNo)
         {
             AdjustmentVM adjustment = AdjustmentBL.GetAdj(voucherNo);
@@ -38,10 +39,9 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjustment);
         }
 
-        // test done
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Adjustment/status/{status}")]
+        [Route("api/Adjustment/getAdjustments/{status}")]
         public HttpResponseMessage GetAdjustmentList(string status)
         {
             List<AdjustmentVM> adjlist = AdjustmentBL.GetAdjList(status);
@@ -52,6 +52,8 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Adjustment/raise")]
         public HttpResponseMessage RaiseAdjustment(int empId, List<AdjustmentVM> iList)
         {
@@ -63,7 +65,8 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
-        // test done
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Adjustment/accept")]
         public HttpResponseMessage AcceptRequest(string voucherNo, int empId, string cmt)
         {
@@ -71,7 +74,8 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        // test done
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Adjustment/reject")]
         public HttpResponseMessage RejectRequest(string voucherNo, int empId, string cmt)
         {

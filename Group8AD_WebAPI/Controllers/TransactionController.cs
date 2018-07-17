@@ -12,6 +12,8 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class TransactionController : ApiController
     {
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Transaction/add")]
         public HttpResponseMessage AddTransaction(Transaction t)
         {
@@ -23,6 +25,8 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, transaction);
         }
 
+        [AcceptVerbs("GET")]
+        [HttpGet]
         [Route("api/Transaction/CBMonth/{deptCode}/{fromDate}/{toDate}")]
         public HttpResponseMessage GetCBByMth(string deptCode, DateTime fromDate, DateTime toDate)
         {
@@ -78,6 +82,8 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Transaction/costReport")]
         public HttpResponseMessage ShowCostReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
@@ -86,7 +92,9 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/Transaction/columeReport")]
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Transaction/volumeReport")]
         public HttpResponseMessage ShowVolumeReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
