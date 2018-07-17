@@ -27,7 +27,6 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //List<NotificationVM> GetNotifications(int empId)
-        //tested
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]
         [Route("api/Notifications/{empId}")]
@@ -42,8 +41,58 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, noti);
         }
 
+        //AddLowStkNotification(int empId, Item i)
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Notification/AddLowStkNotification")]
+        public HttpResponseMessage AddLowStkNotification(NotificationVM notiVM)
+        {
+            try
+            {
+                BusinessLogic.NotificationBL.AddLowStkNotification(notiVM.EmpId,notiVM.Item);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        //AddFulfillNotification(int empId, int repId)
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Notification/AddFulfillNotification")]
+        public HttpResponseMessage AddFulfillNotification(NotificationVM notiVM)
+        {
+            try
+            {
+                BusinessLogic.NotificationBL.AddFulfillNotification(notiVM.EmpId,notiVM.RepId);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        //AddAcptNotification(int repId)
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Notification/AddFulfillNotification")]
+        public HttpResponseMessage AddAcptNotification(int repId)
+        {
+            try
+            {
+                BusinessLogic.NotificationBL.AddAcptNotification(repId);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
         //NotificationVM NotifyManager(Notification n)
-        //tested
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]
         [Route("api/Notification/StoreManager")]
@@ -59,7 +108,6 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //NotificationVM NotifySupervisor(Notification n)
-        //tested
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]
         [Route("api/Notification/Supervisor")]
@@ -72,6 +120,23 @@ namespace Group8AD_WebAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
             return Request.CreateResponse(HttpStatusCode.OK, notification);
+        }
+
+        //AdjApprNotification(int fromEmpId , int toEmpId, Notification n)
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Notification/AdjApprNotification")]
+        public HttpResponseMessage AdjApprNotification(NotificationVM notiVM)
+        {
+            try
+            {
+                BusinessLogic.NotificationBL.AdjApprNotification(notiVM.FromEmp,notiVM.ToEmp,notiVM.notification);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
         }
     }
 }

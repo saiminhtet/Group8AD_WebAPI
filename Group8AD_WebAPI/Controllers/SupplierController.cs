@@ -27,7 +27,6 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //get AllSupplier list 
-        //tested
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]
         [Route("api/Supplier")]
