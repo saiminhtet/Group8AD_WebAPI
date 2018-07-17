@@ -233,6 +233,7 @@
     <Compile Include="BusinessLogic\EmployeeBL.cs" />
     <Compile Include="BusinessLogic\ItemBL.cs" />
     <Compile Include="BusinessLogic\NotificationBL.cs" />
+    <Compile Include="BusinessLogic\ReportItemBL.cs" />
     <Compile Include="BusinessLogic\RequestDetailBL.cs" />
     <Compile Include="BusinessLogic\SupplierBL.cs" />
     <Compile Include="BusinessLogic\TransactionBL.cs" />
