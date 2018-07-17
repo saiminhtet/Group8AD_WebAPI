@@ -12,6 +12,7 @@ namespace Group8AD_WebAPI.Controllers
     public class ItemController : ApiController
     {
 
+
         //get All Item list
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]
@@ -78,7 +79,7 @@ namespace Group8AD_WebAPI.Controllers
 
 
 
-        //get low stock Item list
+        //get Item by Item Code
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]
         [Route("api/Item/GetItem/{itemcode}")]
@@ -92,6 +93,23 @@ namespace Group8AD_WebAPI.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, item);
         }
+
+
+        //get low stock Item list
+        [System.Web.Http.AcceptVerbs("Post")]
+        [System.Web.Http.HttpPost]
+        [Route("api/Item/GetItems/")]
+        public HttpResponseMessage GetItems(string cat, string desc)
+        {
+            List<ItemVM> itemlists = BusinessLogic.ItemBL.GetItems(cat,desc);
+
+            if (itemlists == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, itemlists);
+        }
+
 
 
 

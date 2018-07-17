@@ -69,7 +69,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                         return itemlist;
                     }
                 }
-                itemlist = entities.Items.Where(i => i.Cat == cat && i.Desc == desc).Select(i => new ItemVM()
+                itemlist = entities.Items.Where(i => i.Cat == cat && i.Desc.Contains(desc)).Select(i => new ItemVM()
                 {
                     ItemCode = i.ItemCode,
                     Cat = i.Cat,
@@ -306,6 +306,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             return item;
         }
+
     }
 
 

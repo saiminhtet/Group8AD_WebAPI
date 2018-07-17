@@ -299,6 +299,7 @@
     </Compile>
     <Compile Include="Models\ViewModels\AdjustmentVM.cs" />
     <Compile Include="Models\ViewModels\EmployeeVM.cs" />
+    <Compile Include="Models\ViewModels\ItemSearchVM.cs" />
     <Compile Include="Models\ViewModels\ItemVM.cs" />
     <Compile Include="Models\ViewModels\NotificationVM.cs" />
     <Compile Include="Models\ViewModels\ReportItemVM.cs" />
