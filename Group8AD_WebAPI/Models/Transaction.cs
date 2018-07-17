@@ -22,5 +22,6 @@ namespace Group8AD_WebAPI.Models
         public string Desc { get; set; }
         public string DeptCode { get; set; }
         public string SuppCode { get; set; }
+        public string VoucherNo { get; set; }
     }
 }

@@ -138,6 +138,7 @@
           <Property Name="Desc" Type="nvarchar" MaxLength="100" />
           <Property Name="DeptCode" Type="nvarchar" MaxLength="4" />
           <Property Name="SuppCode" Type="nvarchar" MaxLength="4" />
+          <Property Name="VoucherNo" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <Association Name="FK__Adjustmen__Appro__59063A47">
           <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
@@ -577,6 +578,7 @@
           <Property Name="Desc" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="DeptCode" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
           <Property Name="SuppCode" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="VoucherNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK__Adjustmen__Appro__59063A47">
           <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
@@ -991,6 +993,7 @@
                 <ScalarProperty Name="Desc" ColumnName="Desc" />
                 <ScalarProperty Name="DeptCode" ColumnName="DeptCode" />
                 <ScalarProperty Name="SuppCode" ColumnName="SuppCode" />
+                <ScalarProperty Name="VoucherNo" ColumnName="VoucherNo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
