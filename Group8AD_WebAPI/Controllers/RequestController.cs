@@ -40,7 +40,7 @@ namespace Group8AD_WebAPI.Controllers
 
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Request/deptcode/{deptCode}/{status}")]
+        [Route("api/Request/deptcodestatus/{deptCode}/{status}")]
         public HttpResponseMessage GetRequestByDeptCodeStatus(string deptCode, string status)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(deptCode, status);
@@ -64,7 +64,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/add/{empId}/{status}")]
+        [Route("api/Request/add")]
         public HttpResponseMessage AddRequest(int empId, string status)
         {
             RequestVM request = RequestBL.AddReq(empId, status);
@@ -75,21 +75,21 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/remove/{empId}/{status}")]
+        [Route("api/Request/removebyempid")]
         public HttpResponseMessage DeleteRequestByEmpIdStatus(int empId, string status)
         {
             RequestBL.RemoveReq(empId, status);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/Request/remove/{reqId}")]
+        [Route("api/Request/removebyrqid")]
         public HttpResponseMessage DeleteRequestByReqId(int reqId)
         {
             RequestBL.RemoveReq(reqId);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/Request/submit/{empId}/{reqDetList}/{status}")]
+        [Route("api/Request/submit")]
         public HttpResponseMessage SubmitRequest(int empId, List<RequestDetailVM> reqDetList, string status)
         {
             RequestVM request = RequestBL.SubmitReq(empId, reqDetList, status);
@@ -100,7 +100,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/update/{req}")]
+        [Route("api/Request/update")]
         public HttpResponseMessage UpdateRequest(Request req)
         {
             RequestVM request = RequestBL.UpdateReq(req);
@@ -111,14 +111,14 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/accept/{reqId}/{empId}/{cmt}")]
+        [Route("api/Request/accept")]
         public HttpResponseMessage AcceptRequest(int reqId, int empId, string cmt)
         {
             RequestBL.AcceptRequest(reqId, empId, cmt);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/Request/reject/{reqId}/{empId}/{cmt}")]
+        [Route("api/Request/reject")]
         public HttpResponseMessage RejectRequest(int reqId, int empId, string cmt)
         {
             RequestBL.RejectRequest(reqId, empId, cmt);

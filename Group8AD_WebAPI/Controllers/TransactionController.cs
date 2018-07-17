@@ -12,7 +12,7 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class TransactionController : ApiController
     {
-        [Route("api/Transaction/add/{t}")]
+        [Route("api/Transaction/add")]
         public HttpResponseMessage AddTransaction(Transaction t)
         {
             TransactionVM transaction = TransactionBL.AddTran(t);
@@ -78,7 +78,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        [Route("api/Transaction/costReport/{dept1}/{dept2}/{supp1}/{supp2}/{cat}/{type}/{dates}/{byMonth}")]
+        [Route("api/Transaction/costReport")]
         public HttpResponseMessage ShowCostReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
@@ -86,7 +86,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [Route("api/Transaction/columeReport/{dept1}/{dept2}/{supp1}/{supp2}/{cat}/{type}/{dates}/{byMonth}")]
+        [Route("api/Transaction/columeReport")]
         public HttpResponseMessage ShowVolumeReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
