@@ -13,6 +13,7 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public string SuppCtcNo { get; set; }
         public string SuppFaxNo { get; set; }
         public string SuppAddr { get; set; }
-        public virtual ICollection<Item> Items { get; set; }
+        //public virtual ICollection<Item> Items { get; set; }
+        public virtual Item Item { get; set; }
     }
 }
