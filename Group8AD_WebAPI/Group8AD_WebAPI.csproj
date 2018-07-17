@@ -233,8 +233,11 @@
     <Compile Include="BusinessLogic\EmployeeBL.cs" />
     <Compile Include="BusinessLogic\ItemBL.cs" />
     <Compile Include="BusinessLogic\NotificationBL.cs" />
+    <Compile Include="BusinessLogic\ReportItemBL.cs" />
+    <Compile Include="BusinessLogic\RequestBL.cs" />
     <Compile Include="BusinessLogic\RequestDetailBL.cs" />
     <Compile Include="BusinessLogic\SupplierBL.cs" />
+    <Compile Include="BusinessLogic\TransactionBL.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdjustmentController.cs" />
     <Compile Include="Controllers\CollectionPointController.cs" />
@@ -304,6 +307,7 @@
     <Compile Include="Models\ViewModels\NotificationVM.cs" />
     <Compile Include="Models\ViewModels\ReportItemVM.cs" />
     <Compile Include="Models\ViewModels\RequestDetailVM.cs" />
+    <Compile Include="Models\ViewModels\RequestVM.cs" />
     <Compile Include="Models\ViewModels\SupplierVM.cs" />
     <Compile Include="Models\ViewModels\TransactionVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
