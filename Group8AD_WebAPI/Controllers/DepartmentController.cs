@@ -11,70 +11,81 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class DepartmentController : ApiController
     {
-        //removeDelegate
+        //removeDelegate by deptCode
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
-        [Route("api/Department/{deptCode}/removeDelegate")]
+        [Route("api/Department/removeDelegate/{deptCode}")]
         public HttpResponseMessage removeDelegate(string deptCode)
         {
-            DepartmentVM department = BusinessLogic.DepartmentBL.removeDelegate(deptCode);
-
-            if (department == null)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                BusinessLogic.DepartmentBL.removeDelegate(deptCode);
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, department);
+            catch (Exception e)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
         }
 
         //set Delegate by DepartmentCode , fromDate , toDate and empId
-        [System.Web.Http.AcceptVerbs("POST")]
-        [System.Web.Http.HttpPost]
-        [Route("api/Department/{deptCode}/setDelegate")]
-        public HttpResponseMessage setDelegate(string deptCode, DateTime fromDate, DateTime toDate, int empId)
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Department/setDelegate")]
+        public HttpResponseMessage setDelegate(SetDelegateVM delegateVM)
         {
-            DepartmentVM department = BusinessLogic.DepartmentBL.setDelegate(deptCode,fromDate,toDate,empId);
-
-            if (department == null)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                BusinessLogic.DepartmentBL.setDelegate(delegateVM.DeptCode, delegateVM.DelegateFromDate, delegateVM.DelegateToDate, delegateVM.EmpId);
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, department);
+            catch (Exception e)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }            
         }
 
         //set Rep by DepartmentCode , fromEmpId and toEmpId
-        [System.Web.Http.AcceptVerbs("POST")]
-        [System.Web.Http.HttpPost]
-        [Route("api/Department/{deptCode}/setRep")]
-        public HttpResponseMessage setRep(string deptCode, int fromEmpId, int toEmpId)
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Department/setRep")]
+        public HttpResponseMessage setRep(SetRepVM repVM)
         {
-            DepartmentVM department = BusinessLogic.DepartmentBL.setRep(deptCode, fromEmpId, toEmpId);
-
-            if (department == null)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                BusinessLogic.DepartmentBL.setRep(repVM.DeptCode, repVM.FromEmpId, repVM.ToEmpId);
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, department);
+            catch (Exception e)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
         }
 
         //removeRep(string deptCode, int fromEmpId)
-        [System.Web.Http.AcceptVerbs("POST")]
-        [System.Web.Http.HttpPost]
-        [Route("api/Department/{deptCode}/removeRep")]
-        public HttpResponseMessage removeRep(string deptCode, int fromEmpId)
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Department/removeRep/{deptCode}")]
+        public HttpResponseMessage removeRep(SetRepVM setRepvm)
         {
-            DepartmentVM department = BusinessLogic.DepartmentBL.removeRep(deptCode, fromEmpId);
-
-            if (department == null)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                BusinessLogic.DepartmentBL.removeRep(setRepvm.DeptCode, setRepvm.FromEmpId);
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, department);
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
         }
 
         //setCollPt(string deptCode, int collPt)
-        [System.Web.Http.AcceptVerbs("POST")]
-        [System.Web.Http.HttpPost]
-        [Route("api/Department/{deptCode}/removeRep")]
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Department/setCollPt/{deptCode}/{collPt}")]
         public HttpResponseMessage setCollPt(string deptCode, int collPt)
         {
             DepartmentVM department = BusinessLogic.DepartmentBL.setCollPt(deptCode, collPt);
@@ -87,9 +98,8 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //GetCollPtList
-        //tested
-        [System.Web.Http.AcceptVerbs("GET")]
-        [System.Web.Http.HttpGet]
+        [AcceptVerbs("GET")]
+        [HttpGet]
         [Route("api/Department/GetCollectionPoint")]
         public HttpResponseMessage GetCollPtList()
         {
@@ -103,13 +113,11 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //GetCollPt
-        //tested
-        [System.Web.Http.AcceptVerbs("GET")]
-        [System.Web.Http.HttpGet]
+        [AcceptVerbs("GET")]
+        [HttpGet]
         [Route("api/Department/{deptCode}")]
         public HttpResponseMessage GetCollPt(string deptCode)
         {
-
             string colPt = BusinessLogic.DepartmentBL.GetCollPt(deptCode);
 
             if (colPt == null)
@@ -120,9 +128,8 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //List<string> GetDeptCodes()
-        //tested
-        [System.Web.Http.AcceptVerbs("GET")]
-        [System.Web.Http.HttpGet]
+        [AcceptVerbs("GET")]
+        [HttpGet]
         [Route("api/Department/GetDeptCodes")]
         public HttpResponseMessage GetDeptCodes()
         {
