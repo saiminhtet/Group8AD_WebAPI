@@ -12,22 +12,24 @@ namespace Group8AD_WebAPI.BusinessLogic
         // dummy code
 
         // add an adjustment
-        public static AdjustmentVM AddAdj(AdjustmentVM a)
+        public static AdjustmentVM AddAdj(Adjustment adj)
         {
             AdjustmentVM adjustment = new AdjustmentVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                adjustment = entities.Adjustments.Where(c => c.VoucherNo == a.VoucherNo).Select(c => new AdjustmentVM()
+                entities.Adjustments.Add(adj);
+                entities.SaveChanges();
+                adjustment = entities.Adjustments.Where(a => a.VoucherNo == adj.VoucherNo).Select(a => new AdjustmentVM()
                 {
-                    VoucherNo = c.VoucherNo,
-                    EmpId = c.EmpId,
-                    DateTimeIssued = c.DateTimeIssued,
-                    ItemCode = c.ItemCode,
-                    Reason = c.Reason,
-                    QtyChange = c.QtyChange,
-                    Status = c.Status,
-                    //ApproverId = c.ApproverId,
-                    ApproverComment = c.ApproverComment
+                    VoucherNo = a.VoucherNo,
+                    EmpId = a.EmpId,
+                    DateTimeIssued = a.DateTimeIssued,
+                    ItemCode = a.ItemCode,
+                    Reason = a.Reason,
+                    QtyChange = a.QtyChange,
+                    Status = a.Status,
+                    //ApproverId = a.ApproverId,
+                    ApproverComment = a.ApproverComment
                 }).First<AdjustmentVM>();
             }
             return adjustment;
@@ -136,6 +138,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             // SaveChanges()
             // Send Notification to Clerk
             // Send Email to Clerk
+            return;
         }
 
         // accept adjustment request
@@ -149,6 +152,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             // Add Transaction for each Adjustment
             // Send Notification to Clerk
             // Send Email to Clerk
+            return;
         }
     }
 }

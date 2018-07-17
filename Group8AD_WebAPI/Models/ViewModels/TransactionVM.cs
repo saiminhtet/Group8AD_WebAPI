@@ -15,5 +15,9 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public string Desc { get; set; }
         public string DeptCode { get; set; }
         public string SuppCode { get; set; }
+        public string VoucherNo { get; set; }
+
+        public double Chargeback { get; set; }
+        public double Balance { get; set; }
     }
 }
