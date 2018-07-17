@@ -152,7 +152,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
+                Request request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
                 if (request != null)
                 {
                     entities.Requests.Remove(request);

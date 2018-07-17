@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Group8AD_WebAPI.BusinessLogic;
+using Group8AD_WebAPI.Models;
+using Group8AD_WebAPI.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,10 +12,87 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class TransactionController : ApiController
     {
-        [AcceptVerbs("POST")]
-        [HttpGet]
-        [Route("api/Transaction/")]
+        [Route("api/Transaction/add")]
+        public HttpResponseMessage AddTransaction(Transaction t)
+        {
+            TransactionVM transaction = TransactionBL.AddTran(t);
+            if (transaction == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, transaction);
+        }
 
+        [Route("api/Transaction/CBMonth")]
+        public HttpResponseMessage GetCBByMth(string deptCode, DateTime fromDate, DateTime toDate)
+        {
+            List<TransactionVM> translist = ReportItemBL.GetCBByMth(deptCode, fromDate, toDate);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
+        }
+
+        [Route("api/Transaction/CBRange")]
+        public HttpResponseMessage GetCBByRng(string deptCode, DateTime fromDate, DateTime toDate)
+        {
+            List<TransactionVM> translist = ReportItemBL.GetCBByRng(deptCode, fromDate, toDate);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
+        }
+
+        [Route("api/Transaction/{itemCode}")]
+        public HttpResponseMessage GetLastTenTrans(string itemCode)
+        {
+            List<TransactionVM> translist = ReportItemBL.GetLastTenTrans(itemCode);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
+        }
+
+        [Route("api/Transaction/CBAnnual")]
+        public HttpResponseMessage GetCBAnnual(DateTime toDate)
+        {
+            List<TransactionVM> translist = ReportItemBL.GetCBAnnual(toDate);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
+        }
+
+        [Route("api/Transaction/VolAnnual")]
+        public HttpResponseMessage GetVolAnnual(DateTime toDate)
+        {
+            List<TransactionVM> translist = ReportItemBL.GetVolAnnual(toDate);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
+        }
+
+        [Route("api/Transaction/costReport")]
+        public HttpResponseMessage ShowCostReport(string dept1, string dept2, string supp1, string supp2,
+            string cat, string type, List<DateTime> dates, bool byMonth)
+        {
+            ReportItemBL.ShowCostReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [Route("api/Transaction/columeReport")]
+        public HttpResponseMessage ShowVolumeReport(string dept1, string dept2, string supp1, string supp2,
+            string cat, string type, List<DateTime> dates, bool byMonth)
+        {
+            ReportItemBL.ShowVolumeReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
 
         // GET api/<controller>
         public IEnumerable<string> Get()
