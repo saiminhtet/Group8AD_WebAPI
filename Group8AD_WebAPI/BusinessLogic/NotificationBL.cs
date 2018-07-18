@@ -9,26 +9,20 @@ namespace Group8AD_WebAPI.BusinessLogic
 {
     public static class NotificationBL
     {
-        //add Newreqnotification with empId and currReq
-        public static NotificationVM AddNewReqNotification(int empId, int currReq)//what is currReq 
+        //add new reqNoti
+        public static void AddNewReqNotification(int empId, Request currReq)
         {
-            NotificationVM reqNoti = new NotificationVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                reqNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId && n.NotificationId == currReq).Select(n => new NotificationVM()
+                var newReqNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId).FirstOrDefault();
+                if (newReqNoti != null)
                 {
-                    NotificationId = n.NotificationId,
-                    NotificationDateTime = n.NotificationDateTime,
-                    FromEmp = n.FromEmp,
-                    ToEmp = n.ToEmp,
-                    Type = n.Type,
-                    RouteUri = n.RouteUri,
-                    Content = n.Content,
-                    IsRead = n.IsRead
-            }).First<NotificationVM>();
-                entities.SaveChanges();
+                    newReqNoti.Employee.EmpId = empId;
+                    Request request = currReq;
+                    entities.Notifications.Add(newReqNoti);
+                    entities.SaveChanges();
+                }
             }
-            return reqNoti;
         }
 
         //get Notifiction list 
@@ -141,19 +135,23 @@ namespace Group8AD_WebAPI.BusinessLogic
             return notiSupervisor;
         }
         //AddAcptNotification with repId
-        public static void AdjApprNotification(int fromEmpId , int toEmpId, Notification n)
+        public static void AdjApprNotification(int fromEmpId , int toEmpId, NotificationVM n)
         {
+            NotificationVM adjApprNoti = new NotificationVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var adjApprNoti = entities.Notifications.FirstOrDefault();
-                if (adjApprNoti != null)
+                adjApprNoti = entities.Notifications.Select(r => new NotificationVM()
                 {
-                    adjApprNoti.FromEmp = fromEmpId;
-                    adjApprNoti.ToEmp = toEmpId;
-                    Notification notification = n;
-                    entities.Notifications.Add(adjApprNoti);
-                    entities.SaveChanges();
-                }
+                    FromEmp = fromEmpId,
+                    ToEmp = toEmpId,
+                    NotificationId = n.NotificationId,
+                    NotificationDateTime = n.NotificationDateTime,
+                    RouteUri = n.RouteUri,
+                    Type = n.Type,
+                    Content = n.Content,
+                    IsRead = n.IsRead
+
+                }).First<NotificationVM>();
             }
         }
     }
