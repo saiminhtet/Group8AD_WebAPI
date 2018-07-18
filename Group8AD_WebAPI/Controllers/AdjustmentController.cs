@@ -17,7 +17,7 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/add")]
-        public HttpResponseMessage AddAdjustment(Adjustment adj)
+        public HttpResponseMessage AddAdjustment(AdjustmentVM adj)
         {
             AdjustmentVM adjustment = AdjustmentBL.AddAdj(adj);
             if (adjustment == null)
@@ -27,10 +27,10 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjustment);
         }
 
-        // unable to test because "voucherNo" contain "/" character
-        [AcceptVerbs("GET")]
-        [HttpGet]
-        [Route("api/Adjustment/getAdjustment/{voucherNo}")]
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Adjustment/getAdjustment")]
         public HttpResponseMessage GetAdjustment(string voucherNo)
         {
             AdjustmentVM adjustment = AdjustmentBL.GetAdj(voucherNo);
@@ -75,8 +75,15 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Adjustment/accept")]
         public HttpResponseMessage AcceptRequest(string voucherNo, int empId, string cmt)
         {
-            AdjustmentBL.AcceptRequest(voucherNo, empId, cmt);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                AdjustmentBL.AcceptRequest(voucherNo, empId, cmt);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         // tested, dummy
@@ -85,8 +92,15 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Adjustment/reject")]
         public HttpResponseMessage RejectRequest(string voucherNo, int empId, string cmt)
         {
-            AdjustmentBL.RejectRequest(voucherNo, empId, cmt);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                AdjustmentBL.RejectRequest(voucherNo, empId, cmt);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
 

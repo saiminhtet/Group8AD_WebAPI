@@ -103,8 +103,15 @@ namespace Group8AD_WebAPI.Controllers
         public HttpResponseMessage ShowCostReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
-            ReportItemBL.ShowCostReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                ReportItemBL.ShowCostReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         // tested, dummy
@@ -114,8 +121,15 @@ namespace Group8AD_WebAPI.Controllers
         public HttpResponseMessage ShowVolumeReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
-            ReportItemBL.ShowVolumeReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                ReportItemBL.ShowVolumeReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         // GET api/<controller>
