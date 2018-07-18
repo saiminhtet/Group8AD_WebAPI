@@ -12,30 +12,47 @@ namespace Group8AD_WebAPI.BusinessLogic
         // dummy code
 
         // add an adjustment
-        public static AdjustmentVM AddAdj(Adjustment adj)
+        // not dummy, revise
+        public static AdjustmentVM AddAdj(AdjustmentVM adj)
         {
-            AdjustmentVM adjustment = new AdjustmentVM();
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                entities.Adjustments.Add(adj);
-                entities.SaveChanges();
-                adjustment = entities.Adjustments.Where(a => a.VoucherNo == adj.VoucherNo).Select(a => new AdjustmentVM()
-                {
-                    VoucherNo = a.VoucherNo,
-                    EmpId = a.EmpId,
-                    DateTimeIssued = a.DateTimeIssued,
-                    ItemCode = a.ItemCode,
-                    Reason = a.Reason,
-                    QtyChange = a.QtyChange,
-                    Status = a.Status,
-                    //ApproverId = a.ApproverId,
-                    ApproverComment = a.ApproverComment
-                }).First<AdjustmentVM>();
-            }
-            return adjustment;
+            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            //{
+            //    entities.Adjustments.Add(adj);
+            //    entities.SaveChanges();
+            //    AdjustmentVM adjustment = new AdjustmentVM()
+            //    {
+            //        VoucherNo = adj.VoucherNo,
+            //        EmpId = adj.EmpId,
+            //        DateTimeIssued = adj.DateTimeIssued,
+            //        ItemCode = adj.ItemCode,
+            //        Reason = adj.Reason,
+            //        QtyChange = adj.QtyChange,
+            //        Status = adj.Status,
+            //        //ApproverId = adj.ApproverId,
+            //        ApproverComment = adj.ApproverComment
+            //    };
+            //    return adjustment;
+            //}
+
+            //AdjustmentVM adjustment = new AdjustmentVM()
+            //{
+            //    VoucherNo = adj.VoucherNo,
+            //    EmpId = adj.EmpId,
+            //    DateTimeIssued = adj.DateTimeIssued,
+            //    ItemCode = adj.ItemCode,
+            //    Reason = adj.Reason,
+            //    QtyChange = adj.QtyChange,
+            //    Status = adj.Status,
+            //    //ApproverId = adj.ApproverId,
+            //    ApproverComment = adj.ApproverComment
+            //};
+            //return adjustment;
+
+            return adj;
         }
 
         // get an adjustment by voucher number
+        // not dummy
         public static AdjustmentVM GetAdj(string voucherNo)
         {
             AdjustmentVM adjustment = new AdjustmentVM();
@@ -58,6 +75,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get a list of adjustment by status
+        // not dummy
         public static List<AdjustmentVM> GetAdjList(string status)
         {
             List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
@@ -81,7 +99,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // raise adjustment
-
+        // dummy
         public static List<AdjustmentVM> RaiseAdjustments(int empId, List<AdjustmentVM> iList)
         {
             List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
@@ -129,6 +147,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // reject adjustment request
+        // dummy
         public static void RejectRequest(string voucherNo, int empId, string cmt)
         {
             // Call GetAdj(voucherNo)
@@ -142,6 +161,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // accept adjustment request
+        // dummy
         public static void AcceptRequest(string voucherNo, int empId, string cmt)
         {
             // Call GetAdj(empId)

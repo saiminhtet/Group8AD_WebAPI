@@ -16,16 +16,16 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                supplists = entities.Suppliers.Select(s => new SupplierVM()
-                {
-                    SuppCode = s.SuppCode,
-                    SuppName = s.SuppName,
-                    SuppCtcName = s.SuppCtcName,
-                    SuppCtcNo = s.SuppCtcNo,
-                    SuppFaxNo = s.SuppFaxNo,
-                    SuppAddr = s.SuppAddr,
-                    Items = s.Items
-                }).ToList<SupplierVM>();
+                supplists = (from a in entities.Suppliers
+                            from b in entities.Items.Where(b => b.ItemCode == itemCode && a.SuppCode == b.SuppCode1 
+                            || b.ItemCode == itemCode && a.SuppCode == b.SuppCode2 
+                            || b.ItemCode == itemCode && a.SuppCode == b.SuppCode3)
+                            select new SupplierVM
+                            {
+                                SuppCode = a.SuppCode,
+                                SuppName = a.SuppName
+                            }).ToList<SupplierVM>();
+
             }
             return supplists;
         }

@@ -12,7 +12,10 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class TransactionController : ApiController
     {
-        [Route("api/Transaction/add/{t}")]
+        // difficult to pass in Transaction object to test
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Transaction/add")]
         public HttpResponseMessage AddTransaction(Transaction t)
         {
             TransactionVM transaction = TransactionBL.AddTran(t);
@@ -23,8 +26,11 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, transaction);
         }
 
-        [Route("api/Transaction/CBMonth/{deptCode}/{fromDate}/{toDate}")]
-        public HttpResponseMessage GetCBByMth(string deptCode, DateTime fromDate, DateTime toDate)
+        // tested, dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Transaction/CBMonth")]
+        public HttpResponseMessage CBByMth(string deptCode, DateTime fromDate, DateTime toDate)
         {
             List<TransactionVM> translist = ReportItemBL.GetCBByMth(deptCode, fromDate, toDate);
             if (translist == null)
@@ -34,8 +40,11 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        [Route("api/Transaction/CBRange/{deptCode}/{fromDate}/{toDate}")]
-        public HttpResponseMessage GetCBByRng(string deptCode, DateTime fromDate, DateTime toDate)
+        // tested, dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Transaction/CBRange")]
+        public HttpResponseMessage CBByRng(string deptCode, DateTime fromDate, DateTime toDate)
         {
             List<TransactionVM> translist = ReportItemBL.GetCBByRng(deptCode, fromDate, toDate);
             if (translist == null)
@@ -45,6 +54,9 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
+        // tested, dummy
+        [AcceptVerbs("GET")]
+        [HttpGet]
         [Route("api/Transaction/itemCode/{itemCode}")]
         public HttpResponseMessage GetLastTenTrans(string itemCode)
         {
@@ -56,8 +68,11 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        [Route("api/Transaction/CBAnnual/{toDate}")]
-        public HttpResponseMessage GetCBAnnual(DateTime toDate)
+        // tested, dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Transaction/CBAnnual")]
+        public HttpResponseMessage CBAnnual(DateTime toDate)
         {
             List<TransactionVM> translist = ReportItemBL.GetCBAnnual(toDate);
             if (translist == null)
@@ -67,8 +82,11 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        [Route("api/Transaction/VolAnnual/{toDate}")]
-        public HttpResponseMessage GetVolAnnual(DateTime toDate)
+        // tested, dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Transaction/VolAnnual")]
+        public HttpResponseMessage VolAnnual(DateTime toDate)
         {
             List<TransactionVM> translist = ReportItemBL.GetVolAnnual(toDate);
             if (translist == null)
@@ -78,20 +96,40 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        [Route("api/Transaction/costReport/{dept1}/{dept2}/{supp1}/{supp2}/{cat}/{type}/{dates}/{byMonth}")]
+        // tested, dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Transaction/costReport")]
         public HttpResponseMessage ShowCostReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
-            ReportItemBL.ShowCostReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                ReportItemBL.ShowCostReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
-        [Route("api/Transaction/columeReport/{dept1}/{dept2}/{supp1}/{supp2}/{cat}/{type}/{dates}/{byMonth}")]
+        // tested, dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Transaction/volumeReport")]
         public HttpResponseMessage ShowVolumeReport(string dept1, string dept2, string supp1, string supp2,
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
-            ReportItemBL.ShowVolumeReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                ReportItemBL.ShowVolumeReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         // GET api/<controller>

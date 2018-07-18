@@ -12,9 +12,10 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class RequestController : ApiController
     {
+        // tested
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Request/empid/{empId}/{status}")]
+        [Route("api/Request/getEmployeeRequests/{empId}/{status}")]
         public HttpResponseMessage GetRequestByIdStatus(int empId, string status)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(empId, status);
@@ -25,9 +26,23 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, reqlist);
         }
 
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/getRequests")]
+        public HttpResponseMessage GetRequestByDateRange(int empId, string status, DateTime fromDate, DateTime toDate)
+        {
+            List<RequestVM> reqlist = RequestBL.GetReq(empId, status, fromDate, toDate);
+            if (reqlist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, reqlist);
+        }
+
+        // tested
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Request/status/{status}")]
+        [Route("api/Request/getRequests/{status}")]
         public HttpResponseMessage GetRequestByStatus(string status)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(status);
@@ -38,9 +53,10 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, reqlist);
         }
 
+        // tested
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Request/deptcode/{deptCode}/{status}")]
+        [Route("api/Request/getDepartmentRequests/{deptCode}/{status}")]
         public HttpResponseMessage GetRequestByDeptCodeStatus(string deptCode, string status)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(deptCode, status);
@@ -51,9 +67,10 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, reqlist);
         }
 
+        // tested
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Request/reqid/{reqId}")]
+        [Route("api/Request/getRequest/{reqId}")]
         public HttpResponseMessage GetRequestByReqId(int reqId)
         {
             RequestVM request = RequestBL.GetReq(reqId);
@@ -64,7 +81,10 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/add/{empId}/{status}")]
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/add")]
         public HttpResponseMessage AddRequest(int empId, string status)
         {
             RequestVM request = RequestBL.AddReq(empId, status);
@@ -75,21 +95,44 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/remove/{empId}/{status}")]
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/removeRequest/{empId}/{status}")]
         public HttpResponseMessage DeleteRequestByEmpIdStatus(int empId, string status)
         {
-            RequestBL.RemoveReq(empId, status);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                RequestBL.RemoveReq(empId, status);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
-        [Route("api/Request/remove/{reqId}")]
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/removeRequest/{reqId}")]
         public HttpResponseMessage DeleteRequestByReqId(int reqId)
         {
-            RequestBL.RemoveReq(reqId);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                RequestBL.RemoveReq(reqId);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
-        [Route("api/Request/submit/{empId}/{reqDetList}/{status}")]
+        // tested, dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/submit")]
         public HttpResponseMessage SubmitRequest(int empId, List<RequestDetailVM> reqDetList, string status)
         {
             RequestVM request = RequestBL.SubmitReq(empId, reqDetList, status);
@@ -100,10 +143,13 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/update/{req}")]
+        // tested, not dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/update")]
         public HttpResponseMessage UpdateRequest(Request req)
         {
-            RequestVM request = RequestBL.UpdateReq(req);
+            Request request = RequestBL.UpdateReq(req);
             if (request == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
@@ -111,25 +157,55 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        [Route("api/Request/accept/{reqId}/{empId}/{cmt}")]
+        // tested, dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/accept")]
         public HttpResponseMessage AcceptRequest(int reqId, int empId, string cmt)
         {
-            RequestBL.AcceptRequest(reqId, empId, cmt);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                RequestBL.AcceptRequest(reqId, empId, cmt);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
-        [Route("api/Request/reject/{reqId}/{empId}/{cmt}")]
+        // tested, dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/reject")]
         public HttpResponseMessage RejectRequest(int reqId, int empId, string cmt)
         {
-            RequestBL.RejectRequest(reqId, empId, cmt);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                RequestBL.RejectRequest(reqId, empId, cmt);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
+        // tested, dummy
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Request/updatefulfilled")]
         public HttpResponseMessage UpdateFulfilledStatus()
         {
-            RequestBL.UpdateFulfilledRequestStatus();
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                RequestBL.UpdateFulfilledRequestStatus();
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         //Returns request object belonging to the given request id
