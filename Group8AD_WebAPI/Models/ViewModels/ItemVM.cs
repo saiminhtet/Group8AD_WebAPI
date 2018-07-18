@@ -24,5 +24,8 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public Nullable<double> Price2 { get; set; }
         public string SuppCode3 { get; set; }
         public Nullable<double> Price3 { get; set; }
+
+        public int TempQtyAcpt { get; set; }
+        public int TempQtyReq { get; set; }
     }
 }
