@@ -12,10 +12,10 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public Nullable<int> ApproverId { get; set; }
         public string ApproverComment { get; set; }
 
-        public Nullable<System.DateTime> ReqDateTime { get; set; }
-        public Nullable<System.DateTime> ApprovedDateTime { get; set; }
-        public Nullable<System.DateTime> CancelledDateTime { get; set; }
-        public Nullable<System.DateTime> FulfilledDateTime { get; set; }
+        public DateTime ReqDateTime { get; set; }
+        public DateTime ApprovedDateTime { get; set; }
+        public DateTime CancelledDateTime { get; set; }
+        public DateTime FulfilledDateTime { get; set; }
 
         public string Status { get; set; }
     }
