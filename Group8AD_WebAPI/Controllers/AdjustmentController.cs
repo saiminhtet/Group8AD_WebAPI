@@ -30,7 +30,7 @@ namespace Group8AD_WebAPI.Controllers
         // tested
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Adjustment/getAdjustment")]
+        [Route("api/Adjustment/get")]
         public HttpResponseMessage GetAdjustment(string voucherNo)
         {
             AdjustmentVM adjustment = AdjustmentBL.GetAdj(voucherNo);
@@ -42,9 +42,9 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         // tested
-        [AcceptVerbs("GET")]
-        [HttpGet]
-        [Route("api/Adjustment/getAdjustments/{status}")]
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Adjustment/get")]
         public HttpResponseMessage GetAdjustmentList(string status)
         {
             List<AdjustmentVM> adjlist = AdjustmentBL.GetAdjList(status);

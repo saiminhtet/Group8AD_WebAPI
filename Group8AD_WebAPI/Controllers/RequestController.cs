@@ -13,9 +13,9 @@ namespace Group8AD_WebAPI.Controllers
     public class RequestController : ApiController
     {
         // tested
-        [AcceptVerbs("GET")]
-        [HttpGet]
-        [Route("api/Request/getEmployeeRequests/{empId}/{status}")]
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/get")]
         public HttpResponseMessage GetRequestByIdStatus(int empId, string status)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(empId, status);
@@ -26,9 +26,10 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, reqlist);
         }
 
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Request/getRequests")]
+        [Route("api/Request/get")]
         public HttpResponseMessage GetRequestByDateRange(int empId, string status, DateTime fromDate, DateTime toDate)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(empId, status, fromDate, toDate);
@@ -40,9 +41,9 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         // tested
-        [AcceptVerbs("GET")]
-        [HttpGet]
-        [Route("api/Request/getRequests/{status}")]
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/get")]
         public HttpResponseMessage GetRequestByStatus(string status)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(status);
@@ -54,9 +55,9 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         // tested
-        [AcceptVerbs("GET")]
-        [HttpGet]
-        [Route("api/Request/getDepartmentRequests/{deptCode}/{status}")]
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/get")]
         public HttpResponseMessage GetRequestByDeptCodeStatus(string deptCode, string status)
         {
             List<RequestVM> reqlist = RequestBL.GetReq(deptCode, status);
@@ -68,9 +69,9 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         // tested
-        [AcceptVerbs("GET")]
-        [HttpGet]
-        [Route("api/Request/getRequest/{reqId}")]
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/get")]
         public HttpResponseMessage GetRequestByReqId(int reqId)
         {
             RequestVM request = RequestBL.GetReq(reqId);
@@ -98,7 +99,7 @@ namespace Group8AD_WebAPI.Controllers
         // tested
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Request/removeRequest/{empId}/{status}")]
+        [Route("api/Request/remove")]
         public HttpResponseMessage DeleteRequestByEmpIdStatus(int empId, string status)
         {
             try
@@ -115,7 +116,7 @@ namespace Group8AD_WebAPI.Controllers
         // tested
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Request/removeRequest/{reqId}")]
+        [Route("api/Request/remove")]
         public HttpResponseMessage DeleteRequestByReqId(int reqId)
         {
             try
