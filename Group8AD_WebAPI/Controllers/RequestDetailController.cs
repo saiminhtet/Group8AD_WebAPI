@@ -146,8 +146,8 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //string GetDeptCode(RequestDetail reqDet)
-        [System.Web.Http.AcceptVerbs("GET")]
-        [System.Web.Http.HttpGet]
+        [AcceptVerbs("GET")]
+        [HttpGet]
         [Route("api/RequestDetail/GetDeptCode")]
         public HttpResponseMessage GetDeptCode(RequestDetail reqDet)
         {
