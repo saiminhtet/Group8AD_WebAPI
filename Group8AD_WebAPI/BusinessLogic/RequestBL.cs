@@ -111,6 +111,17 @@ namespace Group8AD_WebAPI.BusinessLogic
             return reqlist;
         }
 
+        // get request by empId, status, fromDate and toDate
+        //public static List<RequestVM> GetReq(int empId, string status, DateTime fromDate, DateTime toDate)
+        //{
+        //    List<RequestVM> reqlist = GetReq(empId, status);
+        //    List<RequestVM> list = new List<RequestVM>();
+        //    for (int i = 0; i < reqlist.Count; i++)
+        //    {
+
+        //    }
+        //}
+
         // get a list of request by status
         // hope can set all fileld not null in Request table
         // done
@@ -314,8 +325,6 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             return request;
         }
-
-
 
         // add request
         // done
