@@ -85,7 +85,7 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/GetItem/{itemcode}")]
         public HttpResponseMessage GetItem(string itemcode)
         {
-            ItemVM item= BusinessLogic.ItemBL.GetItem(itemcode);
+            ItemVM item = BusinessLogic.ItemBL.GetItem(itemcode);
 
             if (item == null)
             {
@@ -95,26 +95,59 @@ namespace Group8AD_WebAPI.Controllers
         }
 
 
-        //get low stock Item list
+        //Search Item by Cat or Desc
         [System.Web.Http.AcceptVerbs("Post")]
         [System.Web.Http.HttpPost]
-        [Route("api/Item/GetItems/")]
-        public HttpResponseMessage GetItems(string cat, string desc)
+        [Route("api/Item/SearchItem/")]
+        public HttpResponseMessage SearchItems(ItemSearchVM itemSearch)
         {
-            List<ItemVM> itemlists = BusinessLogic.ItemBL.GetItems(cat,desc);
+
+            List<ItemVM> itemlists = BusinessLogic.ItemBL.GetItems(itemSearch.Cat, itemSearch.Desc);
 
             if (itemlists == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                //return BadRequest("Not a valid model");
             }
             return Request.CreateResponse(HttpStatusCode.OK, itemlists);
+            //return Ok(itemlists);
         }
 
 
+        //get department Disb Item by EmpId
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Item/GetDeptDisbList/{empId}")]
+        public HttpResponseMessage GetDeptDisbList(int empId)
+        {
+            List<ItemVM> deptdislist = BusinessLogic.ItemBL.GetDeptDisbList(empId);
+
+            if (deptdislist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, deptdislist);
+        }
+
+
+        //get Retrieve Items
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Item/GetRetrieveItems")]
+        public HttpResponseMessage GetRetrieveItems()
+        {
+            List<ItemVM> retrieveitemlists = BusinessLogic.ItemBL.GetRetrieveItems();
+
+            if (retrieveitemlists == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, retrieveitemlists);
+        }
 
 
 
     }
 
-    
+
 }
