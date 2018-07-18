@@ -12,8 +12,8 @@ namespace Group8AD_WebAPI.Controllers
     public class DepartmentController : ApiController
     {
         //removeDelegate by deptCode
-        [System.Web.Http.AcceptVerbs("POST")]
-        [System.Web.Http.HttpPost]
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Department/removeDelegate/{deptCode}")]
         public HttpResponseMessage removeDelegate(string deptCode)
         {
@@ -78,7 +78,7 @@ namespace Group8AD_WebAPI.Controllers
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "error");
             }
         }
 
