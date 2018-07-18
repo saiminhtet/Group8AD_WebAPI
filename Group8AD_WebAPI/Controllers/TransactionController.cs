@@ -54,10 +54,10 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        // tested, dummy
-        [AcceptVerbs("GET")]
-        [HttpGet]
-        [Route("api/Transaction/itemCode/{itemCode}")]
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Transaction/getLastTen")]
         public HttpResponseMessage GetLastTenTrans(string itemCode)
         {
             List<TransactionVM> translist = ReportItemBL.GetLastTenTrans(itemCode);

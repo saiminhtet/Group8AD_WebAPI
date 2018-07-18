@@ -21,7 +21,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 translist = entities.Transactions.Select(t => new TransactionVM()
                 {
                     TranId = t.TranId,
-                    TransDateTime = t.TranDateTime,
+                    TranDateTime = t.TranDateTime,
                     ItemCode = t.ItemCode,
                     QtyChange = t.QtyChange,
                     //UnitPrice = t.UnitPrice,
@@ -42,7 +42,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 translist = entities.Transactions.Select(t => new TransactionVM()
                 {
                     TranId = t.TranId,
-                    TransDateTime = t.TranDateTime,
+                    TranDateTime = t.TranDateTime,
                     ItemCode = t.ItemCode,
                     QtyChange = t.QtyChange,
                     //UnitPrice = t.UnitPrice,
@@ -55,22 +55,50 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get last ten transactions by itemCode
+        // done
         public static List<TransactionVM> GetLastTenTrans(string itemCode)
         {
+            //List<TransactionVM> translist = new List<TransactionVM>();
+            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            //{
+            //    translist = entities.Transactions.Select(t => new TransactionVM()
+            //    {
+            //        TranId = t.TranId,
+            //        TransDateTime = t.TranDateTime,
+            //        ItemCode = t.ItemCode,
+            //        QtyChange = t.QtyChange,
+            //        //UnitPrice = t.UnitPrice,
+            //        Desc = t.Desc,
+            //        DeptCode = t.DeptCode,
+            //        SuppCode = t.SuppCode
+            //    }).ToList<TransactionVM>();
+            //}
+            //return translist;
             List<TransactionVM> translist = new List<TransactionVM>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                translist = entities.Transactions.Select(t => new TransactionVM()
+                List<Transaction> list = entities.Transactions.Where(t => t.ItemCode == itemCode).
+                    OrderByDescending(t => t.TranDateTime).ToList();
+                if (list != null)
                 {
-                    TranId = t.TranId,
-                    TransDateTime = t.TranDateTime,
-                    ItemCode = t.ItemCode,
-                    QtyChange = t.QtyChange,
-                    //UnitPrice = t.UnitPrice,
-                    Desc = t.Desc,
-                    DeptCode = t.DeptCode,
-                    SuppCode = t.SuppCode
-                }).ToList<TransactionVM>();
+                    for (int i = 0; i < 10 && i < list.Count; i++)
+                    {
+                        TransactionVM t = new TransactionVM();
+                        t.TranId = list[i].TranId;
+                        t.TranDateTime = list[i].TranDateTime;
+                        t.ItemCode = list[i].ItemCode;
+                        t.QtyChange = list[i].QtyChange;
+                        if (list[i].UnitPrice != null)
+                            t.UnitPrice = (double)list[i].UnitPrice;
+                        else
+                            t.UnitPrice = 0;
+                        t.Desc = list[i].Desc;
+                        t.DeptCode = list[i].DeptCode;
+                        t.SuppCode = list[i].SuppCode;
+                        t.VoucherNo = list[i].VoucherNo;
+                        translist.Add(t);
+                    }
+                }
             }
             return translist;
         }
@@ -84,7 +112,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 translist = entities.Transactions.Select(t => new TransactionVM()
                 {
                     TranId = t.TranId,
-                    TransDateTime = t.TranDateTime,
+                    TranDateTime = t.TranDateTime,
                     ItemCode = t.ItemCode,
                     QtyChange = t.QtyChange,
                     //UnitPrice = t.UnitPrice,
@@ -105,7 +133,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 translist = entities.Transactions.Select(t => new TransactionVM()
                 {
                     TranId = t.TranId,
-                    TransDateTime = t.TranDateTime,
+                    TranDateTime = t.TranDateTime,
                     ItemCode = t.ItemCode,
                     QtyChange = t.QtyChange,
                     //UnitPrice = t.UnitPrice,
