@@ -68,7 +68,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/add")]
@@ -82,7 +82,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/removeRequest/{empId}/{status}")]
@@ -99,7 +99,7 @@ namespace Group8AD_WebAPI.Controllers
             }
         }
 
-        // tested, referential integrity issue
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/removeRequest/{reqId}")]
@@ -130,13 +130,13 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        // tested, dummy
+        // tested, not dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/update")]
         public HttpResponseMessage UpdateRequest(Request req)
         {
-            RequestVM request = RequestBL.UpdateReq(req);
+            Request request = RequestBL.UpdateReq(req);
             if (request == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);

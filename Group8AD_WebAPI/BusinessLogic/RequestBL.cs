@@ -16,7 +16,9 @@ namespace Group8AD_WebAPI.BusinessLogic
         // done
         public static List<RequestVM> GetReq(int empId, string status)
         {
-            List<RequestVM> reqlist = new List<RequestVM>();
+            // need to check employee role first
+            // all: except bookmarked, unsubmitted
+
             //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             //{
             //    reqlist = entities.Requests.Where(r => r.EmpId == empId && r.Status == status).Select(r => new RequestVM()
@@ -33,31 +35,78 @@ namespace Group8AD_WebAPI.BusinessLogic
             //    }).ToList<RequestVM>();
             //}
             //return reqlist;
+            List<RequestVM> reqlist = new List<RequestVM>();
             List<Request> lst = new List<Request>();
+            Employee employee = new Employee();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                lst = entities.Requests.Where(r => r.EmpId == empId && r.Status == status).ToList();
+                employee = entities.Employees.Where(e => e.EmpId == empId).FirstOrDefault();
             }
-            for (int i = 0; i < lst.Count; i++)
+            string role = employee.Role;
+            string deptCode = employee.DeptCode;
+            if (role == "Department Head" || role == "Delegate")
             {
-                RequestVM req = new RequestVM();
-                req.ReqId = lst[i].ReqId;
-                req.EmpId = lst[i].EmpId;
-                if (lst[i].ApproverId != null)
-                    req.ApproverId = (int) lst[i].ApproverId;
+                reqlist = GetReq(deptCode, status);
+            }
+            else
+            {
+                if (status == "All")
+                {
+                    using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+                    {
+                        lst = entities.Requests.Where(r => r.EmpId == empId && (r.Status == "Submitted" ||
+                        r.Status == "Approved" || r.Status == "Rejected" || r.Status == "Cancelled" || r.Status == "Fulfilled")).ToList();
+                    }
+                    for (int i = 0; i < lst.Count; i++)
+                    {
+                        RequestVM req = new RequestVM();
+                        req.ReqId = lst[i].ReqId;
+                        req.EmpId = lst[i].EmpId;
+                        if (lst[i].ApproverId != null)
+                            req.ApproverId = (int)lst[i].ApproverId;
+                        else
+                            req.ApproverId = 0;
+                        req.ApproverComment = lst[i].ApproverComment;
+                        if (lst[i].ReqDateTime != null)
+                            req.ReqDateTime = (DateTime)lst[i].ReqDateTime;
+                        if (lst[i].ApprovedDateTime != null)
+                            req.ApprovedDateTime = (DateTime)lst[i].ApprovedDateTime;
+                        if (lst[i].CancelledDateTime != null)
+                            req.CancelledDateTime = (DateTime)lst[i].CancelledDateTime;
+                        if (lst[i].FulfilledDateTime != null)
+                            req.FulfilledDateTime = (DateTime)lst[i].FulfilledDateTime;
+                        req.Status = lst[i].Status;
+                        reqlist.Add(req);
+                    }
+                }
                 else
-                    req.ApproverId = 0;
-                req.ApproverComment = lst[i].ApproverComment;
-                if (lst[i].ReqDateTime != null)
-                    req.ReqDateTime = (DateTime) lst[i].ReqDateTime;
-                if (lst[i].ApprovedDateTime != null)
-                    req.ApprovedDateTime = (DateTime) lst[i].ApprovedDateTime;
-                if (lst[i].CancelledDateTime != null)
-                    req.CancelledDateTime = (DateTime) lst[i].CancelledDateTime;
-                if (lst[i].FulfilledDateTime != null)
-                    req.FulfilledDateTime = (DateTime) lst[i].FulfilledDateTime;
-                req.Status = lst[i].Status;
-                reqlist.Add(req);
+                {
+                    using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+                    {
+                        lst = entities.Requests.Where(r => r.EmpId == empId && r.Status == status).ToList();
+                    }
+                    for (int i = 0; i < lst.Count; i++)
+                    {
+                        RequestVM req = new RequestVM();
+                        req.ReqId = lst[i].ReqId;
+                        req.EmpId = lst[i].EmpId;
+                        if (lst[i].ApproverId != null)
+                            req.ApproverId = (int)lst[i].ApproverId;
+                        else
+                            req.ApproverId = 0;
+                        req.ApproverComment = lst[i].ApproverComment;
+                        if (lst[i].ReqDateTime != null)
+                            req.ReqDateTime = (DateTime)lst[i].ReqDateTime;
+                        if (lst[i].ApprovedDateTime != null)
+                            req.ApprovedDateTime = (DateTime)lst[i].ApprovedDateTime;
+                        if (lst[i].CancelledDateTime != null)
+                            req.CancelledDateTime = (DateTime)lst[i].CancelledDateTime;
+                        if (lst[i].FulfilledDateTime != null)
+                            req.FulfilledDateTime = (DateTime)lst[i].FulfilledDateTime;
+                        req.Status = lst[i].Status;
+                        reqlist.Add(req);
+                    }
+                }
             }
             return reqlist;
         }
@@ -84,30 +133,62 @@ namespace Group8AD_WebAPI.BusinessLogic
             //    }).ToList<RequestVM>();
             //}
             List<Request> lst = new List<Request>();
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            if (status == "All")
             {
-                lst = entities.Requests.Where(r => r.Status == status).ToList();
+                using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+                {
+                    lst = entities.Requests.Where(r => r.Status == "Submitted" || r.Status == "Approved" ||
+                    r.Status == "Rejected" || r.Status == "Cancelled" || r.Status == "Fulfilled").ToList();
+                }
+                for (int i = 0; i < lst.Count; i++)
+                {
+                    RequestVM req = new RequestVM();
+                    req.ReqId = lst[i].ReqId;
+                    req.EmpId = lst[i].EmpId;
+                    if (lst[i].ApproverId != null)
+                        req.ApproverId = (int)lst[i].ApproverId;
+                    else
+                        req.ApproverId = 0;
+                    req.ApproverComment = lst[i].ApproverComment;
+                    if (lst[i].ReqDateTime != null)
+                        req.ReqDateTime = (DateTime)lst[i].ReqDateTime;
+                    if (lst[i].ApprovedDateTime != null)
+                        req.ApprovedDateTime = (DateTime)lst[i].ApprovedDateTime;
+                    if (lst[i].CancelledDateTime != null)
+                        req.CancelledDateTime = (DateTime)lst[i].CancelledDateTime;
+                    if (lst[i].FulfilledDateTime != null)
+                        req.FulfilledDateTime = (DateTime)lst[i].FulfilledDateTime;
+                    req.Status = lst[i].Status;
+                    reqlist.Add(req);
+                }
             }
-            for (int i = 0; i < lst.Count; i++)
+            else
             {
-                RequestVM req = new RequestVM();
-                req.ReqId = lst[i].ReqId;
-                req.EmpId = lst[i].EmpId;
-                if (lst[i].ApproverId != null)
-                    req.ApproverId = (int)lst[i].ApproverId;
-                else
-                    req.ApproverId = 0;
-                req.ApproverComment = lst[i].ApproverComment;
-                if (lst[i].ReqDateTime != null)
-                    req.ReqDateTime = (DateTime) lst[i].ReqDateTime;
-                if (lst[i].ApprovedDateTime != null)
-                    req.ApprovedDateTime = (DateTime) lst[i].ApprovedDateTime;
-                if (lst[i].CancelledDateTime != null)
-                    req.CancelledDateTime = (DateTime) lst[i].CancelledDateTime;
-                if (lst[i].FulfilledDateTime != null)
-                    req.FulfilledDateTime = (DateTime) lst[i].FulfilledDateTime;
-                req.Status = lst[i].Status;
-                reqlist.Add(req);
+                using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+                {
+                    lst = entities.Requests.Where(r => r.Status == status).ToList();
+                }
+                for (int i = 0; i < lst.Count; i++)
+                {
+                    RequestVM req = new RequestVM();
+                    req.ReqId = lst[i].ReqId;
+                    req.EmpId = lst[i].EmpId;
+                    if (lst[i].ApproverId != null)
+                        req.ApproverId = (int)lst[i].ApproverId;
+                    else
+                        req.ApproverId = 0;
+                    req.ApproverComment = lst[i].ApproverComment;
+                    if (lst[i].ReqDateTime != null)
+                        req.ReqDateTime = (DateTime)lst[i].ReqDateTime;
+                    if (lst[i].ApprovedDateTime != null)
+                        req.ApprovedDateTime = (DateTime)lst[i].ApprovedDateTime;
+                    if (lst[i].CancelledDateTime != null)
+                        req.CancelledDateTime = (DateTime)lst[i].CancelledDateTime;
+                    if (lst[i].FulfilledDateTime != null)
+                        req.FulfilledDateTime = (DateTime)lst[i].FulfilledDateTime;
+                    req.Status = lst[i].Status;
+                    reqlist.Add(req);
+                }
             }
             return reqlist;
         }
@@ -121,31 +202,67 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 List<Employee> emplist = entities.Employees.Where(e => e.DeptCode == deptCode).ToList();
-                List<Request> templist = entities.Requests.Where(r => r.Status == status).ToList();
-                for (int i = 0; i < templist.Count; i++)
+                List<Request> templist = new List<Request>();
+                if (status == "All")
                 {
-                    for (int j = 0; j < emplist.Count; j++)
+                    templist = entities.Requests.Where(r => r.Status == "Submitted" || r.Status == "Approved" ||
+                    r.Status == "Rejected" || r.Status == "Cancelled" || r.Status == "Fulfilled").ToList();
+                    for (int i = 0; i < templist.Count; i++)
                     {
-                        if (templist[i].EmpId == emplist[j].EmpId)
+                        for (int j = 0; j < emplist.Count; j++)
                         {
-                            RequestVM req = new RequestVM();
-                            req.ReqId = templist[i].ReqId;
-                            req.EmpId = templist[i].EmpId;
-                            if (templist[i].ApproverId != null)
-                                req.ApproverId = (int) templist[i].ApproverId;
-                            else
-                                req.ApproverId = 0;
-                            req.ApproverComment = templist[i].ApproverComment;
-                            if (templist[i].ReqDateTime != null)
-                                req.ReqDateTime = (DateTime) templist[i].ReqDateTime;
-                            if (templist[i].ApprovedDateTime != null)
-                                req.ApprovedDateTime = (DateTime) templist[i].ApprovedDateTime;
-                            if (templist[i].CancelledDateTime != null)
-                                req.CancelledDateTime = (DateTime) templist[i].CancelledDateTime;
-                            if (templist[i].FulfilledDateTime != null)
-                                req.FulfilledDateTime = (DateTime) templist[i].FulfilledDateTime;
-                            req.Status = templist[i].Status;
-                            reqlist.Add(req);
+                            if (templist[i].EmpId == emplist[j].EmpId)
+                            {
+                                RequestVM req = new RequestVM();
+                                req.ReqId = templist[i].ReqId;
+                                req.EmpId = templist[i].EmpId;
+                                if (templist[i].ApproverId != null)
+                                    req.ApproverId = (int)templist[i].ApproverId;
+                                else
+                                    req.ApproverId = 0;
+                                req.ApproverComment = templist[i].ApproverComment;
+                                if (templist[i].ReqDateTime != null)
+                                    req.ReqDateTime = (DateTime)templist[i].ReqDateTime;
+                                if (templist[i].ApprovedDateTime != null)
+                                    req.ApprovedDateTime = (DateTime)templist[i].ApprovedDateTime;
+                                if (templist[i].CancelledDateTime != null)
+                                    req.CancelledDateTime = (DateTime)templist[i].CancelledDateTime;
+                                if (templist[i].FulfilledDateTime != null)
+                                    req.FulfilledDateTime = (DateTime)templist[i].FulfilledDateTime;
+                                req.Status = templist[i].Status;
+                                reqlist.Add(req);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    templist = entities.Requests.Where(r => r.Status == status).ToList();
+                    for (int i = 0; i < templist.Count; i++)
+                    {
+                        for (int j = 0; j < emplist.Count; j++)
+                        {
+                            if (templist[i].EmpId == emplist[j].EmpId)
+                            {
+                                RequestVM req = new RequestVM();
+                                req.ReqId = templist[i].ReqId;
+                                req.EmpId = templist[i].EmpId;
+                                if (templist[i].ApproverId != null)
+                                    req.ApproverId = (int)templist[i].ApproverId;
+                                else
+                                    req.ApproverId = 0;
+                                req.ApproverComment = templist[i].ApproverComment;
+                                if (templist[i].ReqDateTime != null)
+                                    req.ReqDateTime = (DateTime)templist[i].ReqDateTime;
+                                if (templist[i].ApprovedDateTime != null)
+                                    req.ApprovedDateTime = (DateTime)templist[i].ApprovedDateTime;
+                                if (templist[i].CancelledDateTime != null)
+                                    req.CancelledDateTime = (DateTime)templist[i].CancelledDateTime;
+                                if (templist[i].FulfilledDateTime != null)
+                                    req.FulfilledDateTime = (DateTime)templist[i].FulfilledDateTime;
+                                req.Status = templist[i].Status;
+                                reqlist.Add(req);
+                            }
                         }
                     }
                 }
@@ -198,43 +315,52 @@ namespace Group8AD_WebAPI.BusinessLogic
             return request;
         }
 
-        // dummy
+
+
         // add request
+        // done
         public static RequestVM AddReq(int empId, string status)
         {
             RequestVM request = new RequestVM();
-            //Request req = new Request();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                //req.EmpId = empId;
-                //req.Status = status;
-                //entities.Requests.Add(req);
-                //entities.SaveChanges();
+                Request req = new Request();
+                req.EmpId = empId;
+                req.Status = status;
+                req.ApproverComment = "";
+                entities.Requests.Add(req);
+                entities.SaveChanges();
 
-                request = entities.Requests.Select(r => new RequestVM()
-                {
-                    ReqId = r.ReqId,
-                    EmpId = r.EmpId,
-                    //ApproverId = r.ApproverId,
-                    ApproverComment = r.ApproverComment,
-                    //ReqDateTime = r.ReqDateTime,
-                    //ApprovedDateTime = r.ApprovedDateTime,
-                    //CancelledDateTime = r.CancelledDateTime,
-                    //FulfilledDateTime = r.FulfilledDateTime,
-                    Status = r.Status
-                }).First<RequestVM>();
+                List<Request> lst = entities.Requests.ToList();
+                Request r = lst[lst.Count - 1];
+                request.ReqId = r.ReqId;
+                request.EmpId = r.EmpId;
+                if (r.ApproverId != null)
+                    request.ApproverId = (int)r.ApproverId;
+                else
+                    request.ApproverId = 0;
+                request.ApproverComment = r.ApproverComment;
+                if (r.ReqDateTime != null)
+                    request.ReqDateTime = (DateTime)r.ReqDateTime;
+                if (r.ApprovedDateTime != null)
+                    request.ApprovedDateTime = (DateTime)r.ApprovedDateTime;
+                if (r.CancelledDateTime != null)
+                    request.CancelledDateTime = (DateTime)r.CancelledDateTime;
+                if (r.FulfilledDateTime != null)
+                    request.FulfilledDateTime = (DateTime)r.FulfilledDateTime;
+                request.Status = r.Status;
             }
             return request;
         }
 
-        // dummy
         // remove request by empId and status
+        // done
         public static void RemoveReq(int empId, string status)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 List<Request> reqlist = entities.Requests.Where(r => r.EmpId == empId && r.Status == status).ToList();
-                if (!reqlist.Any())
+                if (reqlist.Count > 0)
                 {
                     for (int i = 0; i < reqlist.Count; i++)
                     {
@@ -246,8 +372,8 @@ namespace Group8AD_WebAPI.BusinessLogic
             return;
         }
 
-        // not dummy, referential integrity issue
         // remove request by reqId
+        // done
         public static void RemoveReq(int reqId)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -274,45 +400,13 @@ namespace Group8AD_WebAPI.BusinessLogic
             // Call UpdateReq(currReq) to persist at db
             // Return currReq object
 
-            RequestVM request = new RequestVM();
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                request = entities.Requests.Select(r => new RequestVM()
-                {
-                    ReqId = r.ReqId,
-                    EmpId = r.EmpId,
-                    //ApproverId = r.ApproverId,
-                    ApproverComment = r.ApproverComment,
-                    //ReqDateTime = r.ReqDateTime,
-                    //ApprovedDateTime = r.ApprovedDateTime,
-                    //CancelledDateTime = r.CancelledDateTime,
-                    //FulfilledDateTime = r.FulfilledDateTime,
-                    Status = r.Status
-                }).First<RequestVM>();
-            }
-            return request;
-        }
-
-        // dummy
-        // update request
-        public static RequestVM UpdateReq(Request req)
-        {
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            //List<RequestVM> reqlist = GetReq(empId, "Unsubmitted");
+            //for (int i = 0; i < reqlist.Count; i++)
             //{
-            //    var request = entities.Requests.Where(r => r.ReqId == req.ReqId).FirstOrDefault();
-            //    request.ReqId = req.ReqId;
-            //    request.EmpId = req.EmpId;
-            //    request.ApproverId = req.ApproverId;
-            //    request.ApproverComment = req.ApproverComment;
-            //    request.ReqDateTime = req.ReqDateTime;
-            //    request.ApprovedDateTime = req.ApprovedDateTime;
-            //    request.CancelledDateTime = req.CancelledDateTime;
-            //    request.FulfilledDateTime = req.FulfilledDateTime;
-            //    request.Status = req.Status;
-            //    entities.SaveChanges();
-            //    return request;
+
             //}
 
+            // dummy
             RequestVM request = new RequestVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -332,8 +426,63 @@ namespace Group8AD_WebAPI.BusinessLogic
             return request;
         }
 
-        // dummy
+        // update request
+        // not dummy, but unable to pass in Request object to test
+        public static Request UpdateReq(Request req)
+        {
+            RequestVM rvm = new RequestVM();
+            Request request = new Request();
+            if (req != null)
+            {
+                int reqId = req.ReqId;
+                using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+                {
+                    request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
+                    request.EmpId = req.EmpId;
+                    if (req.ApproverId != null)
+                        request.ApproverId = (int)req.ApproverId;
+                    else
+                        request.ApproverId = 0;
+                    request.ApproverComment = req.ApproverComment;
+                    if (req.ReqDateTime != null)
+                        request.ReqDateTime = req.ReqDateTime;
+                    if (req.ApprovedDateTime != null)
+                        request.ApprovedDateTime = req.ApprovedDateTime;
+                    if (req.CancelledDateTime != null)
+                        request.CancelledDateTime = req.CancelledDateTime;
+                    if (req.FulfilledDateTime != null)
+                        request.FulfilledDateTime = req.FulfilledDateTime;
+                    request.Status = req.Status;
+                    entities.SaveChanges();
+
+                    rvm.ReqId = request.ReqId;
+                    rvm.EmpId = request.EmpId;
+                    if (request.ApproverId != null)
+                        rvm.ApproverId = (int)request.ApproverId;
+                    else
+                        rvm.ApproverId = 0;
+                    rvm.ApproverComment = request.ApproverComment;
+                    if (request.ReqDateTime != null)
+                        rvm.ReqDateTime = (DateTime)request.ReqDateTime;
+                    if (request.ApprovedDateTime != null)
+                        rvm.ApprovedDateTime = (DateTime)request.ApprovedDateTime;
+                    if (request.CancelledDateTime != null)
+                        rvm.CancelledDateTime = (DateTime)request.CancelledDateTime;
+                    if (request.FulfilledDateTime != null)
+                        rvm.FulfilledDateTime = (DateTime)request.FulfilledDateTime;
+                    rvm.Status = request.Status;
+                }
+            }
+            else
+            {
+                rvm.ReqId = 1;
+                request.ReqId = 1;
+            }
+            return request;
+        }
+
         // accept request
+        // not dummy, not tested, will test after GetReq()
         public static void AcceptRequest(int reqId, int empId, string cmt)
         {
             // This is only to explain code steps at Web Api service
@@ -342,11 +491,28 @@ namespace Group8AD_WebAPI.BusinessLogic
             // Add ApproverComment as cmt
             // Add ApprovalDateTime as DateTime.Now()
             // Update Status as “Approved”
+
+            List<RequestVM> reqlist = GetReq(empId, "Unsubmitted");
+            for (int i = 0; i < reqlist.Count; i++)
+            {
+                if (reqlist[i].ReqId == reqId)
+                {
+                    using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+                    {
+                        Request req = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
+                        req.ApproverId = empId;
+                        req.ApproverComment = cmt;
+                        req.ApprovedDateTime = DateTime.Now;
+                        req.Status = "Approved";
+                        entities.SaveChanges();
+                    }
+                }
+            }
             return;
         }
 
-        // dummy
         // reject request
+        // not dummy, not tested, will test after GetReq()
         public static void RejectRequest(int reqId, int empId,string cmt)
         {
             // This is only to explain code steps at Web Api service
@@ -355,6 +521,23 @@ namespace Group8AD_WebAPI.BusinessLogic
             // Add ApproverComment as cmt
             // Add ApprovalDateTime as DateTime.Now()
             // Update Status as “Rejected”
+
+            List<RequestVM> reqlist = GetReq(empId, "Unsubmitted");
+            for (int i = 0; i < reqlist.Count; i++)
+            {
+                if (reqlist[i].ReqId == reqId)
+                {
+                    using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+                    {
+                        Request req = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
+                        req.ApproverId = empId;
+                        req.ApproverComment = cmt;
+                        req.ApprovedDateTime = DateTime.Now;
+                        req.Status = "Rejected";
+                        entities.SaveChanges();
+                    }
+                }
+            }
             return;
         }
 
@@ -369,7 +552,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             //  openCount += shortQty;}
             // if (openCount == 0)
             //  r.Status = “Fulfilled”;
-            // Save Changes for this Request object 
+            // Save Changes for this Request object
             return;
         }
     }
