@@ -40,7 +40,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, reqlist);
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("GET")]
         [HttpGet]
         [Route("api/Request/getDepartmentRequests/{deptCode}/{status}")]
