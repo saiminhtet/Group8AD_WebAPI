@@ -26,6 +26,19 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, reqlist);
         }
 
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Request/getRequests")]
+        public HttpResponseMessage GetRequestByDateRange(int empId, string status, DateTime fromDate, DateTime toDate)
+        {
+            List<RequestVM> reqlist = RequestBL.GetReq(empId, status, fromDate, toDate);
+            if (reqlist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, reqlist);
+        }
+
         // tested
         [AcceptVerbs("GET")]
         [HttpGet]

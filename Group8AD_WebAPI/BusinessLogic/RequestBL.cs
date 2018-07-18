@@ -112,15 +112,20 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get request by empId, status, fromDate and toDate
-        //public static List<RequestVM> GetReq(int empId, string status, DateTime fromDate, DateTime toDate)
-        //{
-        //    List<RequestVM> reqlist = GetReq(empId, status);
-        //    List<RequestVM> list = new List<RequestVM>();
-        //    for (int i = 0; i < reqlist.Count; i++)
-        //    {
-
-        //    }
-        //}
+        public static List<RequestVM> GetReq(int empId, string status, DateTime fromDate, DateTime toDate)
+        {
+            List<RequestVM> reqlist = GetReq(empId, status);
+            List<RequestVM> list = new List<RequestVM>();
+            for (int i = 0; i < reqlist.Count; i++)
+            {
+                DateTime reqDate = reqlist[i].ReqDateTime;
+                int result1 = DateTime.Compare(reqDate, fromDate);
+                int result2 = DateTime.Compare(reqDate, toDate);
+                if (result1 >= 0 && result2 <= 0)
+                    list.Add(reqlist[i]);
+            }
+            return list;
+        }
 
         // get a list of request by status
         // hope can set all fileld not null in Request table
