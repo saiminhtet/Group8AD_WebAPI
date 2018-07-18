@@ -19,5 +19,6 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public int EmpId { get; set; }
         public int RepId { get; set; }
         public Notification notification { get; set; }
+        public Request Request { get; set; }
     }
 }
