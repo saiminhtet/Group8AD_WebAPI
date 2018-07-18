@@ -12,23 +12,25 @@ namespace Group8AD_WebAPI.Controllers
     public class NotificationController : ApiController
     {
         //addNewReqNotification
-        [System.Web.Http.AcceptVerbs("POST")]
-        [System.Web.Http.HttpPost]
-        [Route("api/Notification/{empId}/{currReq}/addNoti")]
-        public HttpResponseMessage AddNewReqNotification(int empId, int currReq)
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Notification/AddNewReqNotification")]
+        public HttpResponseMessage AddNewReqNotification(NotificationVM notiVM)
         {
-            NotificationVM noti = BusinessLogic.NotificationBL.AddNewReqNotification(empId, currReq);
-
-            if (noti == null)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                BusinessLogic.NotificationBL.AddNewReqNotification(notiVM.EmpId, notiVM.Request);
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, noti);
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
         }
 
         //List<NotificationVM> GetNotifications(int empId)
-        [System.Web.Http.AcceptVerbs("GET")]
-        [System.Web.Http.HttpGet]
+        [AcceptVerbs("GET")]
+        [HttpGet]
         [Route("api/Notifications/{empId}")]
         public HttpResponseMessage GetNotifications(int empId)
         {
@@ -93,8 +95,8 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //NotificationVM NotifyManager(Notification n)
-        [System.Web.Http.AcceptVerbs("GET")]
-        [System.Web.Http.HttpGet]
+        [AcceptVerbs("GET")]
+        [HttpGet]
         [Route("api/Notification/StoreManager")]
         public HttpResponseMessage NotifyManager(NotificationVM n)
         {
@@ -108,8 +110,8 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //NotificationVM NotifySupervisor(Notification n)
-        [System.Web.Http.AcceptVerbs("GET")]
-        [System.Web.Http.HttpGet]
+        [AcceptVerbs("GET")]
+        [HttpGet]
         [Route("api/Notification/Supervisor")]
         public HttpResponseMessage NotifySupervisor(NotificationVM n)
         {
@@ -117,7 +119,7 @@ namespace Group8AD_WebAPI.Controllers
 
             if (notification == null)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
             return Request.CreateResponse(HttpStatusCode.OK, notification);
         }
@@ -130,12 +132,12 @@ namespace Group8AD_WebAPI.Controllers
         {
             try
             {
-                BusinessLogic.NotificationBL.AdjApprNotification(notiVM.FromEmp,notiVM.ToEmp,notiVM.notification);
+                BusinessLogic.NotificationBL.AdjApprNotification(notiVM.FromEmp,notiVM.ToEmp,notiVM);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
             }
         }
     }
