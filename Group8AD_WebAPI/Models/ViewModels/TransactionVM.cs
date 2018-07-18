@@ -8,7 +8,7 @@ namespace Group8AD_WebAPI.Models.ViewModels
     public class TransactionVM
     {
         public int TranId { get; set; }
-        public DateTime TransDateTime { get; set; }
+        public DateTime TranDateTime { get; set; }
         public string ItemCode { get; set; }
         public int QtyChange { get; set; }
         public double UnitPrice { get; set; }

@@ -22,7 +22,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 entities.SaveChanges();
 
                 transaction.TranId = t.TranId;
-                transaction.TransDateTime = t.TranDateTime;
+                transaction.TranDateTime = t.TranDateTime;
                 transaction.ItemCode = t.ItemCode;
                 transaction.QtyChange = t.QtyChange;
                 //transaction.UnitPrice = t.UnitPrice;
