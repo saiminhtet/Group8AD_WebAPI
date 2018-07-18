@@ -52,50 +52,72 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get an adjustment by voucher number
-        // not dummy
+        // done
         public static AdjustmentVM GetAdj(string voucherNo)
         {
-            AdjustmentVM adjustment = new AdjustmentVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                adjustment = entities.Adjustments.Where(a => a.VoucherNo == voucherNo).Select(a => new AdjustmentVM()
-                {
-                    VoucherNo = a.VoucherNo,
-                    EmpId = a.EmpId,
-                    DateTimeIssued = a.DateTimeIssued,
-                    ItemCode = a.ItemCode,
-                    Reason = a.Reason,
-                    QtyChange = a.QtyChange,
-                    Status = a.Status,
-                    //ApproverId = a.ApproverId,
-                    ApproverComment = a.ApproverComment
-                }).First<AdjustmentVM>();
+                AdjustmentVM adj = new AdjustmentVM();
+                Adjustment adjustment = new Adjustment();
+                adjustment = entities.Adjustments.Where(a => a.VoucherNo == voucherNo).FirstOrDefault();
+                adj.VoucherNo = adjustment.VoucherNo;
+                adj.EmpId = adjustment.EmpId;
+                adj.DateTimeIssued = adjustment.DateTimeIssued;
+                adj.ItemCode = adjustment.ItemCode;
+                adj.Reason = adjustment.Reason;
+                adj.QtyChange = adjustment.QtyChange;
+                adj.Status = adjustment.Status;
+                if (adjustment.ApproverId != null)
+                    adj.ApproverId = (int)adjustment.ApproverId;
+                else
+                    adjustment.ApproverId = 0;
+                adj.ApproverComment = adjustment.ApproverComment;
+                return adj;
             }
-            return adjustment;
+            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            //{
+            //    adjustment = entities.Adjustments.Where(a => a.VoucherNo == voucherNo).Select(a => new AdjustmentVM()
+            //    {
+            //        VoucherNo = a.VoucherNo,
+            //        EmpId = a.EmpId,
+            //        DateTimeIssued = a.DateTimeIssued,
+            //        ItemCode = a.ItemCode,
+            //        Reason = a.Reason,
+            //        QtyChange = a.QtyChange,
+            //        Status = a.Status,
+            //        //ApproverId = a.ApproverId,
+            //        ApproverComment = a.ApproverComment
+            //    }).First<AdjustmentVM>();
+            //}
         }
 
         // get a list of adjustment by status
-        // not dummy
+        // done
         public static List<AdjustmentVM> GetAdjList(string status)
         {
-            List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
+            List<AdjustmentVM> list = new List<AdjustmentVM>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-
-                adjlist = entities.Adjustments.Where(a => a.Status == status).Select(a => new AdjustmentVM()
+                List<Adjustment> adjlist = entities.Adjustments.Where(a => a.Status == status).ToList();
+                for (int i = 0; i < adjlist.Count; i++)
                 {
-                    VoucherNo = a.VoucherNo,
-                    EmpId = a.EmpId,
-                    DateTimeIssued = a.DateTimeIssued,
-                    ItemCode = a.ItemCode,
-                    Reason = a.Reason,
-                    QtyChange = a.QtyChange,
-                    Status = a.Status,
-                    //ApproverId = a.ApproverId,
-                    ApproverComment = a.ApproverComment
-                }).ToList<AdjustmentVM>();
+                    AdjustmentVM adj = new AdjustmentVM();
+                    adj.VoucherNo = adjlist[i].VoucherNo;
+                    adj.EmpId = adjlist[i].EmpId;
+                    adj.DateTimeIssued = adjlist[i].DateTimeIssued;
+                    adj.ItemCode = adjlist[i].ItemCode;
+                    adj.Reason = adjlist[i].Reason;
+                    adj.QtyChange = adjlist[i].QtyChange;
+                    adj.Status = adjlist[i].Status;
+                    if (adjlist[i].ApproverId != null)
+                        adj.ApproverId = (int)adjlist[i].ApproverId;
+                    else
+                        adjlist[i].ApproverId = 0;
+                    adj.ApproverComment = adjlist[i].ApproverComment;
+                    list.Add(adj);
+                }
             }
-            return adjlist;
+            return list;
         }
 
         // raise adjustment
@@ -103,21 +125,22 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static List<AdjustmentVM> RaiseAdjustments(int empId, List<AdjustmentVM> iList)
         {
             List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                adjlist = entities.Adjustments.Select(a => new AdjustmentVM()
-                {
-                    VoucherNo = a.VoucherNo,
-                    EmpId = a.EmpId,
-                    DateTimeIssued = a.DateTimeIssued,
-                    ItemCode = a.ItemCode,
-                    Reason = a.Reason,
-                    QtyChange = a.QtyChange,
-                    Status = a.Status,
-                    //ApproverId = a.ApproverId,
-                    ApproverComment = a.ApproverComment
-                }).ToList<AdjustmentVM>();
-            }
+            ////dummy
+            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            //{
+            //    adjlist = entities.Adjustments.Select(a => new AdjustmentVM()
+            //    {
+            //        VoucherNo = a.VoucherNo,
+            //        EmpId = a.EmpId,
+            //        DateTimeIssued = a.DateTimeIssued,
+            //        ItemCode = a.ItemCode,
+            //        Reason = a.Reason,
+            //        QtyChange = a.QtyChange,
+            //        Status = a.Status,
+            //        //ApproverId = a.ApproverId,
+            //        ApproverComment = a.ApproverComment
+            //    }).ToList<AdjustmentVM>();
+            //}
             return adjlist;
 
             //List<Adjustment> adjList = new List<Adjustment>();

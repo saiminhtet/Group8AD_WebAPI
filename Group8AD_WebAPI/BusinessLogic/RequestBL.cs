@@ -112,6 +112,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get request by empId, status, fromDate and toDate
+        // done
         public static List<RequestVM> GetReq(int empId, string status, DateTime fromDate, DateTime toDate)
         {
             List<RequestVM> reqlist = GetReq(empId, status);
