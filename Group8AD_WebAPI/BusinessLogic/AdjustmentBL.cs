@@ -13,31 +13,46 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // add an adjustment
         // not dummy, revise
-        public static AdjustmentVM AddAdj(Adjustment adj)
+        public static AdjustmentVM AddAdj(AdjustmentVM adj)
         {
-            AdjustmentVM adjustment = new AdjustmentVM();
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                entities.Adjustments.Add(adj);
-                entities.SaveChanges();
-                adjustment = entities.Adjustments.Where(a => a.VoucherNo == adj.VoucherNo).Select(a => new AdjustmentVM()
-                {
-                    VoucherNo = a.VoucherNo,
-                    EmpId = a.EmpId,
-                    DateTimeIssued = a.DateTimeIssued,
-                    ItemCode = a.ItemCode,
-                    Reason = a.Reason,
-                    QtyChange = a.QtyChange,
-                    Status = a.Status,
-                    //ApproverId = a.ApproverId,
-                    ApproverComment = a.ApproverComment
-                }).First<AdjustmentVM>();
-            }
-            return adjustment;
+            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            //{
+            //    entities.Adjustments.Add(adj);
+            //    entities.SaveChanges();
+            //    AdjustmentVM adjustment = new AdjustmentVM()
+            //    {
+            //        VoucherNo = adj.VoucherNo,
+            //        EmpId = adj.EmpId,
+            //        DateTimeIssued = adj.DateTimeIssued,
+            //        ItemCode = adj.ItemCode,
+            //        Reason = adj.Reason,
+            //        QtyChange = adj.QtyChange,
+            //        Status = adj.Status,
+            //        //ApproverId = adj.ApproverId,
+            //        ApproverComment = adj.ApproverComment
+            //    };
+            //    return adjustment;
+            //}
+
+            //AdjustmentVM adjustment = new AdjustmentVM()
+            //{
+            //    VoucherNo = adj.VoucherNo,
+            //    EmpId = adj.EmpId,
+            //    DateTimeIssued = adj.DateTimeIssued,
+            //    ItemCode = adj.ItemCode,
+            //    Reason = adj.Reason,
+            //    QtyChange = adj.QtyChange,
+            //    Status = adj.Status,
+            //    //ApproverId = adj.ApproverId,
+            //    ApproverComment = adj.ApproverComment
+            //};
+            //return adjustment;
+
+            return adj;
         }
 
         // get an adjustment by voucher number
-        // not dummy, revise
+        // not dummy
         public static AdjustmentVM GetAdj(string voucherNo)
         {
             AdjustmentVM adjustment = new AdjustmentVM();

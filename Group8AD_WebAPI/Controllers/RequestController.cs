@@ -88,8 +88,15 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Request/removeRequest/{empId}/{status}")]
         public HttpResponseMessage DeleteRequestByEmpIdStatus(int empId, string status)
         {
-            RequestBL.RemoveReq(empId, status);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                RequestBL.RemoveReq(empId, status);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         // tested, referential integrity issue
@@ -98,8 +105,15 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Request/removeRequest/{reqId}")]
         public HttpResponseMessage DeleteRequestByReqId(int reqId)
         {
-            RequestBL.RemoveReq(reqId);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                RequestBL.RemoveReq(reqId);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         // tested, dummy
@@ -136,8 +150,15 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Request/accept")]
         public HttpResponseMessage AcceptRequest(int reqId, int empId, string cmt)
         {
-            RequestBL.AcceptRequest(reqId, empId, cmt);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                RequestBL.AcceptRequest(reqId, empId, cmt);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         // tested, dummy
@@ -146,8 +167,15 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Request/reject")]
         public HttpResponseMessage RejectRequest(int reqId, int empId, string cmt)
         {
-            RequestBL.RejectRequest(reqId, empId, cmt);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                RequestBL.RejectRequest(reqId, empId, cmt);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         // tested, dummy
@@ -156,8 +184,15 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Request/updatefulfilled")]
         public HttpResponseMessage UpdateFulfilledStatus()
         {
-            RequestBL.UpdateFulfilledRequestStatus();
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                RequestBL.UpdateFulfilledRequestStatus();
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         //Returns request object belonging to the given request id
