@@ -19,7 +19,7 @@ namespace Group8AD_WebAPI.Controllers
         {
             try
             {
-                BusinessLogic.NotificationBL.AddNewReqNotification(notiVM.EmpId, notiVM.Request);
+                //BusinessLogic.NotificationBL.AddNewReqNotification(notiVM.EmpId, notiVM.Request);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -31,7 +31,7 @@ namespace Group8AD_WebAPI.Controllers
         //List<NotificationVM> GetNotifications(int empId)
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Notifications/{empId}")]
+        [Route("api/Notification/{empId}")]
         public HttpResponseMessage GetNotifications(int empId)
         {
             List<NotificationVM> noti = BusinessLogic.NotificationBL.GetNotifications(empId);
@@ -51,7 +51,7 @@ namespace Group8AD_WebAPI.Controllers
         {
             try
             {
-                BusinessLogic.NotificationBL.AddLowStkNotification(notiVM.EmpId,notiVM.Item);
+                //BusinessLogic.NotificationBL.AddLowStkNotification(notiVM.EmpId,notiVM.Item);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -68,7 +68,7 @@ namespace Group8AD_WebAPI.Controllers
         {
             try
             {
-                BusinessLogic.NotificationBL.AddFulfillNotification(notiVM.EmpId,notiVM.RepId);
+                //BusinessLogic.NotificationBL.AddFulfillNotification(notiVM.EmpId,notiVM.RepId);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
