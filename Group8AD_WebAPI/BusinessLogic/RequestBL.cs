@@ -9,8 +9,6 @@ namespace Group8AD_WebAPI.BusinessLogic
 {
     public class RequestBL
     {
-        // dummy code
-
         // get a list of request by empId and status
         // hope can set all fileld not null in Request table
         // done
@@ -404,8 +402,8 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // submit request
-        // cannot test until UpdateReqDet(reqId, reqDet) is finished
-        public static RequestVM SubmitReq(int empId, List<RequestDetailVM> reqDetList, string status)
+        // done
+        public static RequestVM SubmitReq(int empId, List<RequestDetailVM> reqDetList)
         {
             // This is only to explain code steps at Web Api service
             // Call GetReq(empId, “Unsubmitted”)
@@ -416,19 +414,35 @@ namespace Group8AD_WebAPI.BusinessLogic
             // Return currReq object
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                RequestVM r = new RequestVM();
-                List<RequestVM> reqlist = GetReq(empId, status);
+                RequestVM request = new RequestVM();
+                List<RequestVM> reqlist = GetReq(empId, "Unsubmitted");
                 for (int i = 0; i < reqlist.Count; i++)
                 {
                     for (int j = 0; j < reqDetList.Count; j++)
                     {
-                        RequestDetailVM rvm = RequestDetailBL.UpdateReqDet(reqDetList[j].ReqId, reqDetList[j]);
+                        if (reqlist[i].ReqId == reqDetList[j].ReqId)
+                        {
+                            //RequestDetailVM rvm = RequestDetailBL.UpdateReqDet(reqDetList[j].ReqId, reqDetList[j]);
+                            //RequestDetail rd = entities.RequestDetails.Where(r => r.ReqId == reqDetList[j].ReqId && r.ReqLineNo == reqDetList[j].ReqLineNo).FirstOrDefault();
+                            List<RequestDetail> rdlist = entities.RequestDetails.ToList();
+                            for (int k = 0; k < rdlist.Count; k++)
+                            {
+                                if (reqDetList[j].ReqId == rdlist[k].ReqId && reqDetList[j].ReqLineNo == rdlist[k].ReqLineNo)
+                                {
+                                    rdlist[k].ItemCode = reqDetList[j].ItemCode;
+                                    rdlist[k].ReqQty = reqDetList[j].ReqQty;
+                                    rdlist[k].AwaitQty = reqDetList[j].AwaitQty;
+                                    rdlist[k].FulfilledQty = reqDetList[j].FulfilledQty;
+                                    entities.SaveChanges();
+                                }
+                            }
+                        }
                     }
                     reqlist[i].ReqDateTime = DateTime.Now;
                     reqlist[i].Status = "Submitted";
-                    r = UpdateReq(reqlist[i]);
+                    request = UpdateReq(reqlist[i]);
                 }
-                return r;
+                return request;
                 //RequestVM r = new RequestVM();
                 //List<RequestVM> reqlist = GetReq(empId, status);
                 //for (int i = 0; i < reqlist.Count; i++)
@@ -450,26 +464,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //}
                 //return r;
             }
-
-
-            //// dummy
-            //RequestVM request = new RequestVM();
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    request = entities.Requests.Select(r => new RequestVM()
-            //    {
-            //        ReqId = r.ReqId,
-            //        EmpId = r.EmpId,
-            //        //ApproverId = r.ApproverId,
-            //        ApproverComment = r.ApproverComment,
-            //        //ReqDateTime = r.ReqDateTime,
-            //        //ApprovedDateTime = r.ApprovedDateTime,
-            //        //CancelledDateTime = r.CancelledDateTime,
-            //        //FulfilledDateTime = r.FulfilledDateTime,
-            //        Status = r.Status
-            //    }).First<RequestVM>();
-            //}
-            //return request;
         }
 
         // update request

@@ -10,7 +10,6 @@ namespace Group8AD_WebAPI.BusinessLogic
     public class ReportItemBL
     {
         // dummy code
-        // all dummy
 
         // get chargeback by month
         public static List<TransactionVM> GetCBByMth(string deptCode, DateTime fromDate, DateTime toDate)
