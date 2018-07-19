@@ -246,6 +246,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
+    <Compile Include="Controllers\RequestDetailController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />

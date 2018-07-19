@@ -58,22 +58,6 @@ namespace Group8AD_WebAPI.BusinessLogic
         // done
         public static List<TransactionVM> GetLastTenTrans(string itemCode)
         {
-            //List<TransactionVM> translist = new List<TransactionVM>();
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    translist = entities.Transactions.Select(t => new TransactionVM()
-            //    {
-            //        TranId = t.TranId,
-            //        TransDateTime = t.TranDateTime,
-            //        ItemCode = t.ItemCode,
-            //        QtyChange = t.QtyChange,
-            //        //UnitPrice = t.UnitPrice,
-            //        Desc = t.Desc,
-            //        DeptCode = t.DeptCode,
-            //        SuppCode = t.SuppCode
-            //    }).ToList<TransactionVM>();
-            //}
-            //return translist;
             List<TransactionVM> translist = new List<TransactionVM>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {

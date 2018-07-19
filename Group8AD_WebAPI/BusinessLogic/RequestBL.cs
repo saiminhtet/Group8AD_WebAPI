@@ -497,7 +497,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // accept request
-        // not dummy, not tested, will test after GetReq()
+        // done
         public static void AcceptRequest(int reqId, int empId, string cmt)
         {
             // This is only to explain code steps at Web Api service
@@ -527,7 +527,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // reject request
-        // not dummy, not tested, will test after GetReq()
+        // done
         public static void RejectRequest(int reqId, int empId,string cmt)
         {
             // This is only to explain code steps at Web Api service
