@@ -41,7 +41,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     RouteUri = n.RouteUri,
                     Type = n.Type,
                     Content = n.Content,
-                    IsRead = n.IsRead
+                    IsRead = n.IsRead,
+                    EmpId = empId
                 }).ToList<NotificationVM>();
             }
             return notilists;
