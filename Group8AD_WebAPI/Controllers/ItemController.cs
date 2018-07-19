@@ -212,6 +212,14 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, getqtydisb_list);
         }
 
+        //SaveQtyDisb
+        [System.Web.Http.AcceptVerbs("POST")]
+        [System.Web.Http.HttpPost]
+        [Route("api/Item/SaveQtyDisb")]
+        public HttpResponseMessage SaveQtyDisb(int qtyDisb)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
 
         //FulfillRequest
         [System.Web.Http.AcceptVerbs("POST")]
@@ -252,6 +260,15 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
+        //ReceiveItem
+        [System.Web.Http.AcceptVerbs("POST")]
+        [System.Web.Http.HttpPost]
+        [Route("api/Item/ReceiveItem")]
+        public HttpResponseMessage ReceiveItem(string suppCode, int qty, string ItemCode)
+        {
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
 
         //GetEmpItems
         [System.Web.Http.AcceptVerbs("GET")]
@@ -385,7 +402,7 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Item/UpdateItem")]
-        public HttpResponseMessage UpdateItem(int reorderLvl, int reorderQty, string s1, string s2, double p2, string s3, double p3)
+        public HttpResponseMessage UpdateItem(int reorderLvl, int reorderQty, string s1, double p1, string s2, double p2, string s3, double p3)
         {
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -394,7 +411,7 @@ namespace Group8AD_WebAPI.Controllers
         //FulfillRequestUrgent
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
-        [Route("api/Item/UpdateItem")]
+        [Route("api/Item/FulfillRequestUrgent")]
         public HttpResponseMessage FulfillRequestUrgent(int empId, List<ItemVM> items)
         {
             return Request.CreateResponse(HttpStatusCode.OK);
