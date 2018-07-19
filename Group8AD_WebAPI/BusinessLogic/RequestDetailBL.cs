@@ -97,7 +97,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     ReqQty = r.ReqQty,
                     AwaitQty = r.AwaitQty,
                     FulfilledQty = r.FulfilledQty,
-                    Request = r.Request
+                    //Request = r.Request
                 }).First<RequestDetailVM>();
                 entities.SaveChanges();
             }
@@ -108,25 +108,8 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<RequestDetail> reqDetlist = entities.RequestDetails.Where(r => r.Request.EmpId == empId).ToList();
-                if (!reqDetlist.Any())
-                {
-                    for (int i = 0; i < reqDetlist.Count; i++)
-                    {
-                        entities.RequestDetails.Remove(reqDetlist[i]);
-                        entities.SaveChanges();
-                    }
-                }
-            }            
-        }
-
-        //remove ReqDet
-        public static void removeReqDet(int reqId, string itemCode)
-        {
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                List<RequestDetail> reqDetlist = entities.RequestDetails.Where(r => r.ReqId == reqId && r.ItemCode == itemCode).ToList();
-                if (!reqDetlist.Any())
+                List<RequestDetail> reqDetlist = entities.RequestDetails.Where(r => r.ItemCode == itemCode).ToList();
+                if (reqDetlist.Count > 0)
                 {
                     for (int i = 0; i < reqDetlist.Count; i++)
                     {
@@ -137,19 +120,30 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
+        //remove ReqDet
+        public static void removeReqDet(int reqId, string itemCode)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                RequestDetail request = entities.RequestDetails.Where(r => r.ReqId == reqId && r.ItemCode == itemCode).FirstOrDefault();
+                if (request != null)
+                {
+                    entities.RequestDetails.Remove(request);
+                    entities.SaveChanges();
+                }
+            }
+        }
+
         //remove All
         public static void removeAllReqDet(int reqId)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<RequestDetail> reqDetlist = entities.RequestDetails.Where(r => r.ReqId == reqId).ToList();
-                if (!reqDetlist.Any())
+                RequestDetail request = entities.RequestDetails.Where(r => r.ReqId == reqId).FirstOrDefault();
+                if (request != null)
                 {
-                    for (int i = 0; i < reqDetlist.Count; i++)
-                    {
-                        entities.RequestDetails.Remove(reqDetlist[i]);
-                        entities.SaveChanges();
-                    }
+                    entities.RequestDetails.Remove(request);
+                    entities.SaveChanges();
                 }
             }
         }
@@ -183,13 +177,13 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                RequestDetail await = entities.RequestDetails.Where(r => r.ReqId == reqId).First<RequestDetail>();                
-                if (await != null)                
-                    {
-                        await.AwaitQty = awaitQty;
-                        entities.SaveChanges();
-                    }
-            }             
+                RequestDetail await = entities.RequestDetails.Where(r => r.ReqId == reqId).First<RequestDetail>();
+                if (await != null)
+                {
+                    await.AwaitQty = awaitQty;                    
+                }
+                entities.SaveChanges();
+            }
         }
 
         //GetDeptCode
@@ -208,6 +202,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 RequestDetail fulfilled = entities.RequestDetails.Where(r => r.ReqId == reqId).First<RequestDetail>();
+                //RequestDetail fulfilled = entities.RequestDetails.Where(r => r.ReqId == reqId).First<RequestDetail>();
                 if (fulfilled != null)
                 {
                     fulfilled.FulfilledQty = fulfilledQty;
@@ -215,6 +210,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
             }
         }
-        
+
     }
 }
