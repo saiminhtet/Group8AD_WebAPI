@@ -246,6 +246,7 @@
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
     <Compile Include="Controllers\RequestDetailController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
@@ -303,6 +304,7 @@
       <DependentUpon>SA46Team08ADProjectContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModels\AdjustmentVM.cs" />
+    <Compile Include="Models\ViewModels\CollectionPointVM.cs" />
     <Compile Include="Models\ViewModels\DepartmentVM.cs" />
     <Compile Include="Models\ViewModels\EmployeeVM.cs" />
     <Compile Include="Models\ViewModels\ItemSearchVM.cs" />
