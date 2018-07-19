@@ -162,7 +162,39 @@ namespace Group8AD_WebAPI.Controllers
         }
 
 
+        //GetQtyDisb
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Item/GetQtyDisb")]
+        public HttpResponseMessage GetQtyDisb()
+        {
+            List<ItemVM> getqtydisb_list = BusinessLogic.ItemBL.GetQtyDisb();
 
+            if (getqtydisb_list == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, getqtydisb_list);
+        }
+
+
+        //FulfillRequest
+        [System.Web.Http.AcceptVerbs("POST")]
+        [System.Web.Http.HttpPost]
+        [Route("api/Item/FulfillRequest")]
+        public HttpResponseMessage FulfillRequest(List<ItemVM> item)
+        {
+            try
+            {
+                BusinessLogic.ItemBL.FulfillRequest(item);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
     }
 
 

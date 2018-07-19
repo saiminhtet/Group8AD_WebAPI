@@ -321,10 +321,8 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 //get the request list by emloyee id
                 List<Request> rlist = new List<Request>();
-               // if (deptcode == request_deptcode)
-               // {
-                    rlist = entities.Requests.Where(r => r.EmpId == empId && request_deptcode.Equals(deptcode) && r.Status.Equals("Approved")).ToList();
-                //}
+
+                rlist = entities.Requests.Where(r => r.EmpId == empId && request_deptcode.Equals(deptcode) && r.Status.Equals("Approved")).ToList();
 
 
                 //get request details by request id
@@ -473,6 +471,140 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 return itemlistvm;
             }
+        }
+
+        //GetQtyDisb
+        public static List<ItemVM> GetQtyDisb()
+        {
+            List<ItemVM> itemlist = new List<ItemVM>();
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<Item> items = entities.Items.ToList<Item>();
+
+                foreach (Item item in items)
+                {
+                    ItemVM itemVM = new ItemVM();
+                    itemVM.ItemCode = item.ItemCode;
+                    itemVM.Cat = item.Cat;
+                    itemVM.Desc = item.Desc;
+                    itemVM.Location = item.Location;
+                    itemVM.UOM = item.UOM;
+                    itemVM.IsActive = item.IsActive;
+                    itemVM.Balance = item.Balance;
+                    itemVM.ReorderLevel = item.ReorderLevel;
+                    itemVM.ReorderQty = item.ReorderQty;
+                    itemVM.TempQtyDisb = item.TempQtyDisb;
+                    itemVM.TempQtyCheck = item.TempQtyCheck;
+                    itemVM.SuppCode1 = item.SuppCode1;
+                    itemVM.SuppCode2 = item.SuppCode2;
+                    itemVM.SuppCode3 = item.SuppCode3;
+                    itemVM.Price1 = item.Price1;
+                    itemVM.Price2 = item.Price2;
+                    itemVM.Price3 = item.Price3;
+
+                    itemlist.Add(itemVM);
+                }
+
+                return itemlist;
+            }
+        }
+
+
+        //FulfillRequest
+        public static void FulfillRequest(List<ItemVM> items)
+        {
+            List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
+
+            List<RequestVM> requestlist = RequestBL.GetReq("Approved");
+
+            List<RequestDetailVM> requestdetails_list = new List<RequestDetailVM>();
+
+            foreach (RequestVM r in requestlist)
+            {
+                requestdetails_list = RequestDetailBL.GetReqDetList(r.ReqId);
+            }
+
+            
+            foreach (ItemVM i in items)
+            {
+                int count = (i.TempQtyDisb > i.Balance) ? i.Balance : i.TempQtyDisb ?? default(int);
+
+                foreach (RequestVM r in requestlist)
+                {
+                    if (count > 0)
+                    {
+                        string deptCode = EmployeeBL.GetEmp(r.EmpId).DeptCode;
+
+                        foreach (RequestDetailVM rd in requestdetails_list)
+                        {
+                            if (count > 0)
+                            {
+                                if (i.ItemCode.Equals(rd.ItemCode))
+                                {
+                                    int shortQty = (rd.ReqQty - rd.FulfilledQty);
+
+                                    if (shortQty <= count)
+                                    {
+                                        shortQty = 0;
+                                        count -= shortQty;
+                                        i.Balance -= shortQty;
+                                        rd.AwaitQty += shortQty;
+
+                                        //need to call UpdateBal Method
+
+                                        RequestDetailBL.UpdateAwait(r.ReqId, rd.AwaitQty);
+
+                                        fulfilledList.Add(rd);
+                                    }
+                                    else
+                                    {
+                                        shortQty -= count;
+                                        count = 0;
+                                        i.Balance -= count;
+                                        rd.AwaitQty += count;
+
+                                        //need to call UpdateBal Method
+
+                                        RequestDetailBL.UpdateAwait(r.ReqId, rd.AwaitQty);
+
+                                        fulfilledList.Add(rd);
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            //Making PDF Reports
+            //Group By Department then By Item
+
+            List<RequestDetailVM> ListByDept = new List<RequestDetailVM>();
+
+            foreach (string d in DepartmentBL.GetDeptCodes())
+            {
+                List<RequestDetailVM> rdList = new List<RequestDetailVM>();
+
+                foreach (RequestDetailVM rd in fulfilledList)
+                {
+                    if (EmployeeBL.GetDeptCode(rd.EmpId).Equals(d))
+                    {
+                        if (rdList.Contains(rd))
+                        {
+                            rdList.Find(x => x.ItemCode.Equals(rd.ItemCode)).AwaitQty += rd.AwaitQty;
+                        }
+                        else
+                        {
+                            rdList.Add(rd);
+                        }
+                    }
+                    ListByDept.AddRange(rdList);
+                }
+
+            }
+
+           
         }
     }
 }
