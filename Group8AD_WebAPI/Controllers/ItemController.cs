@@ -31,10 +31,10 @@ namespace Group8AD_WebAPI.Controllers
 
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]
-        [Route("api/Item/GetFrequentList/{id}")]
-        public HttpResponseMessage GetEmployeebyID(int id)
+        [Route("api/Item/GetFrequentList/{empId}")]
+        public HttpResponseMessage GetFrequentList(int empId)
         {
-            List<ItemVM> freq_itemlist = BusinessLogic.ItemBL.GetFrequentList(id);
+            List<ItemVM> freq_itemlist = BusinessLogic.ItemBL.GetFrequentList(empId);
 
 
             if (freq_itemlist == null)
