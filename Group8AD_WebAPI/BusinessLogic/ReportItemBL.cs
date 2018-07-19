@@ -14,43 +14,91 @@ namespace Group8AD_WebAPI.BusinessLogic
         // get chargeback by month
         public static List<TransactionVM> GetCBByMth(string deptCode, DateTime fromDate, DateTime toDate)
         {
-            List<TransactionVM> translist = new List<TransactionVM>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                translist = entities.Transactions.Select(t => new TransactionVM()
+                List<Transaction> translist = entities.Transactions.Where(t => t.DeptCode == deptCode).ToList();
+                List<TransactionVM> list = new List<TransactionVM>();
+                for (int i = 0; i < translist.Count; i++)
                 {
-                    TranId = t.TranId,
-                    TranDateTime = t.TranDateTime,
-                    ItemCode = t.ItemCode,
-                    QtyChange = t.QtyChange,
-                    //UnitPrice = t.UnitPrice,
-                    Desc = t.Desc,
-                    DeptCode = t.DeptCode,
-                    SuppCode = t.SuppCode
-                }).ToList<TransactionVM>();
+                    if (DateTime.Compare(translist[i].TranDateTime, fromDate) >= 0 && DateTime.Compare(translist[i].TranDateTime, toDate) <= 0)
+                    {
+                        TransactionVM trans = new TransactionVM();
+                        trans.TranId = translist[i].TranId;
+                        trans.TranDateTime = translist[i].TranDateTime;
+                        trans.ItemCode = translist[i].ItemCode;
+                        trans.QtyChange = translist[i].QtyChange;
+                        trans.UnitPrice = (double)translist[i].UnitPrice;
+                        trans.Desc = translist[i].Desc;
+                        trans.DeptCode = translist[i].DeptCode;
+                        trans.SuppCode = translist[i].SuppCode;
+                        trans.VoucherNo = translist[i].VoucherNo;
+                        list.Add(trans);
+                    }
+                }
+                return list;
             }
-            return translist;
-        }
+                //// dummy
+                //List<TransactionVM> translist = new List<TransactionVM>();
+                //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+                //{
+                //    translist = entities.Transactions.Select(t => new TransactionVM()
+                //    {
+                //        TranId = t.TranId,
+                //        TranDateTime = t.TranDateTime,
+                //        ItemCode = t.ItemCode,
+                //        QtyChange = t.QtyChange,
+                //        //UnitPrice = t.UnitPrice,
+                //        Desc = t.Desc,
+                //        DeptCode = t.DeptCode,
+                //        SuppCode = t.SuppCode
+                //    }).ToList<TransactionVM>();
+                //}
+                //return translist;
+
+            }
 
         // get chargeback by date range
         public static List<TransactionVM> GetCBByRng(string deptCode, DateTime fromDate, DateTime toDate)
         {
-            List<TransactionVM> translist = new List<TransactionVM>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                translist = entities.Transactions.Select(t => new TransactionVM()
+                List<Transaction> translist = entities.Transactions.Where(t => t.DeptCode == deptCode).ToList();
+                List<TransactionVM> list = new List<TransactionVM>();
+                for (int i = 0; i < translist.Count; i++)
                 {
-                    TranId = t.TranId,
-                    TranDateTime = t.TranDateTime,
-                    ItemCode = t.ItemCode,
-                    QtyChange = t.QtyChange,
-                    //UnitPrice = t.UnitPrice,
-                    Desc = t.Desc,
-                    DeptCode = t.DeptCode,
-                    SuppCode = t.SuppCode
-                }).ToList<TransactionVM>();
+                    if (DateTime.Compare(translist[i].TranDateTime, fromDate) >= 0 && DateTime.Compare(translist[i].TranDateTime, toDate) <= 0)
+                    {
+                        TransactionVM trans = new TransactionVM();
+                        trans.TranId = translist[i].TranId;
+                        trans.TranDateTime = translist[i].TranDateTime;
+                        trans.ItemCode = translist[i].ItemCode;
+                        trans.QtyChange = translist[i].QtyChange;
+                        trans.UnitPrice = (double)translist[i].UnitPrice;
+                        trans.Desc = translist[i].Desc;
+                        trans.DeptCode = translist[i].DeptCode;
+                        trans.SuppCode = translist[i].SuppCode;
+                        trans.VoucherNo = translist[i].VoucherNo;
+                        list.Add(trans);
+                    }
+                }
+                return list;
             }
-            return translist;
+            //List<TransactionVM> translist = new List<TransactionVM>();
+            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            //{
+            //    translist = entities.Transactions.Select(t => new TransactionVM()
+            //    {
+            //        TranId = t.TranId,
+            //        TranDateTime = t.TranDateTime,
+            //        ItemCode = t.ItemCode,
+            //        QtyChange = t.QtyChange,
+            //        //UnitPrice = t.UnitPrice,
+            //        Desc = t.Desc,
+            //        DeptCode = t.DeptCode,
+            //        SuppCode = t.SuppCode
+            //    }).ToList<TransactionVM>();
+            //}
+            //return translist;
         }
 
         // get last ten transactions by itemCode
