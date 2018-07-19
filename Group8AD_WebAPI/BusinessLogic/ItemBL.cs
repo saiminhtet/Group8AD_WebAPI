@@ -592,27 +592,27 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             List<RequestDetailVM> ListByDept = new List<RequestDetailVM>();
 
-            foreach (string d in DepartmentBL.GetDeptCodes())
-            {
-                List<RequestDetailVM> rdList = new List<RequestDetailVM>();
+            //foreach (string d in DepartmentBL.GetDeptCodes())
+            //{
+            //    List<RequestDetailVM> rdList = new List<RequestDetailVM>();
 
-                foreach (RequestDetailVM rd in fulfilledList)
-                {
-                    if (EmployeeBL.GetDeptCode(rd.EmpId).Equals(d))
-                    {
-                        if (rdList.Contains(rd))
-                        {
-                            rdList.Find(x => x.ItemCode.Equals(rd.ItemCode)).AwaitQty += rd.AwaitQty;
-                        }
-                        else
-                        {
-                            rdList.Add(rd);
-                        }
-                    }
-                    ListByDept.AddRange(rdList);
-                }
+            //    foreach (RequestDetailVM rd in fulfilledList)
+            //    {
+            //        if (EmployeeBL.GetDeptCode(rd.EmpId).Equals(d))
+            //        {
+            //            if (rdList.Contains(rd))
+            //            {
+            //                rdList.Find(x => x.ItemCode.Equals(rd.ItemCode)).AwaitQty += rd.AwaitQty;
+            //            }
+            //            else
+            //            {
+            //                rdList.Add(rd);
+            //            }
+            //        }
+            //        ListByDept.AddRange(rdList);
+            //    }
 
-            }
+            //}
 
            
         }
