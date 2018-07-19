@@ -13,26 +13,38 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // add an adjustment
         // not dummy, revise
+        // Object reference not set to an instance of an object, when testing
         public static AdjustmentVM AddAdj(AdjustmentVM adj)
         {
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    entities.Adjustments.Add(adj);
-            //    entities.SaveChanges();
-            //    AdjustmentVM adjustment = new AdjustmentVM()
-            //    {
-            //        VoucherNo = adj.VoucherNo,
-            //        EmpId = adj.EmpId,
-            //        DateTimeIssued = adj.DateTimeIssued,
-            //        ItemCode = adj.ItemCode,
-            //        Reason = adj.Reason,
-            //        QtyChange = adj.QtyChange,
-            //        Status = adj.Status,
-            //        //ApproverId = adj.ApproverId,
-            //        ApproverComment = adj.ApproverComment
-            //    };
-            //    return adjustment;
-            //}
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                Adjustment a = new Adjustment();
+                a.VoucherNo = adj.VoucherNo;
+                a.EmpId = adj.EmpId;
+                a.DateTimeIssued = adj.DateTimeIssued;
+                a.ItemCode = adj.ItemCode;
+                a.Reason = adj.Reason;
+                a.QtyChange = adj.QtyChange;
+                a.Status = adj.Status;
+                a.ApproverId = adj.ApproverId;
+                a.ApproverComment = adj.ApproverComment;
+
+                entities.Adjustments.Add(a);
+                entities.SaveChanges();
+                //AdjustmentVM adjustment = new AdjustmentVM()
+                //{
+                //    VoucherNo = adj.VoucherNo,
+                //    EmpId = adj.EmpId,
+                //    DateTimeIssued = adj.DateTimeIssued,
+                //    ItemCode = adj.ItemCode,
+                //    Reason = adj.Reason,
+                //    QtyChange = adj.QtyChange,
+                //    Status = adj.Status,
+                //    //ApproverId = adj.ApproverId,
+                //    ApproverComment = adj.ApproverComment
+                //};
+                return adj;
+            }
 
             //AdjustmentVM adjustment = new AdjustmentVM()
             //{
@@ -48,7 +60,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             //};
             //return adjustment;
 
-            return adj;
+            //return adj;
         }
 
         // get an adjustment by voucher number
@@ -170,7 +182,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // reject adjustment request
-        // not dummy, not tested
+        // done, except email and notification
         public static void RejectRequest(string voucherNo, int empId, string cmt)
         {
             // Call GetAdj(voucherNo)
@@ -221,7 +233,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // accept adjustment request
-        // not dummy, not tested
+        // done, except email and notification
         public static void AcceptRequest(string voucherNo, int empId, string cmt)
         {
             // Call GetAdj(empId)

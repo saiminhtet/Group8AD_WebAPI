@@ -69,7 +69,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/accept")]
@@ -86,7 +86,7 @@ namespace Group8AD_WebAPI.Controllers
             }
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/reject")]

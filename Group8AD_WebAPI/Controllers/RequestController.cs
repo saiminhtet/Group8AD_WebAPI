@@ -158,7 +158,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/accept")]
@@ -175,7 +175,7 @@ namespace Group8AD_WebAPI.Controllers
             }
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/reject")]
