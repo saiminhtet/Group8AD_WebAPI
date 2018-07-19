@@ -15,11 +15,11 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/RequestDetail/addReqDet")]
-        public HttpResponseMessage AddReqDet(RequestDetailVM reqDetVM)
+        public HttpResponseMessage AddReqDet(int empId, RequestDetailVM reqDetVM, string status)
         {
             try
             {
-                RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(reqDetVM.EmpId, reqDetVM, reqDetVM.Status);
+                RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(empId, reqDetVM, status);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
