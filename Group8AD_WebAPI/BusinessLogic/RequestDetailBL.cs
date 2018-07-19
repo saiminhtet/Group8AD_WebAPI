@@ -26,17 +26,29 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 foreach (RequestDetail rd in requestDetailList)
                 {
-                    if (reqDet.ItemCode == rd.ItemCode)//if exist reqDet with same itemCode
+                    if (status == "Unsubmitted")
                     {
-                        reqDet.ReqQty++;//increase reqQty
+                        if (reqDet.ItemCode == rd.ItemCode)//if exist reqDet with same itemCode
+                        {
+                            reqDet.ReqQty++;//increase reqQty
 
-                        UpdateReqDet(reqDet.ReqId, reqDet);
+                            UpdateReqDet(reqDet.ReqId, reqDet);
+                        }
+                        else
+                        {
+                            AddReqDet(reqDet.ReqId, reqDet);//create reqDet
+                        }
                     }
-                    else
+
+                    if (status == "Bookmarked")
                     {
-                        AddReqDet(reqDet.ReqId, reqDet);//create reqDet
+                        if (reqDet.ItemCode != rd.ItemCode)//if reqDet does not exist  with itemCode
+                        {
+                            AddReqDet(reqDet.ReqId, reqDet);//create reqDet
+                        }
                     }
                 }
+
             }
             return reqDet;
         }
@@ -44,21 +56,31 @@ namespace Group8AD_WebAPI.BusinessLogic
         //add RequestDetail with reqId and reqDet
         public static RequestDetailVM AddReqDet(int reqId, RequestDetailVM reqDet)
         {
-            RequestDetailVM reqDetail = new RequestDetailVM();
+            RequestDetailVM request = new RequestDetailVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                reqDetail = entities.RequestDetails.Select(r => new RequestDetailVM()
-                {
-                    ReqId = reqId,
-                    ReqLineNo = r.ReqLineNo,
-                    ItemCode = r.ItemCode,
-                    ReqQty = r.ReqQty,
-                    AwaitQty = r.AwaitQty,
-                    FulfilledQty = r.FulfilledQty,
-                    Request = r.Request
-                }).First<RequestDetailVM>();
+                RequestDetail req = new RequestDetail();
+                req.ReqId = reqId;
+                req.ReqLineNo = reqDet.ReqLineNo;
+                req.ItemCode = reqDet.ItemCode;
+                req.ReqQty = reqDet.ReqQty;
+                req.AwaitQty = reqDet.AwaitQty;
+                req.FulfilledQty = reqDet.FulfilledQty;
+                entities.RequestDetails.Add(req);
+                entities.SaveChanges();
+
+                List<RequestDetail> lst = entities.RequestDetails.ToList();
+                RequestDetail r = lst[lst.Count - 1];
+                request.ReqId = r.ReqId;
+                request.ReqLineNo = r.ReqLineNo;
+                request.ItemCode = r.ItemCode;
+                request.ReqQty = r.ReqQty;
+                request.AwaitQty = r.AwaitQty;
+                request.FulfilledQty = r.FulfilledQty;
             }
-            return reqDetail;
+
+            return request;
+
         }
 
         //update RequestDetail with reqId and reqDet
