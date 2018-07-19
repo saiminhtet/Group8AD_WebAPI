@@ -55,13 +55,13 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, adjlist);
         }
 
-        // tested, dummy
+        // not tested, not dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/raise")]
-        public HttpResponseMessage RaiseAdjustment(int empId, List<AdjustmentVM> iList)
+        public HttpResponseMessage RaiseAdjustment(int empId, List<ItemVM> iList, List<string> reasonList)
         {
-            List<AdjustmentVM> adjlist = AdjustmentBL.RaiseAdjustments(empId, iList);
+            List<AdjustmentVM> adjlist = AdjustmentBL.RaiseAdjustments(empId, iList, reasonList);
             if (adjlist == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);

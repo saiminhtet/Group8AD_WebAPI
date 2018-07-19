@@ -130,13 +130,14 @@ namespace Group8AD_WebAPI.Controllers
             }
         }
 
-        // tested, dummy
+        // tested
+        // wait for UpdateReqDet(reqId, reqDet) to be finished
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/submit")]
-        public HttpResponseMessage SubmitRequest(int empId, List<RequestDetailVM> reqDetList, string status)
+        public HttpResponseMessage SubmitRequest(int empId, List<RequestDetailVM> reqDetList)
         {
-            RequestVM request = RequestBL.SubmitReq(empId, reqDetList, status);
+            RequestVM request = RequestBL.SubmitReq(empId, reqDetList);
             if (request == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
