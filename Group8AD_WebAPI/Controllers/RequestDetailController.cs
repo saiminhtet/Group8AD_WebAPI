@@ -11,38 +11,36 @@ namespace Group8AD_WebAPI.Controllers
 { 
     public class RequestDetailController : ApiController
     {
-        //AddReqDet(int empId, RequestDetail reqDet , string status)       
+        //AddReqDet(int empId, RequestDetail reqDet , string status)     
+        //ok
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/RequestDetail/addReqDet")]
         public HttpResponseMessage AddReqDet(int empId, RequestDetailVM reqDetVM, string status)
         {
-            try
+            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(empId, reqDetVM, status);
+            if (req == null)
             {
-                RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(empId, reqDetVM, status);
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
-            }
+            return Request.CreateResponse(HttpStatusCode.OK, req);
+
         }
 
         //AddReqDet(int reqId, RequestDetail reqDet)
+        //ok
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/RequestDetail/addReqDet/reqId")]
-        public HttpResponseMessage AddReqDet_reqId(RequestDetailVM reqDetVM)
+        [Route("api/RequestDetail/addReqDet/{reqId}")]
+        public HttpResponseMessage AddReqDet_reqId(int reqId, RequestDetailVM reqDetVM)
         {
-            try
+            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(reqId, reqDetVM);
+            if (req == null)
             {
-                RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(reqDetVM.ReqId, reqDetVM);
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
-            }
+            return Request.CreateResponse(HttpStatusCode.OK, req);
+
         }
 
         //UpdateReqDet(int reqId, RequestDetailVM reqDet)
