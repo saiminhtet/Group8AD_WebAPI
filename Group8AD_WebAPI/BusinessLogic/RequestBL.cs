@@ -442,58 +442,27 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // update request
-        // not dummy, but unable to pass in Request object to test
-        public static Request UpdateReq(Request req)
+        // done
+        public static RequestVM UpdateReq(RequestVM req)
         {
-            RequestVM rvm = new RequestVM();
-            Request request = new Request();
-            if (req != null)
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                int reqId = req.ReqId;
-                using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-                {
-                    request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
-                    request.EmpId = req.EmpId;
-                    if (req.ApproverId != null)
-                        request.ApproverId = (int)req.ApproverId;
-                    else
-                        request.ApproverId = 0;
-                    request.ApproverComment = req.ApproverComment;
-                    if (req.ReqDateTime != null)
-                        request.ReqDateTime = req.ReqDateTime;
-                    if (req.ApprovedDateTime != null)
-                        request.ApprovedDateTime = req.ApprovedDateTime;
-                    if (req.CancelledDateTime != null)
-                        request.CancelledDateTime = req.CancelledDateTime;
-                    if (req.FulfilledDateTime != null)
-                        request.FulfilledDateTime = req.FulfilledDateTime;
-                    request.Status = req.Status;
-                    entities.SaveChanges();
-
-                    rvm.ReqId = request.ReqId;
-                    rvm.EmpId = request.EmpId;
-                    if (request.ApproverId != null)
-                        rvm.ApproverId = (int)request.ApproverId;
-                    else
-                        rvm.ApproverId = 0;
-                    rvm.ApproverComment = request.ApproverComment;
-                    if (request.ReqDateTime != null)
-                        rvm.ReqDateTime = (DateTime)request.ReqDateTime;
-                    if (request.ApprovedDateTime != null)
-                        rvm.ApprovedDateTime = (DateTime)request.ApprovedDateTime;
-                    if (request.CancelledDateTime != null)
-                        rvm.CancelledDateTime = (DateTime)request.CancelledDateTime;
-                    if (request.FulfilledDateTime != null)
-                        rvm.FulfilledDateTime = (DateTime)request.FulfilledDateTime;
-                    rvm.Status = request.Status;
-                }
+                Request request = entities.Requests.Where(r => r.ReqId == req.ReqId).FirstOrDefault();
+                request.EmpId = req.EmpId;
+                request.ApproverId = req.ApproverId;
+                request.ApproverComment = req.ApproverComment;
+                if (req.ReqDateTime != null && DateTime.Compare(req.ReqDateTime, new DateTime(1800, 01, 01)) > 0)
+                    request.ReqDateTime = req.ReqDateTime;
+                if (req.ApprovedDateTime != null && DateTime.Compare(req.ApprovedDateTime, new DateTime(1800, 01, 01)) > 0)
+                    request.ApprovedDateTime = req.ApprovedDateTime;
+                if (req.CancelledDateTime != null && DateTime.Compare(req.CancelledDateTime, new DateTime(1800, 01, 01)) > 0)
+                    request.CancelledDateTime = req.CancelledDateTime;
+                if (req.FulfilledDateTime != null && DateTime.Compare(req.FulfilledDateTime, new DateTime(1800, 01, 01)) > 0)
+                    request.FulfilledDateTime = req.FulfilledDateTime;
+                request.Status = req.Status;
+                entities.SaveChanges();
             }
-            else
-            {
-                rvm.ReqId = 1;
-                request.ReqId = 1;
-            }
-            return request;
+            return req;
         }
 
         // accept request

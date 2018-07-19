@@ -11,27 +11,30 @@ namespace Group8AD_WebAPI.BusinessLogic
     {
         // dummy code
 
-        // not dummy, difficult to pass in Transaction object to test
         // add a transaction
-        public static TransactionVM AddTran(Transaction t)
+        // done
+        public static TransactionVM AddTran(TransactionVM t)
         {
-            TransactionVM transaction = new TransactionVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                entities.Transactions.Add(t);
+                Transaction tran = new Transaction();
+                tran.TranDateTime = t.TranDateTime;
+                tran.ItemCode = t.ItemCode;
+                tran.QtyChange = t.QtyChange;
+                tran.UnitPrice = t.UnitPrice;
+                tran.Desc = t.Desc;
+                tran.DeptCode = t.DeptCode;
+                tran.SuppCode = t.SuppCode;
+                tran.VoucherNo = t.VoucherNo;
+
+                entities.Transactions.Add(tran);
                 entities.SaveChanges();
 
-                transaction.TranId = t.TranId;
-                transaction.TranDateTime = t.TranDateTime;
-                transaction.ItemCode = t.ItemCode;
-                transaction.QtyChange = t.QtyChange;
-                //transaction.UnitPrice = t.UnitPrice;
-                transaction.Desc = t.Desc;
-                transaction.DeptCode = t.DeptCode;
-                transaction.SuppCode = t.SuppCode;
-                transaction.VoucherNo = t.VoucherNo;
+                List<Transaction> translist = entities.Transactions.ToList();
+                int transId = translist[translist.Count - 1].TranId;
+                t.TranId = transId;
+                return t;
             }
-            return transaction;
         }
     }
 }
