@@ -15,10 +15,10 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public string Type { get; set; }
         public string Content { get; set; }
         public bool IsRead { get; set; }
-        public Item Item { get; set; }
+        //public Item Item { get; set; }
         public int EmpId { get; set; }
-        public int RepId { get; set; }
-        public Notification notification { get; set; }
-        public Request Request { get; set; }
+        //public int RepId { get; set; }
+        //public Notification notification { get; set; }
+        //public Request Request { get; set; }
     }
 }
