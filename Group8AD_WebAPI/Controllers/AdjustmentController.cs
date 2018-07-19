@@ -59,9 +59,9 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/raise")]
-        public HttpResponseMessage RaiseAdjustment(int empId, List<ItemVM> iList, List<string> reasonList)
+        public HttpResponseMessage RaiseAdjustment(int empId, List<ItemVM> iList)
         {
-            List<AdjustmentVM> adjlist = AdjustmentBL.RaiseAdjustments(empId, iList, reasonList);
+            List<AdjustmentVM> adjlist = AdjustmentBL.RaiseAdjustments(empId, iList);
             if (adjlist == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
