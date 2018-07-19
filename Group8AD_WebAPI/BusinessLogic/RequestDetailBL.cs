@@ -10,24 +10,35 @@ namespace Group8AD_WebAPI.BusinessLogic
     public static class RequestDetailBL
     {
         //add RequestDetail with empId , reqDet and status
-        public static RequestDetailVM AddReqDet(int empId, RequestDetailVM reqDet , string status)
+        public static RequestDetailVM AddReqDet(int empId, RequestDetailVM reqDet, string status)
         {
-            RequestDetailVM reqDetail = new RequestDetailVM();
+            RequestDetailVM reqDetail = new RequestDetailVM();      
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                reqDetail = entities.RequestDetails.Select(r => new RequestDetailVM()
+                List<RequestVM> requestlists = RequestBL.GetReq(empId, status);
+
+                if (requestlists.Count == 0)
                 {
-                    EmpId = empId,
-                    ReqLineNo = r.ReqLineNo,
-                    ItemCode = r.ItemCode,
-                    ReqQty = r.ReqQty,
-                    AwaitQty = r.AwaitQty,
-                    FulfilledQty = r.FulfilledQty,
-                    Request = r.Request,
-                    Status = status
-                }).First<RequestDetailVM>();
+                    RequestBL.AddReq(empId, status);
+                }
+
+                List<RequestDetail> requestDetailList = entities.RequestDetails.Where(x => x.ReqId == reqDet.ReqId).ToList<RequestDetail>();
+
+                foreach (RequestDetail rd in requestDetailList)
+                {
+                    if (reqDet.ItemCode == rd.ItemCode)//if exist reqDet with same itemCode
+                    {
+                        reqDet.ReqQty++;//increase reqQty
+
+                        UpdateReqDet(reqDet.ReqId, reqDet);
+                    }
+                    else
+                    {
+                        AddReqDet(reqDet.ReqId, reqDet);//create reqDet
+                    }
+                }
             }
-            return reqDetail;
+            return reqDet;
         }
 
         //add RequestDetail with reqId and reqDet
