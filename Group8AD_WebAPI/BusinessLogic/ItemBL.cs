@@ -321,10 +321,10 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 //get the request list by emloyee id
                 List<Request> rlist = new List<Request>();
-                if (deptcode == request_deptcode)
-                {
-                    rlist = entities.Requests.Where(r => r.EmpId == empId && r.Status.Equals("Approved")).ToList();
-                }
+               // if (deptcode == request_deptcode)
+               // {
+                    rlist = entities.Requests.Where(r => r.EmpId == empId && request_deptcode.Equals(deptcode) && r.Status.Equals("Approved")).ToList();
+                //}
 
 
                 //get request details by request id
@@ -423,10 +423,55 @@ namespace Group8AD_WebAPI.BusinessLogic
                         }
                     }
                 }
-
                 return ritemlist;
+            }
+        }
+
+        //ResetQtyDisb
+        public static List<ItemVM> ResetQtyDisb()
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<Item> itemlist = entities.Items.ToList<Item>();
+                List<Item> updateditemlist = new List<Item>();
+                List<ItemVM> itemlistvm = new List<ItemVM>();
+                foreach (Item item in itemlist)
+                {
+
+                    Item updateitem = entities.Items.Where(i => i.ItemCode == item.ItemCode).First<Item>();
+                    updateitem.TempQtyDisb = 0;
+                    entities.SaveChanges();
+
+                    updateditemlist.Add(updateitem);
+                }
+
+                foreach (Item item in updateditemlist)
+                {
+                    ItemVM itemVM = new ItemVM();
+                    itemVM.ItemCode = item.ItemCode;
+                    itemVM.Cat = item.Cat;
+
+                    itemVM.Desc = item.Desc;
+                    itemVM.Location = item.Location;
+                    itemVM.UOM = item.UOM;
+                    itemVM.IsActive = item.IsActive;
+                    itemVM.Balance = item.Balance;
+                    itemVM.ReorderLevel = item.ReorderLevel;
+                    itemVM.ReorderQty = item.ReorderQty;
+                    itemVM.TempQtyDisb = item.TempQtyDisb;
+                    itemVM.TempQtyCheck = item.TempQtyCheck;
+                    itemVM.SuppCode1 = item.SuppCode1;
+                    itemVM.SuppCode2 = item.SuppCode2;
+                    itemVM.SuppCode3 = item.SuppCode3;
+                    itemVM.Price1 = item.Price1;
+                    itemVM.Price2 = item.Price2;
+                    itemVM.Price3 = item.Price3;
+
+                    itemlistvm.Add(itemVM);
+                }
 
 
+                return itemlistvm;
             }
         }
     }

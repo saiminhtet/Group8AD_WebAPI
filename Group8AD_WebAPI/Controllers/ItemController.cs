@@ -146,6 +146,22 @@ namespace Group8AD_WebAPI.Controllers
         }
 
 
+        // ResetQtyDisb
+        [System.Web.Http.AcceptVerbs("POST")]
+        [System.Web.Http.HttpPost]
+        [Route("api/Item/ResetQtyDisb")]
+        public HttpResponseMessage ResetQtyDisb()
+        {
+            List<ItemVM> retrieveitemlists = BusinessLogic.ItemBL.ResetQtyDisb();
+
+            if (retrieveitemlists == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, retrieveitemlists);
+        }
+
+
 
     }
 
