@@ -46,8 +46,16 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static string GetHeadId(int empId)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {                
-                string DeptHeadId = entities.Departments.Where(e => e.DeptHeadId == empId).ToString();
+            {
+                //string DeptHeadId = (from a in entities.Employees.Where(a => a.EmpId == empId)
+                //                    from b in entities.Departments
+                //                    where a.DeptCode == b.DeptCode
+                //                    select new
+                //                    {
+                //                       DeptHeadId = b.DeptHeadId
+                //                    }).ToString();
+                string deptCode = GetDeptCode(empId);
+                string DeptHeadId = entities.Departments.Where(x => x.DeptCode == deptCode).Select(x => x.DeptHeadId).First().ToString();             
                 return DeptHeadId;
             }
         }
@@ -59,7 +67,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var role = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.Role).ToString();
+                var role = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.Role).First();
                 return role;
             }
         }
@@ -86,5 +94,15 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             return emplists;
         }
+
+        ////Get Employee 
+        //public static List<EmployeeVM> GetEmp(string deptCode, string name)
+        //{
+
+        //    //if (deptCode=null)
+        //    //{
+
+        //    //}
+        //}
     }
 }
