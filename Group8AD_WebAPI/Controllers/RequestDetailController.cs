@@ -11,8 +11,7 @@ namespace Group8AD_WebAPI.Controllers
 { 
     public class RequestDetailController : ApiController
     {
-        //AddReqDet(int empId, RequestDetail reqDet , string status)     
-        //ok
+        //AddReqDet(int empId, RequestDetail reqDet , string status)   
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/RequestDetail/addReqDet")]
@@ -28,7 +27,6 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //AddReqDet(int reqId, RequestDetail reqDet)
-        //ok
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/RequestDetail/addReqDet/{reqId}")]
@@ -46,29 +44,27 @@ namespace Group8AD_WebAPI.Controllers
         //UpdateReqDet(int reqId, RequestDetailVM reqDet)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/RequestDetail/update")]
-        public HttpResponseMessage UpdateReqDet(RequestDetailVM reqDetVM)
+        [Route("api/RequestDetail/update/{reqId}")]
+        public HttpResponseMessage UpdateReqDet(int reqId, RequestDetailVM reqDetVM)
         {
-            try
+            RequestDetailVM req = BusinessLogic.RequestDetailBL.UpdateReqDet(reqId, reqDetVM);
+            if (req == null)
             {
-                RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(reqDetVM.ReqId, reqDetVM);
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
-            }
+            return Request.CreateResponse(HttpStatusCode.OK, req);
+
         }
 
         //removeReqDet(int empId, string itemCode, string status)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/RequestDetail/removeReqDet_empId/{empId}")]
-        public HttpResponseMessage removeReqDet(RequestDetailVM reqDetvm)
+        [Route("api/RequestDetail/removeReqDet")]
+        public HttpResponseMessage removeReqDet(int empId, string itemCode, string status)
         {
             try
             {
-                BusinessLogic.RequestDetailBL.removeReqDet(reqDetvm.EmpId, reqDetvm.ItemCode, reqDetvm.Status);
+                BusinessLogic.RequestDetailBL.removeReqDet(empId,itemCode,status);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -80,12 +76,12 @@ namespace Group8AD_WebAPI.Controllers
         //removeReqDet(int reqId, string itemCode)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/RequestDetail/removeReqDet/{reqId}")]
-        public HttpResponseMessage removeReqDet_reqId(RequestDetailVM reqDetvm)
+        [Route("api/RequestDetail/removeReqDet_reqId")]
+        public HttpResponseMessage removeReqDet_reqId(int reqId, string itemCode)
         {
             try
             {
-                BusinessLogic.RequestDetailBL.removeReqDet(reqDetvm.ReqId, reqDetvm.ItemCode);
+                BusinessLogic.RequestDetailBL.removeReqDet(reqId,itemCode);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -97,7 +93,7 @@ namespace Group8AD_WebAPI.Controllers
         //removeAllReqDet(int reqId)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/RequestDetail/removeAll/{reqId}")]
+        [Route("api/RequestDetail/removeAll")]
         public HttpResponseMessage removeAllReqDet(int reqId)
         {
             try
@@ -129,7 +125,7 @@ namespace Group8AD_WebAPI.Controllers
         //UpdateAwait(int reqId, int awaitQty)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/RequestDetail/updateAwait/{reqId}/{awaitQty}")]
+        [Route("api/RequestDetail/updateAwait")]
         public HttpResponseMessage UpdateAwait(int reqId, int awaitQty)
         {
             try
@@ -144,6 +140,7 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //string GetDeptCode(RequestDetail reqDet)
+        //
         [AcceptVerbs("GET")]
         [HttpGet]
         [Route("api/RequestDetail/GetDeptCode")]
@@ -162,12 +159,12 @@ namespace Group8AD_WebAPI.Controllers
         //UpdateFulfilled(int reqId, int fulfilledQty)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/RequestDetail/updateFulfilled/{reqId}/{fulfilledQty}")]
+        [Route("api/RequestDetail/updateFulfilled/{reqId}")]
         public HttpResponseMessage UpdateFulfilled(int reqId, int fulfilledQty)
         {
             try
             {
-                BusinessLogic.RequestDetailBL.UpdateAwait(reqId, fulfilledQty);
+                BusinessLogic.RequestDetailBL.UpdateFulfilled(reqId, fulfilledQty);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
