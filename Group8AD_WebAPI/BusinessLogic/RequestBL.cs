@@ -403,8 +403,8 @@ namespace Group8AD_WebAPI.BusinessLogic
             return;
         }
 
-        // dummy
         // submit request
+        // cannot test until UpdateReqDet(reqId, reqDet) is finished
         public static RequestVM SubmitReq(int empId, List<RequestDetailVM> reqDetList, string status)
         {
             // This is only to explain code steps at Web Api service
@@ -414,31 +414,62 @@ namespace Group8AD_WebAPI.BusinessLogic
             // Set status for currReq to “Submitted”
             // Call UpdateReq(currReq) to persist at db
             // Return currReq object
-
-            //List<RequestVM> reqlist = GetReq(empId, "Unsubmitted");
-            //for (int i = 0; i < reqlist.Count; i++)
-            //{
-
-            //}
-
-            // dummy
-            RequestVM request = new RequestVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                request = entities.Requests.Select(r => new RequestVM()
+                RequestVM r = new RequestVM();
+                List<RequestVM> reqlist = GetReq(empId, status);
+                for (int i = 0; i < reqlist.Count; i++)
                 {
-                    ReqId = r.ReqId,
-                    EmpId = r.EmpId,
-                    //ApproverId = r.ApproverId,
-                    ApproverComment = r.ApproverComment,
-                    //ReqDateTime = r.ReqDateTime,
-                    //ApprovedDateTime = r.ApprovedDateTime,
-                    //CancelledDateTime = r.CancelledDateTime,
-                    //FulfilledDateTime = r.FulfilledDateTime,
-                    Status = r.Status
-                }).First<RequestVM>();
+                    for (int j = 0; j < reqDetList.Count; j++)
+                    {
+                        RequestDetailVM rvm = RequestDetailBL.UpdateReqDet(reqDetList[j].ReqId, reqDetList[j]);
+                    }
+                    reqlist[i].ReqDateTime = DateTime.Now;
+                    reqlist[i].Status = "Submitted";
+                    r = UpdateReq(reqlist[i]);
+                }
+                return r;
+                //RequestVM r = new RequestVM();
+                //List<RequestVM> reqlist = GetReq(empId, status);
+                //for (int i = 0; i < reqlist.Count; i++)
+                //{
+                //    List<RequestDetail> rdlist = entities.RequestDetails.Where(rd => rd.ReqId == reqlist[i].ReqId).ToList();
+                //    for (int j = 0; j < rdlist.Count; j++)
+                //    {
+                //        for (int k = 0; k < reqDetList.Count; k++)
+                //        {
+                //            if (rdlist[j].ReqId == reqDetList[k].ReqId && rdlist[j].ReqLineNo == reqDetList[k].ReqLineNo)
+                //            {
+                //                RequestDetailVM rvm = RequestDetailBL.UpdateReqDet(rdlist[j].ReqId, reqDetList[k]);
+                //            }
+                //        }
+                //    }
+                //    reqlist[i].ReqDateTime = DateTime.Now;
+                //    reqlist[i].Status = "Submitted";
+                //    r = UpdateReq(reqlist[i]);
+                //}
+                //return r;
             }
-            return request;
+
+
+            //// dummy
+            //RequestVM request = new RequestVM();
+            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            //{
+            //    request = entities.Requests.Select(r => new RequestVM()
+            //    {
+            //        ReqId = r.ReqId,
+            //        EmpId = r.EmpId,
+            //        //ApproverId = r.ApproverId,
+            //        ApproverComment = r.ApproverComment,
+            //        //ReqDateTime = r.ReqDateTime,
+            //        //ApprovedDateTime = r.ApprovedDateTime,
+            //        //CancelledDateTime = r.CancelledDateTime,
+            //        //FulfilledDateTime = r.FulfilledDateTime,
+            //        Status = r.Status
+            //    }).First<RequestVM>();
+            //}
+            //return request;
         }
 
         // update request
@@ -537,6 +568,9 @@ namespace Group8AD_WebAPI.BusinessLogic
             // if (openCount == 0)
             //  r.Status = “Fulfilled”;
             // Save Changes for this Request object
+
+            //int openCount = 0;
+
             return;
         }
     }
