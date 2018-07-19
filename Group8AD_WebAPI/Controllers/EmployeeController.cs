@@ -65,7 +65,7 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Employee/{id}/DepartmentHead")]
         public HttpResponseMessage GetDepartmentHead(int id)
         {
-            string DeptHead = BusinessLogic.EmployeeBL.GetDeptCode(id);
+            string DeptHead = BusinessLogic.EmployeeBL.GetHeadId(id);
 
             if (DeptHead == null)
             {
@@ -73,5 +73,35 @@ namespace Group8AD_WebAPI.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, DeptHead);
         }
+
+
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Employee/{id}/Role")]
+        public HttpResponseMessage GetRole(int id)
+        {
+            string role = BusinessLogic.EmployeeBL.GetRole(id);
+
+            if (role == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, role);
+        }
+
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Employee/GetEmp")]
+        public HttpResponseMessage GetEmp(string dCode, string name)
+        {
+             List<EmployeeVM> emplist = BusinessLogic.EmployeeBL.GetAllEmp();
+
+            if (emplist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, emplist);
+        }
+
     }
 }

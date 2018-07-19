@@ -521,7 +521,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             foreach (RequestVM r in requestlist)
             {
-                requestdetails_list = RequestDetailBL.GetReqDetList(r.ReqId);
+                requestdetails_list.AddRange(RequestDetailBL.GetReqDetList(r.ReqId));
             }
 
             
@@ -555,6 +555,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                         RequestDetailBL.UpdateAwait(r.ReqId, rd.AwaitQty);
 
                                         fulfilledList.Add(rd);
+                                        break;
                                     }
                                     else
                                     {
@@ -568,11 +569,20 @@ namespace Group8AD_WebAPI.BusinessLogic
                                         RequestDetailBL.UpdateAwait(r.ReqId, rd.AwaitQty);
 
                                         fulfilledList.Add(rd);
+                                        break;
                                     }
                                 }
 
                             }
+                            else
+                            {
+                                break;
+                            }
                         }
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
