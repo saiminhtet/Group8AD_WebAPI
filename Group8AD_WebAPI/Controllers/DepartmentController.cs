@@ -48,14 +48,15 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         //set Rep by DepartmentCode , fromEmpId and toEmpId
+        //tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Department/setRep")]
-        public HttpResponseMessage setRep(SetRepVM repVM)
+        public HttpResponseMessage setRep(string deptCode, int empId)
         {
             try
             {
-                BusinessLogic.DepartmentBL.setRep(repVM.DeptCode, repVM.FromEmpId, repVM.ToEmpId);
+                BusinessLogic.DepartmentBL.setRep(deptCode,empId);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -65,36 +66,21 @@ namespace Group8AD_WebAPI.Controllers
             }
         }
 
-        //removeRep(string deptCode, int fromEmpId)
+        //setCollPt(string deptCode, int collPt)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Department/removeRep/{deptCode}")]
-        public HttpResponseMessage removeRep(SetRepVM setRepvm)
+        [Route("api/Department/setCollPt")]
+        public HttpResponseMessage setCollPt(string deptCode, int collPt)
         {
             try
             {
-                BusinessLogic.DepartmentBL.removeRep(setRepvm.DeptCode, setRepvm.FromEmpId);
+                BusinessLogic.DepartmentBL.setCollPt(deptCode, collPt);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "error");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
             }
-        }
-
-        //setCollPt(string deptCode, int collPt)
-        [AcceptVerbs("POST")]
-        [HttpPost]
-        [Route("api/Department/setCollPt/{deptCode}/{collPt}")]
-        public HttpResponseMessage setCollPt(string deptCode, int collPt)
-        {
-            DepartmentVM department = BusinessLogic.DepartmentBL.setCollPt(deptCode, collPt);
-
-            if (department == null)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK, department);
         }
 
         //GetCollPtList
@@ -103,7 +89,7 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Department/GetCollectionPoint")]
         public HttpResponseMessage GetCollPtList()
         {
-            List<string> departments = BusinessLogic.DepartmentBL.GetCollPtList();
+            List<CollectionPointVM> departments = BusinessLogic.DepartmentBL.GetCollPtList();
 
             if (departments == null)
             {
@@ -115,10 +101,10 @@ namespace Group8AD_WebAPI.Controllers
         //GetCollPt
         [AcceptVerbs("GET")]
         [HttpGet]
-        [Route("api/Department/{deptCode}")]
+        [Route("api/Department/GetCollPt/{deptCode}")]
         public HttpResponseMessage GetCollPt(string deptCode)
         {
-            string colPt = BusinessLogic.DepartmentBL.GetCollPt(deptCode);
+            CollectionPointVM colPt = BusinessLogic.DepartmentBL.GetCollPt(deptCode);
 
             if (colPt == null)
             {
@@ -140,6 +126,19 @@ namespace Group8AD_WebAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
             return Request.CreateResponse(HttpStatusCode.OK, departments);
+        }
+
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Department/GetDept")]
+        public HttpResponseMessage GetDept(int empId)
+        {
+            DepartmentVM dep = BusinessLogic.DepartmentBL.GetDept(empId);
+            if (dep == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, dep);
         }
     }
 }
