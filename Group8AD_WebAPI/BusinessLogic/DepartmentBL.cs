@@ -40,77 +40,61 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //set Rep by DepartmentCode , fromEmpId and toEmpId
-        public static void setRep(string deptCode, int fromEmpId, int toEmpId)
+       
+        public static void setRep(string deptCode, int empId)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                Department department = entities.Departments.Where(d => d.DeptCode == deptCode).First<Department>();
+                Department department = entities.Departments.Where(d => d.DeptCode.Equals(deptCode)).First<Department>();
                 {
-                    department.DeptRepId = fromEmpId;
+                    department.DeptRepId = empId;
                     entities.SaveChanges();
-                };
-            }
-        }
-
-        //remove Rep by deptCode and fromEmpId 
-        public static void removeRep(string deptCode, int fromEmpId)
-        {
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {               
-                Department department = entities.Departments.Where(d => d.DeptCode == deptCode).First<Department>();
-                {
-                    department.DeptRepId = null;
-                    department.DelegateFromDate = null;
-                    department.DelegateToDate = null;
-                    entities.SaveChanges();
-                };
-            }
-        }
-
-        public static List<string> GetCollPtList()
-        {
-            List<string> list = new List<string>();
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                var departmentList = entities.Departments.Select(d => d.ColPtId);
-                foreach (var v in departmentList)
-                {
-                    list.Add(v.ToString());
                 }
             }
-            return list;
+            return;
         }
         
-        //get CollPt by DepartmentCode 
-        public static string GetCollPt(string deptCode)
+        public static List<CollectionPointVM> GetCollPtList()
         {
+            List<CollectionPointVM> collist = new List<CollectionPointVM>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var collPt = entities.Departments.Where(d => d.DeptCode == deptCode).Select(d => d.ColPtId).First().ToString();
-                return collPt;
+                collist = entities.CollectionPoints.Select(a => new CollectionPointVM()
+                {
+                    ColPtId = a.ColPtId,
+                    Location = a.Location
+                }).ToList<CollectionPointVM>();
+
+                return collist;
             }
+        }
+        public static CollectionPointVM GetCollPt(string deptCode)
+        {
+            CollectionPointVM collectionPoint = new CollectionPointVM();
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                var collPt = entities.Departments.Where(d => d.DeptCode.Equals(deptCode)).Select(d => d.ColPtId).First();
+                collectionPoint = entities.CollectionPoints.Where(c => c.ColPtId == collPt).Select(c => new CollectionPointVM()
+                {
+                    ColPtId = c.ColPtId,
+                    Location = c.Location
+                }).First<CollectionPointVM>();
+            }
+            return collectionPoint;            
         }
 
         //set CollPt by DepartmentCode , collPt
-        public static DepartmentVM setCollPt(string deptCode, int collPt)
+        public static void setCollPt(string deptCode, int collPt)
         {
-            DepartmentVM rep = new DepartmentVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                rep = entities.Departments.Where(d => d.DeptCode == deptCode && d.ColPtId == collPt).Select(d => new DepartmentVM()
+                Department department = entities.Departments.Where(d => d.DeptCode.Equals(deptCode)).First<Department>();
                 {
-                    DeptCode = d.DeptCode,
-                    DeptName = d.DeptName,
-                    DeptCtcNo = d.DeptCtcNo,
-                    DeptFaxNo = d.DeptFaxNo,
-                    ColPtId = d.ColPtId,
-                    DeptHeadId = d.DeptHeadId,
-                    DeptRepId = d.DeptRepId,
-                    DelegateApproverId = d.DelegateApproverId
-                }).First<DepartmentVM>();
-                entities.SaveChanges();
+                    department.ColPtId = collPt;
+                    entities.SaveChanges();
+                }
             }
-            return rep;
+            return;
         }
 
         //get department code 
@@ -127,6 +111,29 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
             }
             return list;
+        }
+
+        //getDept by empId
+        public static DepartmentVM GetDept(int empId)
+        {
+            DepartmentVM department = new DepartmentVM();
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                department = entities.Departments.Where(d => d.DeptRepId == empId).Select(d => new DepartmentVM()
+                {
+                    DeptCode = d.DeptCode,
+                    DeptName = d.DeptName,
+                    DeptCtcNo = d.DeptCtcNo,
+                    DeptFaxNo = d.DeptFaxNo,
+                    ColPtId = d.ColPtId,
+                    DeptHeadId = d.DeptHeadId,
+                    DeptRepId = d.DeptRepId,
+                    DelegateApproverId = d.DelegateApproverId,
+                    EmpId = empId
+
+                }).First<DepartmentVM>();
+            }
+            return department;
         }
     }
 }
