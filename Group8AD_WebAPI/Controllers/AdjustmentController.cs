@@ -13,7 +13,7 @@ namespace Group8AD_WebAPI.Controllers
     //Controllers
     public class AdjustmentController : ApiController
     {
-        // difficult to pass in Adjustment object to test
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/add")]

@@ -144,13 +144,13 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, request);
         }
 
-        // tested, not dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/update")]
-        public HttpResponseMessage UpdateRequest(Request req)
+        public HttpResponseMessage UpdateRequest(RequestVM req)
         {
-            Request request = RequestBL.UpdateReq(req);
+            RequestVM request = RequestBL.UpdateReq(req);
             if (request == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);

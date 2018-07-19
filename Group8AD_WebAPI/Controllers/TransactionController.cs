@@ -12,11 +12,11 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class TransactionController : ApiController
     {
-        // difficult to pass in Transaction object to test
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Transaction/add")]
-        public HttpResponseMessage AddTransaction(Transaction t)
+        public HttpResponseMessage AddTransaction(TransactionVM t)
         {
             TransactionVM transaction = TransactionBL.AddTran(t);
             if (transaction == null)

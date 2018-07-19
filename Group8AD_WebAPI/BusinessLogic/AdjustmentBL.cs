@@ -12,8 +12,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         // dummy code
 
         // add an adjustment
-        // not dummy, revise
-        // Object reference not set to an instance of an object, when testing
+        // done
         public static AdjustmentVM AddAdj(AdjustmentVM adj)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -31,36 +30,8 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 entities.Adjustments.Add(a);
                 entities.SaveChanges();
-                //AdjustmentVM adjustment = new AdjustmentVM()
-                //{
-                //    VoucherNo = adj.VoucherNo,
-                //    EmpId = adj.EmpId,
-                //    DateTimeIssued = adj.DateTimeIssued,
-                //    ItemCode = adj.ItemCode,
-                //    Reason = adj.Reason,
-                //    QtyChange = adj.QtyChange,
-                //    Status = adj.Status,
-                //    //ApproverId = adj.ApproverId,
-                //    ApproverComment = adj.ApproverComment
-                //};
                 return adj;
             }
-
-            //AdjustmentVM adjustment = new AdjustmentVM()
-            //{
-            //    VoucherNo = adj.VoucherNo,
-            //    EmpId = adj.EmpId,
-            //    DateTimeIssued = adj.DateTimeIssued,
-            //    ItemCode = adj.ItemCode,
-            //    Reason = adj.Reason,
-            //    QtyChange = adj.QtyChange,
-            //    Status = adj.Status,
-            //    //ApproverId = adj.ApproverId,
-            //    ApproverComment = adj.ApproverComment
-            //};
-            //return adjustment;
-
-            //return adj;
         }
 
         // get an adjustment by voucher number
