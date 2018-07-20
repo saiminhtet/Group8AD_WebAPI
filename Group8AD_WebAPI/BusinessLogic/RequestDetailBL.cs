@@ -11,7 +11,7 @@ namespace Group8AD_WebAPI.BusinessLogic
     {
         //add RequestDetail with empId , reqDet and status
         //dummy
-        public static RequestDetailVM AddReqDet(int empId, string itemCode, string status)
+        public static RequestDetailVM AddReqDet(int empId, string itemCode,int reqQty, string status)
         {
             RequestDetailVM reqDetail = new RequestDetailVM();      
             //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
