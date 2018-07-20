@@ -110,25 +110,6 @@ namespace Group8AD_WebAPI.BusinessLogic
         // not dummy, not tested
         public static List<AdjustmentVM> RaiseAdjustments(int empId, List<ItemVM> iList)
         {
-            ////dummy
-            //List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    adjlist = entities.Adjustments.Select(a => new AdjustmentVM()
-            //    {
-            //        VoucherNo = a.VoucherNo,
-            //        EmpId = a.EmpId,
-            //        DateTimeIssued = a.DateTimeIssued,
-            //        ItemCode = a.ItemCode,
-            //        Reason = a.Reason,
-            //        QtyChange = a.QtyChange,
-            //        Status = a.Status,
-            //        //ApproverId = a.ApproverId,
-            //        ApproverComment = a.ApproverComment
-            //    }).ToList<AdjustmentVM>();
-            //}
-            //return adjlist;
-
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
@@ -140,7 +121,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                         Adjustment a = new Adjustment();
                         string vNum = GenerateVoucherNo();
                         a.VoucherNo = vNum;
-                        //a.VoucherNo = "2019";
                         a.EmpId = empId;
                         a.DateTimeIssued = DateTime.Now;
                         a.ItemCode = iList[i].ItemCode;
@@ -234,25 +214,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                         item.Price3 = iList[i].Price3;
                         NotificationBL.AddLowStkNotification(empId, item);
                     }
-                    //Item item = new Item();
-                    //item.ItemCode = iList[i].ItemCode;
-                    //item.Cat = iList[i].Cat;
-                    //item.Desc = iList[i].Desc;
-                    //item.Location = iList[i].Location;
-                    //item.UOM = iList[i].UOM;
-                    //item.IsActive = iList[i].IsActive;
-                    //item.Balance = iList[i].Balance;
-                    //item.ReorderLevel = iList[i].ReorderLevel;
-                    //item.ReorderQty = iList[i].ReorderQty;
-                    //item.TempQtyDisb = iList[i].TempQtyDisb;
-                    //item.TempQtyCheck = iList[i].TempQtyCheck;
-                    //item.SuppCode1 = iList[i].SuppCode1;
-                    //item.Price1 = iList[i].Price1;
-                    //item.SuppCode2 = iList[i].SuppCode2;
-                    //item.Price2 = iList[i].Price2;
-                    //item.SuppCode3 = iList[i].SuppCode3;
-                    //item.Price3 = iList[i].Price3;
-                    //NotificationBL.AddLowStkNotification(empId, item);
                 }
                 // will implement when Email service method is done
                 // send email to clerk
@@ -398,8 +359,6 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 string year = DateTime.Now.Year.ToString();
-                List<string> vlist = entities.Adjustments.Where(a => a.VoucherNo.Substring(0, 4) == year)
-                    .Select(a => a.VoucherNo).ToList();
                 List<Adjustment> adjlist = entities.Adjustments.Where(a => a.VoucherNo.Substring(0, 4) == year).ToList();
                 int index = Int32.Parse(adjlist[adjlist.Count - 1].VoucherNo.Substring(5, 5));
                 index = index + 1;
