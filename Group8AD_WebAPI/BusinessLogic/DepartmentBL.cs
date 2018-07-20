@@ -117,22 +117,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static DepartmentVM GetDept(int empId)
         {
             DepartmentVM department = new DepartmentVM();
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                department = entities.Departments.Where(d => d.DeptRepId == empId).Select(d => new DepartmentVM()
-                {
-                    DeptCode = d.DeptCode,
-                    DeptName = d.DeptName,
-                    DeptCtcNo = d.DeptCtcNo,
-                    DeptFaxNo = d.DeptFaxNo,
-                    ColPtId = d.ColPtId,
-                    DeptHeadId = d.DeptHeadId,
-                    DeptRepId = d.DeptRepId,
-                    DelegateApproverId = d.DelegateApproverId,
-                    EmpId = empId
-
-                }).First<DepartmentVM>();
-            }
+            
             return department;
         }
     }
