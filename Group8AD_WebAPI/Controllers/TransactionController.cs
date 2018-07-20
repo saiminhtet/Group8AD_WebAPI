@@ -74,7 +74,7 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Transaction/CBAnnual")]
         public HttpResponseMessage CBAnnual(DateTime toDate)
         {
-            List<TransactionVM> translist = ReportItemBL.GetCBAnnual(toDate);
+            List<ReportItemVM> translist = ReportItemBL.GetCBMonthly(toDate);
             if (translist == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);

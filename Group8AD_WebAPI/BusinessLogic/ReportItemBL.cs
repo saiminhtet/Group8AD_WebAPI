@@ -142,25 +142,38 @@ namespace Group8AD_WebAPI.BusinessLogic
             return translist;
         }
 
-        // get annual chargeback
-        public static List<TransactionVM> GetCBAnnual(DateTime toDate)
+        // get monthly chargeback
+        public static List<ReportItemVM> GetCBMonthly(DateTime toDate)
         {
-            List<TransactionVM> translist = new List<TransactionVM>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                translist = entities.Transactions.Select(t => new TransactionVM()
+                int year = toDate.Year;
+                int month = toDate.Month;
+                DateTime startDate = new DateTime(year, month, 01, 00, 00, 00);
+                DateTime endDate = startDate.AddMonths(1);
+                List<ReportItemVM> rilist = new List<ReportItemVM>();
+                List<Transaction> translist = entities.Transactions.ToList();
+                List<Department> deptlist = entities.Departments.Where(d => d.DeptCode != "STOR").ToList();
+                for (int i = 0; i < deptlist.Count; i++)
                 {
-                    TranId = t.TranId,
-                    TranDateTime = t.TranDateTime,
-                    ItemCode = t.ItemCode,
-                    QtyChange = t.QtyChange,
-                    //UnitPrice = t.UnitPrice,
-                    Desc = t.Desc,
-                    DeptCode = t.DeptCode,
-                    SuppCode = t.SuppCode
-                }).ToList<TransactionVM>();
+                    double chargeBack = 0;
+                    for (int j = 0; j < translist.Count; j++)
+                    {
+                        if (translist[j].UnitPrice != null && deptlist[i].DeptCode == translist[j].DeptCode &&
+                            DateTime.Compare(translist[i].TranDateTime, startDate) >= 0 &&
+                            DateTime.Compare(translist[i].TranDateTime, endDate) < 0)
+                        {
+                            chargeBack = chargeBack + chargeBack + translist[i].QtyChange * (double)translist[i].UnitPrice;
+                        }
+                    }
+                    ReportItemVM ri = new ReportItemVM();
+                    ri.Label = deptlist[i].DeptName;
+                    ri.Val1 = chargeBack;
+                    ri.Val2 = 0;
+                    rilist.Add(ri);
+                }
+                return rilist;
             }
-            return translist;
         }
 
         // get annual volume
