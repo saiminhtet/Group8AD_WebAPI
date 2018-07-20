@@ -30,9 +30,9 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/RequestDetail/addReqDet")]
-        public HttpResponseMessage AddReqDet(int empId, string itemCode, string status)
+        public HttpResponseMessage AddReqDet(int empId, string itemCode, int reqQty, string status)
         {
-            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(empId, itemCode,status);
+            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(empId, itemCode,reqQty,status);
             if (req == null)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
