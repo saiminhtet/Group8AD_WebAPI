@@ -10,47 +10,48 @@ namespace Group8AD_WebAPI.BusinessLogic
     public static class RequestDetailBL
     {
         //add RequestDetail with empId , reqDet and status
-        public static RequestDetailVM AddReqDet(int empId, RequestDetailVM reqDet, string status)
+        //dummy
+        public static RequestDetailVM AddReqDet(int empId, string itemCode, string status)
         {
             RequestDetailVM reqDetail = new RequestDetailVM();      
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                List<RequestVM> requestlists = RequestBL.GetReq(empId, status);
+            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            //{
+            //    List<RequestVM> requestlists = RequestBL.GetReq(empId, status);
 
-                if (requestlists.Count == 0)
-                {
-                    RequestBL.AddReq(empId, status);
-                }
+            //    if (requestlists.Count == 0)
+            //    {
+            //        RequestBL.AddReq(empId, status);
+            //    }
 
-                List<RequestDetail> requestDetailList = entities.RequestDetails.Where(x => x.ReqId == reqDet.ReqId).ToList<RequestDetail>();
+            //    List<RequestDetail> requestDetailList = entities.RequestDetails.Where(x => x.ReqId == reqDet.ReqId).ToList<RequestDetail>();
 
-                foreach (RequestDetail rd in requestDetailList)
-                {
-                    if (status == "Unsubmitted")
-                    {
-                        if (reqDet.ItemCode == rd.ItemCode)//if exist reqDet with same itemCode
-                        {
-                            reqDet.ReqQty++;//increase reqQty
+            //    foreach (RequestDetail rd in requestDetailList)
+            //    {
+            //        if (status == "Unsubmitted")
+            //        {
+            //            if (reqDet.ItemCode == rd.ItemCode)//if exist reqDet with same itemCode
+            //            {
+            //                reqDet.ReqQty++;//increase reqQty
 
-                            UpdateReqDet(reqDet.ReqId, reqDet);
-                        }
-                        else
-                        {
-                            AddReqDet(reqDet.ReqId, reqDet);//create reqDet
-                        }
-                    }
+            //                UpdateReqDet(reqDet.ReqId, reqDet);
+            //            }
+            //            else
+            //            {
+            //                AddReqDet(reqDet.ReqId, reqDet);//create reqDet
+            //            }
+            //        }
 
-                    if (status == "Bookmarked")
-                    {
-                        if (reqDet.ItemCode != rd.ItemCode)//if reqDet does not exist  with itemCode
-                        {
-                            AddReqDet(reqDet.ReqId, reqDet);//create reqDet
-                        }
-                    }
-                }
+            //        if (status == "Bookmarked")
+            //        {
+            //            if (reqDet.ItemCode != rd.ItemCode)//if reqDet does not exist  with itemCode
+            //            {
+            //                AddReqDet(reqDet.ReqId, reqDet);//create reqDet
+            //            }
+            //        }
+            //    }
 
-            }
-            return reqDet;
+            //}
+            return reqDetail;
         }
 
         //add RequestDetail with reqId and reqDet
