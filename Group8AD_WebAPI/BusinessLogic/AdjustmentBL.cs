@@ -30,6 +30,9 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 entities.Adjustments.Add(a);
                 entities.SaveChanges();
+
+                //List<AdjustmentVM> adjlist = 
+                //AdjustmentVM adjustment = new AdjustmentVM();
                 return adj;
             }
         }
@@ -107,136 +110,120 @@ namespace Group8AD_WebAPI.BusinessLogic
         // not dummy, not tested
         public static List<AdjustmentVM> RaiseAdjustments(int empId, List<ItemVM> iList)
         {
-            //dummy
-            List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                adjlist = entities.Adjustments.Select(a => new AdjustmentVM()
+                List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
+                for (int i = 0; i < iList.Count; i++)
                 {
-                    VoucherNo = a.VoucherNo,
-                    EmpId = a.EmpId,
-                    DateTimeIssued = a.DateTimeIssued,
-                    ItemCode = a.ItemCode,
-                    Reason = a.Reason,
-                    QtyChange = a.QtyChange,
-                    Status = a.Status,
-                    //ApproverId = a.ApproverId,
-                    ApproverComment = a.ApproverComment
-                }).ToList<AdjustmentVM>();
+                    if (iList[i].TempQtyCheck - iList[i].Balance > 0)
+                    {
+                        AdjustmentVM avm = new AdjustmentVM();
+                        Adjustment a = new Adjustment();
+                        string vNum = GenerateVoucherNo();
+                        a.VoucherNo = vNum;
+                        a.EmpId = empId;
+                        a.DateTimeIssued = DateTime.Now;
+                        a.ItemCode = iList[i].ItemCode;
+                        // a.Reason = iList[i].TempReason;
+                        a.Reason = "";
+                        a.QtyChange = (int)iList[i].TempQtyCheck - iList[i].Balance;
+                        a.Status = "Submitted";
+                        a.ApproverComment = "";
+                        entities.Adjustments.Add(a);
+                        entities.SaveChanges();
+                        List<Adjustment> alist = entities.Adjustments.ToList();
+                        Adjustment temp = alist[alist.Count - 1];
+                        avm.VoucherNo = temp.VoucherNo;
+                        avm.EmpId = temp.EmpId;
+                        avm.DateTimeIssued = temp.DateTimeIssued;
+                        avm.ItemCode = temp.ItemCode;
+                        avm.Reason = temp.Reason;
+                        avm.QtyChange = temp.QtyChange;
+                        avm.Status = temp.Status;
+                        avm.ApproverComment = temp.ApproverComment;
+                        adjlist.Add(avm);
+
+                        double chgVal = a.QtyChange * (double)iList[i].Price1;
+                        if (chgVal >= 250)
+                        {
+                            Notification notif = new Notification();
+                            notif.NotificationDateTime = DateTime.Now;
+                            notif.FromEmp = empId;
+                            notif.ToEmp = 104;
+                            notif.RouteUri = "";
+                            notif.Type = "Adjustment Submitted";
+                            notif.Content = a.Reason;
+                            notif.IsRead = false;
+                            entities.Notifications.Add(notif);
+                            entities.SaveChanges();
+                            List<Notification> nlist = entities.Notifications.ToList();
+                            Notification tempNotif = nlist[nlist.Count - 1];
+                            NotificationVM nvm = new NotificationVM();
+                            nvm.NotificationId = tempNotif.NotificationId;
+                            nvm.NotificationDateTime = tempNotif.NotificationDateTime;
+                            nvm.FromEmp = tempNotif.FromEmp;
+                            nvm.ToEmp = tempNotif.ToEmp;
+                            nvm.RouteUri = tempNotif.RouteUri;
+                            nvm.Type = tempNotif.Type;
+                            nvm.Content = tempNotif.Content;
+                            nvm.IsRead = tempNotif.IsRead;
+                            NotificationBL.NotifyManager(nvm);
+                        }
+                        else
+                        {
+                            Notification notif = new Notification();
+                            notif.NotificationDateTime = DateTime.Now;
+                            notif.FromEmp = empId;
+                            notif.ToEmp = 105;
+                            notif.RouteUri = "";
+                            notif.Type = "Adjustment Submitted";
+                            notif.Content = a.Reason;
+                            notif.IsRead = false;
+                            entities.Notifications.Add(notif);
+                            entities.SaveChanges();
+                            List<Notification> nlist = entities.Notifications.ToList();
+                            Notification tempNotif = nlist[nlist.Count - 1];
+                            NotificationVM nvm = new NotificationVM();
+                            nvm.NotificationId = tempNotif.NotificationId;
+                            nvm.NotificationDateTime = tempNotif.NotificationDateTime;
+                            nvm.FromEmp = tempNotif.FromEmp;
+                            nvm.ToEmp = tempNotif.ToEmp;
+                            nvm.RouteUri = tempNotif.RouteUri;
+                            nvm.Type = tempNotif.Type;
+                            nvm.Content = tempNotif.Content;
+                            nvm.IsRead = tempNotif.IsRead;
+                            NotificationBL.NotifySupervisor(nvm);
+                        }
+                        Item item = new Item();
+                        item.ItemCode = iList[i].ItemCode;
+                        item.Cat = iList[i].Cat;
+                        item.Desc = iList[i].Desc;
+                        item.Location = iList[i].Location;
+                        item.UOM = iList[i].UOM;
+                        item.IsActive = iList[i].IsActive;
+                        item.Balance = iList[i].Balance;
+                        item.ReorderLevel = iList[i].ReorderLevel;
+                        item.ReorderQty = iList[i].ReorderQty;
+                        item.TempQtyDisb = iList[i].TempQtyDisb;
+                        item.TempQtyCheck = iList[i].TempQtyCheck;
+                        item.SuppCode1 = iList[i].SuppCode1;
+                        item.Price1 = iList[i].Price1;
+                        item.SuppCode2 = iList[i].SuppCode2;
+                        item.Price2 = iList[i].Price2;
+                        item.SuppCode3 = iList[i].SuppCode3;
+                        item.Price3 = iList[i].Price3;
+                        NotificationBL.AddLowStkNotification(empId, item);
+                    }
+                }
+                // will implement when Email service method is done
+                // send email to clerk
+                //SendAdjReqEmail(empId, adjlist);
+                //// send email to manager
+                //SendAdjReqEmail(104, adjlist);
+                //// send email to supervisor
+                //SendAdjReqEmail(105, adjlist);
+                return adjlist;
             }
-            return adjlist;
-
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
-            //    for (int i = 0; i < iList.Count; i++)
-            //    {
-            //        if (iList[i].TempQtyCheck - iList[i].Balance > 0)
-            //        {
-            //            AdjustmentVM avm = new AdjustmentVM();
-            //            Adjustment a = new Adjustment();
-            //            a.EmpId = empId;
-            //            a.DateTimeIssued = DateTime.Now;
-            //            a.ItemCode = iList[i].ItemCode;
-            //            int index = iList.FindIndex(x => x.ItemCode.Equals(iList[i].ItemCode));
-            //            a.Reason = reasonList[index];
-            //            a.QtyChange = (int)iList[i].TempQtyCheck - iList[i].Balance;
-            //            a.Status = "Submitted";
-            //            entities.Adjustments.Add(a);
-            //            entities.SaveChanges();
-            //            List<Adjustment> alist = entities.Adjustments.ToList();
-            //            Adjustment temp = alist[alist.Count - 1];
-            //            avm.VoucherNo = temp.VoucherNo;
-            //            avm.EmpId = temp.EmpId;
-            //            avm.DateTimeIssued = temp.DateTimeIssued;
-            //            avm.ItemCode = temp.ItemCode;
-            //            avm.Reason = temp.Reason;
-            //            avm.QtyChange = temp.QtyChange;
-            //            avm.Status = temp.Status;
-            //            adjlist.Add(avm);
-
-            //            double chgVal = a.QtyChange * (double)iList[i].Price1;
-            //            if (chgVal >= 250)
-            //            {
-            //                Notification notif = new Notification();
-            //                notif.NotificationDateTime = DateTime.Now;
-            //                notif.FromEmp = empId;
-            //                notif.ToEmp = 104;
-            //                notif.RouteUri = "";
-            //                notif.Type = "Adjustment Submitted";
-            //                notif.Content = a.Reason;
-            //                notif.IsRead = false;
-            //                entities.Notifications.Add(notif);
-            //                entities.SaveChanges();
-            //                List<Notification> nlist = entities.Notifications.ToList();
-            //                Notification tempNotif = nlist[nlist.Count - 1];
-            //                NotificationVM nvm = new NotificationVM();
-            //                nvm.NotificationId = tempNotif.NotificationId;
-            //                nvm.NotificationDateTime = tempNotif.NotificationDateTime;
-            //                nvm.FromEmp = tempNotif.FromEmp;
-            //                nvm.ToEmp = tempNotif.ToEmp;
-            //                nvm.RouteUri = tempNotif.RouteUri;
-            //                nvm.Type = tempNotif.Type;
-            //                nvm.Content = tempNotif.Content;
-            //                nvm.IsRead = tempNotif.IsRead;
-            //                NotificationBL.NotifyManager(nvm);
-            //            }
-            //            else
-            //            {
-            //                Notification notif = new Notification();
-            //                notif.NotificationDateTime = DateTime.Now;
-            //                notif.FromEmp = empId;
-            //                notif.ToEmp = 105;
-            //                notif.RouteUri = "";
-            //                notif.Type = "Adjustment Submitted";
-            //                notif.Content = a.Reason;
-            //                notif.IsRead = false;
-            //                entities.Notifications.Add(notif);
-            //                entities.SaveChanges();
-            //                List<Notification> nlist = entities.Notifications.ToList();
-            //                Notification tempNotif = nlist[nlist.Count - 1];
-            //                NotificationVM nvm = new NotificationVM();
-            //                nvm.NotificationId = tempNotif.NotificationId;
-            //                nvm.NotificationDateTime = tempNotif.NotificationDateTime;
-            //                nvm.FromEmp = tempNotif.FromEmp;
-            //                nvm.ToEmp = tempNotif.ToEmp;
-            //                nvm.RouteUri = tempNotif.RouteUri;
-            //                nvm.Type = tempNotif.Type;
-            //                nvm.Content = tempNotif.Content;
-            //                nvm.IsRead = tempNotif.IsRead;
-            //                NotificationBL.NotifySupervisor(nvm);
-            //            }
-            //        }
-            //        Item item = new Item();
-            //        item.ItemCode = iList[i].ItemCode;
-            //        item.Cat = iList[i].Cat;
-            //        item.Desc = iList[i].Desc;
-            //        item.Location = iList[i].Location;
-            //        item.UOM = iList[i].UOM;
-            //        item.IsActive = iList[i].IsActive;
-            //        item.Balance = iList[i].Balance;
-            //        item.ReorderLevel = iList[i].ReorderLevel;
-            //        item.ReorderQty = iList[i].ReorderQty;
-            //        item.TempQtyDisb = iList[i].TempQtyDisb;
-            //        item.TempQtyCheck = iList[i].TempQtyCheck;
-            //        item.SuppCode1 = iList[i].SuppCode1;
-            //        item.Price1 = iList[i].Price1;
-            //        item.SuppCode2 = iList[i].SuppCode2;
-            //        item.Price2 = iList[i].Price2;
-            //        item.SuppCode3 = iList[i].SuppCode3;
-            //        item.Price3 = iList[i].Price3;
-            //        NotificationBL.AddLowStkNotification(empId, item);
-            //    }
-            //// will implement when Email service method is done
-            //// send email to clerk
-            //SendAdjReqEmail(empId, adjlist);
-            //// send email to manager
-            //SendAdjReqEmail(104, adjlist);
-            //// send email to supervisor
-            //SendAdjReqEmail(105, adjlist);
-            //return adjlist;
-            //}
-                
 
             //List<Adjustment> adjList = new List<Adjustment>();
             //foreach (Item i in iList)
@@ -365,6 +352,20 @@ namespace Group8AD_WebAPI.BusinessLogic
                 // SendAdjApprEmail(empId, adjustment);
             }
             return;
+        }
+
+        public static string GenerateVoucherNo()
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                string year = DateTime.Now.Year.ToString();
+                List<Adjustment> adjlist = entities.Adjustments.Where(a => a.VoucherNo.Substring(0, 4) == year).ToList();
+                int index = Int32.Parse(adjlist[adjlist.Count - 1].VoucherNo.Substring(5, 5));
+                index = index + 1;
+                string number = String.Format("{0:00000}", index);
+                string voucherNo = year + "/" + number;
+                return voucherNo;
+            }
         }
     }
 }

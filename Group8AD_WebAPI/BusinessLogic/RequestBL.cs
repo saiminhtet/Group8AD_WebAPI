@@ -550,8 +550,8 @@ namespace Group8AD_WebAPI.BusinessLogic
             return;
         }
 
-        // dummy
         // update fulfilled request status
+        // included in "Accept Disbursed Items" use case, no need to implement
         public static void UpdateFulfilledRequestStatus()
         {
             // int openCount = 0;
