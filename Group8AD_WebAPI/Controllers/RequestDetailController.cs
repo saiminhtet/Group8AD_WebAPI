@@ -11,19 +11,33 @@ namespace Group8AD_WebAPI.Controllers
 { 
     public class RequestDetailController : ApiController
     {
-        //AddReqDet(int empId, RequestDetail reqDet , string status)   
+        //AddReqDet(int empId, RequestDetail reqDet , string status) 
+        //[AcceptVerbs("POST")]
+        //[HttpPost]
+        //[Route("api/RequestDetail/addReqDet")]
+        //public HttpResponseMessage AddReqDet(int empId, RequestDetailVM reqDetVM, string status)
+        //{
+        //    RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(empId, reqDetVM, status);
+        //    if (req == null)
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.BadRequest);
+        //    }
+        //    return Request.CreateResponse(HttpStatusCode.OK, req);
+
+        //}
+        //AddReqDet(int empId, RequestDetail reqDet , string status)
+        //dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/RequestDetail/addReqDet")]
-        public HttpResponseMessage AddReqDet(int empId, RequestDetailVM reqDetVM, string status)
+        public HttpResponseMessage AddReqDet(int empId, string itemCode, string status)
         {
-            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(empId, reqDetVM, status);
+            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(empId, itemCode,status);
             if (req == null)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
             return Request.CreateResponse(HttpStatusCode.OK, req);
-
         }
 
         //AddReqDet(int reqId, RequestDetail reqDet)
