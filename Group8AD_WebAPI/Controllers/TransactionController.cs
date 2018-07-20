@@ -40,13 +40,13 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Transaction/CBRange")]
         public HttpResponseMessage CBByRng(string deptCode, DateTime fromDate, DateTime toDate)
         {
-            List<TransactionVM> translist = ReportItemBL.GetCBByRng(deptCode, fromDate, toDate);
+            List<ReportItemVM> translist = ReportItemBL.GetCBByRng(deptCode, fromDate, toDate);
             if (translist == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
