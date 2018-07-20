@@ -22,7 +22,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //for (int i = 0; i < monthList.Count; i++)
                 //{
                 //    List<Transaction> transList = entities.Transactions.
-                //        Where(t => DateTime.Compare(t.TranDateTime, monthList[i]) >= 0 && DateTime.Compare(t.TranDateTime, monthList[i].AddMonths(1)) < 0 
+                //        Where(t => DateTime.Compare(t.TranDateTime, monthList[i]) >= 0 && DateTime.Compare(t.TranDateTime, monthList[i].AddMonths(1)) < 0
                 //        && t.DeptCode == deptCode).ToList();
                 //    double chargeBack = 0;
                 //    for (int j = 0; j < transList.Count; j++)
@@ -32,13 +32,18 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //            chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
                 //        }
                 //    }
+                //    chargeBack = Math.Round(chargeBack, 2);
+                //    string format = "yyyy MMM";
+                //    string label = monthList[i].ToString(format);
                 //    ReportItemVM ri = new ReportItemVM();
                 //    ri.Period = monthList[i];
+                //    ri.Label = label;
                 //    ri.Val1 = chargeBack;
                 //    ri.Val2 = 0;
                 //    riList.Add(ri);
                 //}
                 //return riList;
+
                 List<DateTime> monthList = GetMonthList(fromDate, toDate);
                 List<ReportItemVM> riList = new List<ReportItemVM>();
                 for (int i = 0; i < monthList.Count; i++)
@@ -48,14 +53,18 @@ namespace Group8AD_WebAPI.BusinessLogic
                     for (int j = 0; j < transList.Count; j++)
                     {
                         if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
-                            && DateTime.Compare(transList[j].TranDateTime, monthList[i]) >= 0 
+                            && DateTime.Compare(transList[j].TranDateTime, monthList[i]) >= 0
                             && DateTime.Compare(transList[j].TranDateTime, monthList[i].AddMonths(1)) >= 0)
                         {
                             chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
                         }
                     }
+                    chargeBack = Math.Round(chargeBack, 2);
+                    string format = "yyyy MMM";
+                    string label = monthList[i].ToString(format);
                     ReportItemVM ri = new ReportItemVM();
                     ri.Period = monthList[i];
+                    ri.Label = label;
                     ri.Val1 = chargeBack;
                     ri.Val2 = 0;
                     riList.Add(ri);
@@ -65,52 +74,38 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get chargeback by date range
-        public static List<TransactionVM> GetCBByRng(string deptCode, DateTime fromDate, DateTime toDate)
+        // done
+        public static List<ReportItemVM> GetCBByRng(string deptCode, DateTime fromDate, DateTime toDate)
         {
-            //List<DateTime> monthList = GetMonthList(fromDate, toDate);
-            //List<ReportItemVM> riList = new List<ReportItemVM>();
-            //for (int i = 0; i < monthList.Count; i++)
-            //{
-            //    List<Transaction> transList = entities.Transactions.ToList();
-            //    double chargeBack = 0;
-            //    for (int j = 0; j < transList.Count; j++)
-            //    {
-            //        if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
-            //            && DateTime.Compare(transList[j].TranDateTime, monthList[i]) >= 0
-            //            && DateTime.Compare(transList[j].TranDateTime, monthList[i].AddMonths(1)) >= 0)
-            //        {
-            //            chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
-            //        }
-            //    }
-            //    ReportItemVM ri = new ReportItemVM();
-            //    ri.Period = monthList[i];
-            //    ri.Val1 = chargeBack;
-            //    ri.Val2 = 0;
-            //    riList.Add(ri);
-            //}
-            //return riList;
+            
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<Transaction> translist = entities.Transactions.Where(t => t.DeptCode == deptCode).ToList();
-                List<TransactionVM> list = new List<TransactionVM>();
-                for (int i = 0; i < translist.Count; i++)
+                List<DateTime> weekList = GetWeekList(fromDate, toDate);
+                List<ReportItemVM> riList = new List<ReportItemVM>();
+                for (int i = 0; i < weekList.Count; i++)
                 {
-                    if (DateTime.Compare(translist[i].TranDateTime, fromDate) >= 0 && DateTime.Compare(translist[i].TranDateTime, toDate) <= 0)
+                    List<Transaction> transList = entities.Transactions.ToList();
+                    double chargeBack = 0;
+                    for (int j = 0; j < transList.Count; j++)
                     {
-                        TransactionVM trans = new TransactionVM();
-                        trans.TranId = translist[i].TranId;
-                        trans.TranDateTime = translist[i].TranDateTime;
-                        trans.ItemCode = translist[i].ItemCode;
-                        trans.QtyChange = translist[i].QtyChange;
-                        trans.UnitPrice = (double)translist[i].UnitPrice;
-                        trans.Desc = translist[i].Desc;
-                        trans.DeptCode = translist[i].DeptCode;
-                        trans.SuppCode = translist[i].SuppCode;
-                        trans.VoucherNo = translist[i].VoucherNo;
-                        list.Add(trans);
+                        if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
+                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) >= 0)
+                        {
+                            chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                        }
                     }
+                    chargeBack = Math.Round(chargeBack, 2);
+                    string format = "yyyy MMM d";
+                    string label = weekList[i].ToString(format);
+                    ReportItemVM ri = new ReportItemVM();
+                    ri.Period = weekList[i];
+                    ri.Label = label;
+                    ri.Val1 = chargeBack;
+                    ri.Val2 = 0;
+                    riList.Add(ri);
                 }
-                return list;
+                return riList;
             }
         }
 
@@ -220,6 +215,43 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             }
             return monthList;
+        }
+
+        public static List<DateTime> GetWeekList(DateTime fromDate, DateTime toDate)
+        {
+            // make sure fromDate is before toDate, will add in validation later
+            List<DateTime> weekList = new List<DateTime>();
+            int fromYear = fromDate.Year;
+            int fromMonth = fromDate.Month;
+            int fromDay = fromDate.Day;
+            DateTime startWeek = new DateTime(fromYear, fromMonth, fromDay, 00, 00, 00);
+            if (fromDate.DayOfWeek == DayOfWeek.Tuesday) startWeek = startWeek.AddDays(-1);
+            else if (fromDate.DayOfWeek == DayOfWeek.Wednesday) startWeek = startWeek.AddDays(-2);
+            else if (fromDate.DayOfWeek == DayOfWeek.Thursday) startWeek = startWeek.AddDays(-3);
+            else if (fromDate.DayOfWeek == DayOfWeek.Friday) startWeek = startWeek.AddDays(-4);
+            else if (fromDate.DayOfWeek == DayOfWeek.Saturday) startWeek = startWeek.AddDays(-5);
+            else if (fromDate.DayOfWeek == DayOfWeek.Sunday) startWeek = startWeek.AddDays(-6);
+            else startWeek = new DateTime(fromYear, fromMonth, fromDay, 00, 00, 00);
+
+            int toYear = toDate.Year;
+            int toMonth = toDate.Month;
+            int toDay = toDate.Day;
+            DateTime endWeek = new DateTime(toYear, toMonth, toDay, 00, 00, 00);
+            if (toDate.DayOfWeek == DayOfWeek.Tuesday) endWeek = endWeek.AddDays(-1);
+            else if (toDate.DayOfWeek == DayOfWeek.Wednesday) endWeek = endWeek.AddDays(-2);
+            else if (toDate.DayOfWeek == DayOfWeek.Thursday) endWeek = endWeek.AddDays(-3);
+            else if (toDate.DayOfWeek == DayOfWeek.Friday) endWeek = endWeek.AddDays(-4);
+            else if (toDate.DayOfWeek == DayOfWeek.Saturday) endWeek = endWeek.AddDays(-5);
+            else if (toDate.DayOfWeek == DayOfWeek.Sunday) endWeek = endWeek.AddDays(-6);
+            else endWeek = new DateTime(toYear, toMonth, toDay, 00, 00, 00);
+
+            while (DateTime.Compare(startWeek, endWeek) < 0)
+            {
+                weekList.Add(startWeek);
+                startWeek = startWeek.AddDays(7);
+
+            }
+            return weekList;
         }
     }
 }
