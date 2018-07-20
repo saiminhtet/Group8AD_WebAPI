@@ -12,54 +12,83 @@ namespace Group8AD_WebAPI.BusinessLogic
         // dummy code
 
         // get chargeback by month
-        public static List<TransactionVM> GetCBByMth(string deptCode, DateTime fromDate, DateTime toDate)
+        // done
+        public static List<ReportItemVM> GetCBByMth(string deptCode, DateTime fromDate, DateTime toDate)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<Transaction> translist = entities.Transactions.Where(t => t.DeptCode == deptCode).ToList();
-                List<TransactionVM> list = new List<TransactionVM>();
-                for (int i = 0; i < translist.Count; i++)
-                {
-                    if (DateTime.Compare(translist[i].TranDateTime, fromDate) >= 0 && DateTime.Compare(translist[i].TranDateTime, toDate) <= 0)
-                    {
-                        TransactionVM trans = new TransactionVM();
-                        trans.TranId = translist[i].TranId;
-                        trans.TranDateTime = translist[i].TranDateTime;
-                        trans.ItemCode = translist[i].ItemCode;
-                        trans.QtyChange = translist[i].QtyChange;
-                        trans.UnitPrice = (double)translist[i].UnitPrice;
-                        trans.Desc = translist[i].Desc;
-                        trans.DeptCode = translist[i].DeptCode;
-                        trans.SuppCode = translist[i].SuppCode;
-                        trans.VoucherNo = translist[i].VoucherNo;
-                        list.Add(trans);
-                    }
-                }
-                return list;
-            }
-                //// dummy
-                //List<TransactionVM> translist = new List<TransactionVM>();
-                //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+                //List<DateTime> monthList = GetMonthList(fromDate, toDate);
+                //List<ReportItemVM> riList = new List<ReportItemVM>();
+                //for (int i = 0; i < monthList.Count; i++)
                 //{
-                //    translist = entities.Transactions.Select(t => new TransactionVM()
+                //    List<Transaction> transList = entities.Transactions.
+                //        Where(t => DateTime.Compare(t.TranDateTime, monthList[i]) >= 0 && DateTime.Compare(t.TranDateTime, monthList[i].AddMonths(1)) < 0 
+                //        && t.DeptCode == deptCode).ToList();
+                //    double chargeBack = 0;
+                //    for (int j = 0; j < transList.Count; j++)
                 //    {
-                //        TranId = t.TranId,
-                //        TranDateTime = t.TranDateTime,
-                //        ItemCode = t.ItemCode,
-                //        QtyChange = t.QtyChange,
-                //        //UnitPrice = t.UnitPrice,
-                //        Desc = t.Desc,
-                //        DeptCode = t.DeptCode,
-                //        SuppCode = t.SuppCode
-                //    }).ToList<TransactionVM>();
+                //        if (transList[j].UnitPrice != null)
+                //        {
+                //            chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                //        }
+                //    }
+                //    ReportItemVM ri = new ReportItemVM();
+                //    ri.Period = monthList[i];
+                //    ri.Val1 = chargeBack;
+                //    ri.Val2 = 0;
+                //    riList.Add(ri);
                 //}
-                //return translist;
-
+                //return riList;
+                List<DateTime> monthList = GetMonthList(fromDate, toDate);
+                List<ReportItemVM> riList = new List<ReportItemVM>();
+                for (int i = 0; i < monthList.Count; i++)
+                {
+                    List<Transaction> transList = entities.Transactions.ToList();
+                    double chargeBack = 0;
+                    for (int j = 0; j < transList.Count; j++)
+                    {
+                        if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
+                            && DateTime.Compare(transList[j].TranDateTime, monthList[i]) >= 0 
+                            && DateTime.Compare(transList[j].TranDateTime, monthList[i].AddMonths(1)) >= 0)
+                        {
+                            chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                        }
+                    }
+                    ReportItemVM ri = new ReportItemVM();
+                    ri.Period = monthList[i];
+                    ri.Val1 = chargeBack;
+                    ri.Val2 = 0;
+                    riList.Add(ri);
+                }
+                return riList;
             }
+        }
 
         // get chargeback by date range
         public static List<TransactionVM> GetCBByRng(string deptCode, DateTime fromDate, DateTime toDate)
         {
+            //List<DateTime> monthList = GetMonthList(fromDate, toDate);
+            //List<ReportItemVM> riList = new List<ReportItemVM>();
+            //for (int i = 0; i < monthList.Count; i++)
+            //{
+            //    List<Transaction> transList = entities.Transactions.ToList();
+            //    double chargeBack = 0;
+            //    for (int j = 0; j < transList.Count; j++)
+            //    {
+            //        if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
+            //            && DateTime.Compare(transList[j].TranDateTime, monthList[i]) >= 0
+            //            && DateTime.Compare(transList[j].TranDateTime, monthList[i].AddMonths(1)) >= 0)
+            //        {
+            //            chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
+            //        }
+            //    }
+            //    ReportItemVM ri = new ReportItemVM();
+            //    ri.Period = monthList[i];
+            //    ri.Val1 = chargeBack;
+            //    ri.Val2 = 0;
+            //    riList.Add(ri);
+            //}
+            //return riList;
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 List<Transaction> translist = entities.Transactions.Where(t => t.DeptCode == deptCode).ToList();
@@ -83,22 +112,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
                 return list;
             }
-            //List<TransactionVM> translist = new List<TransactionVM>();
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    translist = entities.Transactions.Select(t => new TransactionVM()
-            //    {
-            //        TranId = t.TranId,
-            //        TranDateTime = t.TranDateTime,
-            //        ItemCode = t.ItemCode,
-            //        QtyChange = t.QtyChange,
-            //        //UnitPrice = t.UnitPrice,
-            //        Desc = t.Desc,
-            //        DeptCode = t.DeptCode,
-            //        SuppCode = t.SuppCode
-            //    }).ToList<TransactionVM>();
-            //}
-            //return translist;
         }
 
         // get last ten transactions by itemCode
@@ -188,6 +201,25 @@ namespace Group8AD_WebAPI.BusinessLogic
             string cat, string type, List<DateTime> dates, bool byMonth)
         {
             return;
+        }
+
+        public static List<DateTime> GetMonthList(DateTime fromDate, DateTime toDate)
+        {
+            // make sure fromDate is before toDate, will add in validation later
+            List<DateTime> monthList = new List<DateTime>();
+            int fromYear = fromDate.Year;
+            int fromMonth = fromDate.Month;
+            DateTime startMonth = new DateTime(fromYear, fromMonth, 01, 00, 00, 00);
+            int toYear = toDate.Year;
+            int toMonth = toDate.Month;
+            DateTime endMonth = new DateTime(toYear, toMonth, 01, 00, 00, 00);
+            while(DateTime.Compare(startMonth, endMonth) < 0)
+            {
+                monthList.Add(startMonth);
+                startMonth = startMonth.AddMonths(1);
+
+            }
+            return monthList;
         }
     }
 }
