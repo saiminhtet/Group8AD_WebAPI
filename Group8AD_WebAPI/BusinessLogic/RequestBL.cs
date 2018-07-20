@@ -394,7 +394,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                 Request request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
                 if (request != null)
                 {
-                    entities.Requests.Remove(request);
+                    //entities.Requests.Remove(request);
+                    request.Status = "Cancelled";
                     entities.SaveChanges();
                 }
             }
