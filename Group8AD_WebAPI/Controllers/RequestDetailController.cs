@@ -90,8 +90,8 @@ namespace Group8AD_WebAPI.Controllers
         //removeReqDet(int reqId, string itemCode)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/RequestDetail/removeReqDet_reqId")]
-        public HttpResponseMessage removeReqDet_reqId(int reqId, string itemCode)
+        [Route("api/RequestDetail/removeReqDet")]
+        public HttpResponseMessage removeReqDet(int reqId, string itemCode)
         {
             try
             {
