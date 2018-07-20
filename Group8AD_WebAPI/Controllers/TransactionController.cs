@@ -68,11 +68,11 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Transaction/CBAnnual")]
-        public HttpResponseMessage CBAnnual(DateTime toDate)
+        [Route("api/Transaction/CBMonthly")]
+        public HttpResponseMessage CBMonthly(DateTime toDate)
         {
             List<ReportItemVM> translist = ReportItemBL.GetCBMonthly(toDate);
             if (translist == null)

@@ -17,44 +17,17 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                //List<DateTime> monthList = GetMonthList(fromDate, toDate);
-                //List<ReportItemVM> riList = new List<ReportItemVM>();
-                //for (int i = 0; i < monthList.Count; i++)
-                //{
-                //    List<Transaction> transList = entities.Transactions.
-                //        Where(t => DateTime.Compare(t.TranDateTime, monthList[i]) >= 0 && DateTime.Compare(t.TranDateTime, monthList[i].AddMonths(1)) < 0
-                //        && t.DeptCode == deptCode).ToList();
-                //    double chargeBack = 0;
-                //    for (int j = 0; j < transList.Count; j++)
-                //    {
-                //        if (transList[j].UnitPrice != null)
-                //        {
-                //            chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
-                //        }
-                //    }
-                //    chargeBack = Math.Round(chargeBack, 2);
-                //    string format = "yyyy MMM";
-                //    string label = monthList[i].ToString(format);
-                //    ReportItemVM ri = new ReportItemVM();
-                //    ri.Period = monthList[i];
-                //    ri.Label = label;
-                //    ri.Val1 = chargeBack;
-                //    ri.Val2 = 0;
-                //    riList.Add(ri);
-                //}
-                //return riList;
-
                 List<DateTime> monthList = GetMonthList(fromDate, toDate);
                 List<ReportItemVM> riList = new List<ReportItemVM>();
+                List<Transaction> transList = entities.Transactions.ToList();
                 for (int i = 0; i < monthList.Count; i++)
                 {
-                    List<Transaction> transList = entities.Transactions.ToList();
                     double chargeBack = 0;
                     for (int j = 0; j < transList.Count; j++)
                     {
                         if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
                             && DateTime.Compare(transList[j].TranDateTime, monthList[i]) >= 0
-                            && DateTime.Compare(transList[j].TranDateTime, monthList[i].AddMonths(1)) >= 0)
+                            && DateTime.Compare(transList[j].TranDateTime, monthList[i].AddMonths(1)) < 0)
                         {
                             chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
                         }
@@ -82,15 +55,15 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 List<DateTime> weekList = GetWeekList(fromDate, toDate);
                 List<ReportItemVM> riList = new List<ReportItemVM>();
+                List<Transaction> transList = entities.Transactions.ToList();
                 for (int i = 0; i < weekList.Count; i++)
                 {
-                    List<Transaction> transList = entities.Transactions.ToList();
                     double chargeBack = 0;
                     for (int j = 0; j < transList.Count; j++)
                     {
                         if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
                             && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) >= 0)
+                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
                         {
                             chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
                         }
@@ -143,6 +116,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get monthly chargeback
+        // done
         public static List<ReportItemVM> GetCBMonthly(DateTime toDate)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -160,13 +134,15 @@ namespace Group8AD_WebAPI.BusinessLogic
                     for (int j = 0; j < translist.Count; j++)
                     {
                         if (translist[j].UnitPrice != null && deptlist[i].DeptCode == translist[j].DeptCode &&
-                            DateTime.Compare(translist[i].TranDateTime, startDate) >= 0 &&
-                            DateTime.Compare(translist[i].TranDateTime, endDate) < 0)
+                            DateTime.Compare(translist[j].TranDateTime, startDate) >= 0 &&
+                            DateTime.Compare(translist[j].TranDateTime, endDate) < 0)
                         {
-                            chargeBack = chargeBack + chargeBack + translist[i].QtyChange * (double)translist[i].UnitPrice;
+                            chargeBack = chargeBack + translist[j].QtyChange * (double)translist[j].UnitPrice;
                         }
                     }
                     ReportItemVM ri = new ReportItemVM();
+                    chargeBack = Math.Round(chargeBack, 2);
+                    ri.Period = toDate;
                     ri.Label = deptlist[i].DeptName;
                     ri.Val1 = chargeBack;
                     ri.Val2 = 0;
