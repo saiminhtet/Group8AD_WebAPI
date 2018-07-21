@@ -83,7 +83,6 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         // tested
-        // a bit slow
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Transaction/VolMonthly")]
@@ -97,7 +96,7 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Transaction/costReport")]
@@ -112,20 +111,19 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        // tested, dummy
+        // tested
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Transaction/volumeReport")]
         public HttpResponseMessage ShowVolumeReport(string dept1, string dept2, string supp1, string supp2,
             string cat, List<DateTime> dates, bool byMonth)
         {
-            //List<ReportItemVM> translist = ReportItemBL.ShowVolumeReport(dept1, dept2, supp1, supp2, cat, dates, byMonth);
-            //if (translist == null)
-            //{
-            //    return Request.CreateResponse(HttpStatusCode.InternalServerError);
-            //}
-            //return Request.CreateResponse(HttpStatusCode.OK, translist);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            List<ReportItemVM> translist = ReportItemBL.ShowVolumeReport(dept1, dept2, supp1, supp2, cat, dates, byMonth);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
         // GET api/<controller>
