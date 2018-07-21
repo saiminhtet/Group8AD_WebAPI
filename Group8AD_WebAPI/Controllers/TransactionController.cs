@@ -82,13 +82,14 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        // tested, dummy
+        // tested
+        // a bit slow
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Transaction/VolAnnual")]
-        public HttpResponseMessage VolAnnual(DateTime toDate)
+        [Route("api/Transaction/VolMonthly")]
+        public HttpResponseMessage VolMonthly(DateTime toDate)
         {
-            List<TransactionVM> translist = ReportItemBL.GetVolAnnual(toDate);
+            List<ReportItemVM> translist = ReportItemBL.GetVolMonthly(toDate);
             if (translist == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);

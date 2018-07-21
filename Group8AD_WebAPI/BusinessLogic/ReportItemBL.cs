@@ -142,7 +142,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     }
                     ReportItemVM ri = new ReportItemVM();
                     chargeBack = Math.Round(chargeBack, 2);
-                    ri.Period = toDate;
+                    ri.Period = startDate;
                     ri.Label = deptlist[i].DeptName;
                     ri.Val1 = chargeBack;
                     ri.Val2 = 0;
@@ -153,24 +153,54 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get annual volume
-        public static List<TransactionVM> GetVolAnnual(DateTime toDate)
+        // done
+        public static List<ReportItemVM> GetVolMonthly(DateTime toDate)
         {
-            List<TransactionVM> translist = new List<TransactionVM>();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                translist = entities.Transactions.Select(t => new TransactionVM()
+                int year = toDate.Year;
+                int month = toDate.Month;
+                DateTime startDate = new DateTime(year, month, 01, 00, 00, 00);
+                DateTime endDate = startDate.AddMonths(1);
+                List<ReportItemVM> rilist = new List<ReportItemVM>();
+                List<Request> rlist = entities.Requests.ToList();
+                List<Item> ilist = entities.Items.ToList();
+                for (int i = 0; i < ilist.Count; i++)
                 {
-                    TranId = t.TranId,
-                    TranDateTime = t.TranDateTime,
-                    ItemCode = t.ItemCode,
-                    QtyChange = t.QtyChange,
-                    //UnitPrice = t.UnitPrice,
-                    Desc = t.Desc,
-                    DeptCode = t.DeptCode,
-                    SuppCode = t.SuppCode
-                }).ToList<TransactionVM>();
+                    string itemName = ilist[i].Desc;
+                    int reqQty = 0;
+                    for (int j = 0; j < rlist.Count; j++)
+                    {
+                        if (rlist[j].ReqDateTime != null && DateTime.Compare((DateTime)rlist[j].ReqDateTime, startDate) >= 0 &&
+                            DateTime.Compare((DateTime)rlist[j].ReqDateTime, endDate) < 0)
+                        {
+                            List<RequestDetail> rdlist = entities.RequestDetails.ToList();
+                            for (int k = 0; k < rdlist.Count; k++)
+                            {
+                                if (rdlist[k].ReqId == rlist[j].ReqId && rdlist[k].ItemCode == ilist[i].ItemCode)
+                                {
+                                    reqQty = reqQty + rdlist[k].ReqQty;
+                                }
+                            }
+                            //List<RequestDetail> rdlist = entities.RequestDetails.Where(r => r.ItemCode == ilist[i].ItemCode).ToList();
+                            //for (int k = 0; k < rdlist.Count; k++)
+                            //{
+                            //    if (rdlist[k].ReqId == rlist[j].ReqId)
+                            //    {
+                            //        reqQty = reqQty + rdlist[k].ReqQty;
+                            //    }
+                            //}
+                        }
+                    }
+                    ReportItemVM ri = new ReportItemVM();
+                    ri.Period = startDate;
+                    ri.Label = itemName;
+                    ri.Val1 = reqQty;
+                    ri.Val2 = 0;
+                    rilist.Add(ri);
+                }
+                return rilist;
             }
-            return translist;
         }
 
         // show cost report
