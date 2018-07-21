@@ -131,7 +131,6 @@ namespace Group8AD_WebAPI.Controllers
         }
 
         // tested
-        // wait for UpdateReqDet(reqId, reqDet) to be finished
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/submit")]

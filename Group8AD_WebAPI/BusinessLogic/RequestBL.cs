@@ -10,29 +10,9 @@ namespace Group8AD_WebAPI.BusinessLogic
     public class RequestBL
     {
         // get a list of request by empId and status
-        // hope can set all fileld not null in Request table
         // done
         public static List<RequestVM> GetReq(int empId, string status)
         {
-            // need to check employee role first
-            // all: except bookmarked, unsubmitted
-
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    reqlist = entities.Requests.Where(r => r.EmpId == empId && r.Status == status).Select(r => new RequestVM()
-            //    {
-            //        ReqId = r.ReqId,
-            //        EmpId = r.EmpId,
-            //        ApproverId = (int) r.ApproverId,
-            //        ApproverComment = r.ApproverComment,
-            //        ReqDateTime = (DateTime) r.ReqDateTime,
-            //        ApprovedDateTime = (DateTime) r.ApprovedDateTime,
-            //        CancelledDateTime = (DateTime) r.CancelledDateTime,
-            //        FulfilledDateTime = (DateTime) r.FulfilledDateTime,
-            //        Status = r.Status
-            //    }).ToList<RequestVM>();
-            //}
-            //return reqlist;
             List<RequestVM> reqlist = new List<RequestVM>();
             List<Request> lst = new List<Request>();
             Employee employee = new Employee();
@@ -127,26 +107,10 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get a list of request by status
-        // hope can set all fileld not null in Request table
         // done
         public static List<RequestVM> GetReq(string status)
         {
             List<RequestVM> reqlist = new List<RequestVM>();
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    reqlist = entities.Requests.Where(r => r.Status == status).Select(r => new RequestVM()
-            //    {
-            //        ReqId = r.ReqId,
-            //        EmpId = r.EmpId,
-            //        //ApproverId = r.ApproverId,
-            //        ApproverComment = r.ApproverComment,
-            //        //ReqDateTime = r.ReqDateTime,
-            //        //ApprovedDateTime = r.ApprovedDateTime,
-            //        //CancelledDateTime = r.CancelledDateTime,
-            //        //FulfilledDateTime = r.FulfilledDateTime,
-            //        Status = r.Status
-            //    }).ToList<RequestVM>();
-            //}
             List<Request> lst = new List<Request>();
             if (status == "All")
             {
@@ -209,7 +173,6 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // get a list of request by deptCode and status
-        // hope can have a "deptCode" field in Request table
         // done
         public static List<RequestVM> GetReq(string deptCode, string status)
         {
@@ -290,21 +253,6 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static RequestVM GetReq(int reqId)
         {
             RequestVM request = new RequestVM();
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    request = entities.Requests.Where(r => r.ReqId == reqId).Select(r => new RequestVM()
-            //    {
-            //        ReqId = r.ReqId,
-            //        EmpId = r.EmpId,
-            //        //ApproverId = r.ApproverId,
-            //        ApproverComment = r.ApproverComment,
-            //        //ReqDateTime = r.ReqDateTime,
-            //        //ApprovedDateTime = r.ApprovedDateTime,
-            //        //CancelledDateTime = r.CancelledDateTime,
-            //        //FulfilledDateTime = r.FulfilledDateTime,
-            //        Status = r.Status
-            //    }).First<RequestVM>();
-            //}
             Request req = new Request();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -468,6 +416,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         //}
 
         // submit request
+        // done
         public static RequestVM SubmitReq(int reqId, List<RequestDetailVM> reqDetList)
         {
             // make requestId in reqDetList is the same as reqId
@@ -503,6 +452,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                 req.Status = "Submitted";
                 req = UpdateReq(req);
             }
+
+            int empId = req.EmpId;
+            //// will call when method is completed
+            //EmailBL.SendNewReqEmail(empId, req);
+            NotificationBL.AddNewReqNotification(empId, req);
+            // redirect to SubmittedRequestDetails page
             return req;
         }
 
