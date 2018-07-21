@@ -12,31 +12,31 @@ namespace Group8AD_WebAPI.Controllers
     public class NotificationController : ApiController
     {
         //addNewReqNotification
-        //[AcceptVerbs("POST")]
-        //[HttpPost]
-        //[Route("api/Notification/AddNewReqNotification")]
-        //public HttpResponseMessage AddNewReqNotification(NotificationVM notiVM)
-        //{
-        //    try
-        //    {
-        //        //BusinessLogic.NotificationBL.AddNewReqNotification(notiVM.EmpId, notiVM.Request);
-        //        return Request.CreateResponse(HttpStatusCode.OK);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
-        //    }
-        //}
-
-        //addNewReqNotification
-        //dummy
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Notification/AddNewReqNotification")]
-        public HttpResponseMessage AddNewReqNotification(int empId, Request currReq)
+        public HttpResponseMessage AddNewReqNotification(int empId, RequestVM currReq)
         {
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                BusinessLogic.NotificationBL.AddNewReqNotification(empId, currReq);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
         }
+
+        //addNewReqNotification
+        //dummy
+        //[AcceptVerbs("POST")]
+        //[HttpPost]
+        //[Route("api/Notification/AddNewReqNotification")]
+        //public HttpResponseMessage AddNewReqNotification(int empId, Request currReq)
+        //{
+        //    return Request.CreateResponse(HttpStatusCode.OK);
+        //}
 
         //List<NotificationVM> GetNotifications(int empId)
         [AcceptVerbs("GET")]
