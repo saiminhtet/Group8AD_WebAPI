@@ -135,9 +135,9 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Request/submit")]
-        public HttpResponseMessage SubmitRequest(int empId, List<RequestDetailVM> reqDetList)
+        public HttpResponseMessage SubmitRequest(int reqId, List<RequestDetailVM> reqDetList)
         {
-            RequestVM request = RequestBL.SubmitReq(empId, reqDetList);
+            RequestVM request = RequestBL.SubmitReq(reqId, reqDetList);
             if (request == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);

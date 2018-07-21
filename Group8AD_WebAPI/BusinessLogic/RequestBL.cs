@@ -402,69 +402,108 @@ namespace Group8AD_WebAPI.BusinessLogic
             return;
         }
 
+        //// submit request
+        //// done
+        //public static RequestVM SubmitReq(int empId, List<RequestDetailVM> reqDetList)
+        //{
+        //    // This is only to explain code steps at Web Api service
+        //    // Call GetReq(empId, “Unsubmitted”)
+        //    // Call UpdateReqDet(reqId, reqDet) for each reqDet in reqDetLst
+        //    // Set reqDateTime for currReq object to DateTime.Now()
+        //    // Set status for currReq to “Submitted”
+        //    // Call UpdateReq(currReq) to persist at db
+        //    // Return currReq object
+        //    using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+        //    {
+        //        RequestVM request = new RequestVM();
+        //        List<RequestVM> reqlist = GetReq(empId, "Unsubmitted");
+        //        for (int i = 0; i < reqlist.Count; i++)
+        //        {
+        //            for (int j = 0; j < reqDetList.Count; j++)
+        //            {
+        //                if (reqlist[i].ReqId == reqDetList[j].ReqId)
+        //                {
+        //                    //RequestDetailVM rvm = RequestDetailBL.UpdateReqDet(reqDetList[j].ReqId, reqDetList[j]);
+        //                    //RequestDetail rd = entities.RequestDetails.Where(r => r.ReqId == reqDetList[j].ReqId && r.ReqLineNo == reqDetList[j].ReqLineNo).FirstOrDefault();
+        //                    List<RequestDetail> rdlist = entities.RequestDetails.ToList();
+        //                    for (int k = 0; k < rdlist.Count; k++)
+        //                    {
+        //                        if (reqDetList[j].ReqId == rdlist[k].ReqId && reqDetList[j].ReqLineNo == rdlist[k].ReqLineNo)
+        //                        {
+        //                            rdlist[k].ItemCode = reqDetList[j].ItemCode;
+        //                            rdlist[k].ReqQty = reqDetList[j].ReqQty;
+        //                            rdlist[k].AwaitQty = reqDetList[j].AwaitQty;
+        //                            rdlist[k].FulfilledQty = reqDetList[j].FulfilledQty;
+        //                            entities.SaveChanges();
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //            reqlist[i].ReqDateTime = DateTime.Now;
+        //            reqlist[i].Status = "Submitted";
+        //            request = UpdateReq(reqlist[i]);
+        //        }
+        //        return request;
+        //        //RequestVM r = new RequestVM();
+        //        //List<RequestVM> reqlist = GetReq(empId, status);
+        //        //for (int i = 0; i < reqlist.Count; i++)
+        //        //{
+        //        //    List<RequestDetail> rdlist = entities.RequestDetails.Where(rd => rd.ReqId == reqlist[i].ReqId).ToList();
+        //        //    for (int j = 0; j < rdlist.Count; j++)
+        //        //    {
+        //        //        for (int k = 0; k < reqDetList.Count; k++)
+        //        //        {
+        //        //            if (rdlist[j].ReqId == reqDetList[k].ReqId && rdlist[j].ReqLineNo == reqDetList[k].ReqLineNo)
+        //        //            {
+        //        //                RequestDetailVM rvm = RequestDetailBL.UpdateReqDet(rdlist[j].ReqId, reqDetList[k]);
+        //        //            }
+        //        //        }
+        //        //    }
+        //        //    reqlist[i].ReqDateTime = DateTime.Now;
+        //        //    reqlist[i].Status = "Submitted";
+        //        //    r = UpdateReq(reqlist[i]);
+        //        //}
+        //        //return r;
+        //    }
+        //}
+
         // submit request
-        // done
-        public static RequestVM SubmitReq(int empId, List<RequestDetailVM> reqDetList)
+        public static RequestVM SubmitReq(int reqId, List<RequestDetailVM> reqDetList)
         {
-            // This is only to explain code steps at Web Api service
-            // Call GetReq(empId, “Unsubmitted”)
-            // Call UpdateReqDet(reqId, reqDet) for each reqDet in reqDetLst
-            // Set reqDateTime for currReq object to DateTime.Now()
-            // Set status for currReq to “Submitted”
-            // Call UpdateReq(currReq) to persist at db
-            // Return currReq object
+            // make requestId in reqDetList is the same as reqId
+            RequestVM req = GetReq(reqId);
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                RequestVM request = new RequestVM();
-                List<RequestVM> reqlist = GetReq(empId, "Unsubmitted");
-                for (int i = 0; i < reqlist.Count; i++)
+                for (int i = 0; i < reqDetList.Count; i++)
                 {
-                    for (int j = 0; j < reqDetList.Count; j++)
+                    if (reqDetList[i].ReqId == reqId)
                     {
-                        if (reqlist[i].ReqId == reqDetList[j].ReqId)
+                        //// will call this method when UpdateReqDet is finished
+                        //RequestDetailVM rd = RequestDetailBL.UpdateReqDet(reqId, reqDetList[i]);
+                        //RequestDetail requestDetail = entities.RequestDetails.Where(rd => rd.ReqId == reqDetList[i].ReqId &&
+                        //rd.ReqLineNo == reqDetList[i].ReqLineNo).FirstOrDefault();
+                        //requestDetail.ReqQty = reqDetList[i].ReqQty;
+                        //requestDetail.AwaitQty = reqDetList[i].AwaitQty;
+                        //requestDetail.FulfilledQty = reqDetList[i].FulfilledQty;
+                        //entities.SaveChanges();
+                        List<RequestDetail> rdlist = entities.RequestDetails.ToList();
+                        for (int j = 0; j < rdlist.Count; j++)
                         {
-                            //RequestDetailVM rvm = RequestDetailBL.UpdateReqDet(reqDetList[j].ReqId, reqDetList[j]);
-                            //RequestDetail rd = entities.RequestDetails.Where(r => r.ReqId == reqDetList[j].ReqId && r.ReqLineNo == reqDetList[j].ReqLineNo).FirstOrDefault();
-                            List<RequestDetail> rdlist = entities.RequestDetails.ToList();
-                            for (int k = 0; k < rdlist.Count; k++)
+                            if (reqDetList[i].ReqId == rdlist[j].ReqId && reqDetList[i].ReqLineNo == rdlist[j].ReqLineNo)
                             {
-                                if (reqDetList[j].ReqId == rdlist[k].ReqId && reqDetList[j].ReqLineNo == rdlist[k].ReqLineNo)
-                                {
-                                    rdlist[k].ItemCode = reqDetList[j].ItemCode;
-                                    rdlist[k].ReqQty = reqDetList[j].ReqQty;
-                                    rdlist[k].AwaitQty = reqDetList[j].AwaitQty;
-                                    rdlist[k].FulfilledQty = reqDetList[j].FulfilledQty;
-                                    entities.SaveChanges();
-                                }
+                                rdlist[j].ReqQty = reqDetList[i].ReqQty;
+                                rdlist[j].AwaitQty = reqDetList[i].AwaitQty;
+                                rdlist[j].FulfilledQty = reqDetList[i].FulfilledQty;
+                                entities.SaveChanges();
                             }
                         }
                     }
-                    reqlist[i].ReqDateTime = DateTime.Now;
-                    reqlist[i].Status = "Submitted";
-                    request = UpdateReq(reqlist[i]);
                 }
-                return request;
-                //RequestVM r = new RequestVM();
-                //List<RequestVM> reqlist = GetReq(empId, status);
-                //for (int i = 0; i < reqlist.Count; i++)
-                //{
-                //    List<RequestDetail> rdlist = entities.RequestDetails.Where(rd => rd.ReqId == reqlist[i].ReqId).ToList();
-                //    for (int j = 0; j < rdlist.Count; j++)
-                //    {
-                //        for (int k = 0; k < reqDetList.Count; k++)
-                //        {
-                //            if (rdlist[j].ReqId == reqDetList[k].ReqId && rdlist[j].ReqLineNo == reqDetList[k].ReqLineNo)
-                //            {
-                //                RequestDetailVM rvm = RequestDetailBL.UpdateReqDet(rdlist[j].ReqId, reqDetList[k]);
-                //            }
-                //        }
-                //    }
-                //    reqlist[i].ReqDateTime = DateTime.Now;
-                //    reqlist[i].Status = "Submitted";
-                //    r = UpdateReq(reqlist[i]);
-                //}
-                //return r;
+                req.ReqDateTime = DateTime.Now;
+                req.Status = "Submitted";
+                req = UpdateReq(req);
             }
+            return req;
         }
 
         // update request
@@ -473,7 +512,27 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                Request request = entities.Requests.Where(r => r.ReqId == req.ReqId).FirstOrDefault();
+                int reqId = req.ReqId;
+                //List<Request> rlist = entities.Requests.ToList();
+                //for (int i = 0; i < rlist.Count; i++)
+                //{
+                //    if (rlist[i].ReqId == reqId)
+                //    {
+                //        rlist[i].EmpId = req.EmpId;
+                //        rlist[i].ApproverId = req.ApproverId;
+                //        rlist[i].ApproverComment = req.ApproverComment;
+                //        if (req.ReqDateTime != null && DateTime.Compare(req.ReqDateTime, new DateTime(1800, 01, 01)) > 0)
+                //            rlist[i].ReqDateTime = req.ReqDateTime;
+                //        if (req.ApprovedDateTime != null && DateTime.Compare(req.ApprovedDateTime, new DateTime(1800, 01, 01)) > 0)
+                //            rlist[i].ApprovedDateTime = req.ApprovedDateTime;
+                //        if (req.CancelledDateTime != null && DateTime.Compare(req.CancelledDateTime, new DateTime(1800, 01, 01)) > 0)
+                //            rlist[i].CancelledDateTime = req.CancelledDateTime;
+                //        if (req.FulfilledDateTime != null && DateTime.Compare(req.FulfilledDateTime, new DateTime(1800, 01, 01)) > 0)
+                //            rlist[i].FulfilledDateTime = req.FulfilledDateTime;
+                //        rlist[i].Status = req.Status;
+                //    }
+                //}
+                Request request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
                 request.EmpId = req.EmpId;
                 request.ApproverId = req.ApproverId;
                 request.ApproverComment = req.ApproverComment;
