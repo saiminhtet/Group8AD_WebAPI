@@ -10,47 +10,62 @@ namespace Group8AD_WebAPI.BusinessLogic
     public static class RequestDetailBL
     {
         //add RequestDetail with empId , reqDet and status
-        //dummy
+        
         public static RequestDetailVM AddReqDet(int empId, string itemCode,int reqQty, string status)
         {
-            RequestDetailVM reqDetail = new RequestDetailVM();      
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    List<RequestVM> requestlists = RequestBL.GetReq(empId, status);
+            RequestDetailVM reqDetail = new RequestDetailVM();
+            RequestVM req = new RequestVM();
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<RequestVM> requestlists = RequestBL.GetReq(empId, status);
+                foreach (RequestVM r in requestlists)
+                {
+                    req.ReqId = r.ReqId;
+                }
 
-            //    if (requestlists.Count == 0)
-            //    {
-            //        RequestBL.AddReq(empId, status);
-            //    }
+                if (requestlists.Count == 0)
+                {
+                    RequestBL.AddReq(empId, status);
+                }
 
-            //    List<RequestDetail> requestDetailList = entities.RequestDetails.Where(x => x.ReqId == reqDet.ReqId).ToList<RequestDetail>();
+                List<RequestDetail> requestDetailList = entities.RequestDetails.Where(x => x.ReqId == req.ReqId).ToList<RequestDetail>();
 
-            //    foreach (RequestDetail rd in requestDetailList)
-            //    {
-            //        if (status == "Unsubmitted")
-            //        {
-            //            if (reqDet.ItemCode == rd.ItemCode)//if exist reqDet with same itemCode
-            //            {
-            //                reqDet.ReqQty++;//increase reqQty
+                reqDetail = entities.RequestDetails.Where(r => r.ReqId == req.ReqId).Select(r => new RequestDetailVM()
+                {
+                    ReqId = req.ReqId,
+                    ReqLineNo = r.ReqLineNo,
+                    ItemCode = itemCode,
+                    ReqQty = reqQty,
+                    AwaitQty = r.AwaitQty,
+                    FulfilledQty = r.FulfilledQty
+                }).First<RequestDetailVM>();
 
-            //                UpdateReqDet(reqDet.ReqId, reqDet);
-            //            }
-            //            else
-            //            {
-            //                AddReqDet(reqDet.ReqId, reqDet);//create reqDet
-            //            }
-            //        }
+                foreach (RequestDetail rd in requestDetailList)
+                {
+                    if (status == "Unsubmitted")
+                    {
+                        if (reqDetail.ItemCode == rd.ItemCode)//if exist reqDet with same itemCode
+                        {
+                            reqDetail.ReqQty++;//increase reqQty
 
-            //        if (status == "Bookmarked")
-            //        {
-            //            if (reqDet.ItemCode != rd.ItemCode)//if reqDet does not exist  with itemCode
-            //            {
-            //                AddReqDet(reqDet.ReqId, reqDet);//create reqDet
-            //            }
-            //        }
-            //    }
+                            UpdateReqDet(reqDetail.ReqId, reqDetail);
+                        }
+                        else
+                        {
+                            AddReqDet(req.ReqId, reqDetail);//create reqDet
+                        }
+                    }
 
-            //}
+                    if (status == "Bookmarked")
+                    {
+                        if (reqDetail.ItemCode != rd.ItemCode)//if reqDet does not exist  with itemCode
+                        {
+                            AddReqDet(reqDetail.ReqId, reqDetail);//create reqDet
+                        }
+                    }
+                }
+
+            }
             return reqDetail;
         }
 
