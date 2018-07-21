@@ -82,13 +82,14 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
-        // tested, dummy
+        // tested
+        // a bit slow
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Transaction/VolAnnual")]
-        public HttpResponseMessage VolAnnual(DateTime toDate)
+        [Route("api/Transaction/VolMonthly")]
+        public HttpResponseMessage VolMonthly(DateTime toDate)
         {
-            List<TransactionVM> translist = ReportItemBL.GetVolAnnual(toDate);
+            List<ReportItemVM> translist = ReportItemBL.GetVolMonthly(toDate);
             if (translist == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
@@ -101,17 +102,14 @@ namespace Group8AD_WebAPI.Controllers
         [HttpPost]
         [Route("api/Transaction/costReport")]
         public HttpResponseMessage ShowCostReport(string dept1, string dept2, string supp1, string supp2,
-            string cat, string type, List<DateTime> dates, bool byMonth)
+            string cat, List<DateTime> dates, bool byMonth)
         {
-            try
-            {
-                ReportItemBL.ShowCostReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
-                return Request.CreateResponse(HttpStatusCode.OK);
-            }
-            catch
+            List<ReportItemVM> translist = ReportItemBL.ShowCostReport(dept1, dept2, supp1, supp2, cat, dates, byMonth);
+            if (translist == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
 
         // tested, dummy
@@ -119,17 +117,15 @@ namespace Group8AD_WebAPI.Controllers
         [HttpPost]
         [Route("api/Transaction/volumeReport")]
         public HttpResponseMessage ShowVolumeReport(string dept1, string dept2, string supp1, string supp2,
-            string cat, string type, List<DateTime> dates, bool byMonth)
+            string cat, List<DateTime> dates, bool byMonth)
         {
-            try
-            {
-                ReportItemBL.ShowVolumeReport(dept1, dept2, supp1, supp2, cat, type, dates, byMonth);
-                return Request.CreateResponse(HttpStatusCode.OK);
-            }
-            catch
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
-            }
+            //List<ReportItemVM> translist = ReportItemBL.ShowVolumeReport(dept1, dept2, supp1, supp2, cat, dates, byMonth);
+            //if (translist == null)
+            //{
+            //    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            //}
+            //return Request.CreateResponse(HttpStatusCode.OK, translist);
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         // GET api/<controller>
