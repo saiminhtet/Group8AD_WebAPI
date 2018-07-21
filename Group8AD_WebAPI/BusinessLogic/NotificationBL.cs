@@ -10,17 +10,26 @@ namespace Group8AD_WebAPI.BusinessLogic
     public static class NotificationBL
     {
         //add new reqNoti
-        public static void AddNewReqNotification(int empId, Request currReq)
+        public static void AddNewReqNotification(int empId, RequestVM currReq)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var newReqNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId).FirstOrDefault();
-                if (newReqNoti != null)
+                try
                 {
-                    newReqNoti.Employee.EmpId = empId;
-                    Request request = currReq;
-                    entities.Notifications.Add(newReqNoti);
+                    Notification noti = new Notification();
+                    noti.FromEmp = currReq.EmpId;
+                    noti.ToEmp = (int)currReq.ApproverId;
+                    noti.NotificationDateTime = System.DateTime.Now;
+                    noti.RouteUri = "";
+                    noti.Type = "Request Submitted";
+                    noti.Content = "Request Submitted";
+                    noti.IsRead = true;
+                    entities.Notifications.Add(noti);
                     entities.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
                 }
             }
         }
