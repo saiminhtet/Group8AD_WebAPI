@@ -34,11 +34,14 @@ namespace Group8AD_WebAPI.Controllers
         [HttpPost]
         //[Route("api/Department/setDelegate")]
         [Route("api/Department/setDelegate/{deptCode}/{fromDate}/{toDate}/{empId}")]
-        public HttpResponseMessage setDelegate(string deptCode, DateTime fromDate, DateTime toDate, int empId)
+        public HttpResponseMessage setDelegate(string deptCode, string fromDate, string toDate, string empId)
         {
+            DateTime fromdate = Convert.ToDateTime(fromDate);
+            DateTime todate = Convert.ToDateTime(toDate);
+            int EmpId = Convert.ToInt16(empId);
             try
             {
-                BusinessLogic.DepartmentBL.setDelegate(deptCode,fromDate,toDate,empId);
+                BusinessLogic.DepartmentBL.setDelegate(deptCode,fromdate,todate,EmpId);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -53,11 +56,12 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Department/setRep")]
-        public HttpResponseMessage setRep(string deptCode, int empId)
+        public HttpResponseMessage setRep(string deptCode, string empId)//int empId
         {
             try
             {
-                BusinessLogic.DepartmentBL.setRep(deptCode,empId);
+                int emp = Convert.ToInt16(empId);
+                BusinessLogic.DepartmentBL.setRep(deptCode,emp);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -72,11 +76,12 @@ namespace Group8AD_WebAPI.Controllers
         [HttpPost]
         [Route("api/Department/setCollPt")]
         //[Route("api/Department/setCollPt/{deptCode}/{collPt}")]
-        public HttpResponseMessage setCollPt(string deptCode, int collPt)
+        public HttpResponseMessage setCollPt(string deptCode, string collPt)//int collPt 
         {
             try
             {
-                BusinessLogic.DepartmentBL.setCollPt(deptCode, collPt);
+                int collPoint = Convert.ToInt16(collPt);
+                BusinessLogic.DepartmentBL.setCollPt(deptCode, collPoint);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -134,9 +139,10 @@ namespace Group8AD_WebAPI.Controllers
         [HttpPost]
         [Route("api/Department/GetDept")]
         //[Route("api/Department/GetDept/{empId}")]
-        public HttpResponseMessage GetDept(int empId)
+        public HttpResponseMessage GetDept(string empId)//int empId
         {
-            DepartmentVM dep = BusinessLogic.DepartmentBL.GetDept(empId);
+            int EmpId = Convert.ToInt16(empId);
+            DepartmentVM dep = BusinessLogic.DepartmentBL.GetDept(EmpId);
             if (dep == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
