@@ -15,11 +15,12 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Notification/AddNewReqNotification")]
-        public HttpResponseMessage AddNewReqNotification(int empId, RequestVM currReq)
+        public HttpResponseMessage AddNewReqNotification(string empId, RequestVM currReq)//int empId
         {
+            int EmpId = Convert.ToInt16(empId);
             try
             {
-                BusinessLogic.NotificationBL.AddNewReqNotification(empId, currReq);
+                BusinessLogic.NotificationBL.AddNewReqNotification(EmpId, currReq);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -32,9 +33,10 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("GET")]
         [HttpGet]
         [Route("api/Notification/{empId}")]
-        public HttpResponseMessage GetNotifications(int empId)
+        public HttpResponseMessage GetNotifications(string empId)
         {
-            List<NotificationVM> noti = BusinessLogic.NotificationBL.GetNotifications(empId);
+            int EmpId = Convert.ToInt16(empId);
+            List<NotificationVM> noti = BusinessLogic.NotificationBL.GetNotifications(EmpId);
 
             if (noti == null)
             {
@@ -47,11 +49,12 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Notification/AddLowStkNotification")]
-        public HttpResponseMessage AddLowStkNotification(int empId, Item item)
+        public HttpResponseMessage AddLowStkNotification(string empId, Item item)
         {
+            int EmpId = Convert.ToInt16(empId);
             try
             {
-                BusinessLogic.NotificationBL.AddLowStkNotification(empId,item);
+                BusinessLogic.NotificationBL.AddLowStkNotification(EmpId,item);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -74,11 +77,13 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Notification/AddFulfillNotification")]
-        public HttpResponseMessage AddFulfillNotification(int empId, int repId)
+        public HttpResponseMessage AddFulfillNotification(string empId, string repId)
         {
+            int EmpId = Convert.ToInt16(empId);
+            int RepId = Convert.ToInt16(repId);
             try
             {
-                BusinessLogic.NotificationBL.AddFulfillNotification(empId,repId);
+                BusinessLogic.NotificationBL.AddFulfillNotification(EmpId,RepId);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -103,9 +108,10 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Notification/AddAcptNotification")]
         public HttpResponseMessage AddAcptNotification(int repId)
         {
+            int RepId = Convert.ToInt16(repId);
             try
             {
-                BusinessLogic.NotificationBL.AddAcptNotification(repId);
+                BusinessLogic.NotificationBL.AddAcptNotification(RepId);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -158,11 +164,13 @@ namespace Group8AD_WebAPI.Controllers
         //[AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Notification/AdjApprNotification")]
-        public HttpResponseMessage AdjApprNotification(int fromEmpId, int toEmpId, NotificationVM n)
+        public HttpResponseMessage AdjApprNotification(string fromEmpId, string toEmpId, NotificationVM n)
         {
+            int FromEmpId = Convert.ToInt16(fromEmpId);
+            int ToEmpId = Convert.ToInt16(toEmpId);
             try
             {
-                BusinessLogic.NotificationBL.AdjApprNotification(fromEmpId,toEmpId,n);
+                BusinessLogic.NotificationBL.AdjApprNotification(FromEmpId,ToEmpId,n);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
