@@ -62,29 +62,69 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var lowStkNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId).FirstOrDefault();
-                if (lowStkNoti != null)
+                try
                 {
-                    lowStkNoti.Employee.EmpId = empId;
-                    Item item = i;
-                    entities.Notifications.Add(lowStkNoti);
+                    Notification noti = new Notification();
+                    noti.FromEmp = empId;
+                    noti.ToEmp = 104;
+                    noti.NotificationDateTime = System.DateTime.Now;
+                    noti.RouteUri = "";
+                    noti.Type = "Request Submitted";
+                    noti.Content = "Request Submitted";
+                    noti.IsRead = true;
+                    entities.Notifications.Add(noti);
                     entities.SaveChanges();
                 }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                //var lowStkNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId).FirstOrDefault();
+                //if (lowStkNoti != null)
+                //{
+                //    lowStkNoti.Employee.EmpId = empId;
+                //    Item item = i;
+                //    entities.Notifications.Add(lowStkNoti);
+                //    entities.SaveChanges();
+                //}
             }
         }
 
         //AddFulfillNotification with empId and repId
         public static void AddFulfillNotification(int empId, int repId)
-        {
+        {            
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var fulFillNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId && n.Employee.Department.DeptRepId == repId).FirstOrDefault();
-                if (fulFillNoti != null)
+                var emploeeses=entities.Employees.Where(n => n.EmpId == empId).FirstOrDefault();
+                if (emploeeses != null)
                 {
-                    fulFillNoti.Employee.EmpId = empId;
-                    fulFillNoti.Employee.Department.DeptRepId = repId;
-                    entities.Notifications.Add(fulFillNoti);
-                    entities.SaveChanges();
+                    var request = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
+                    if (request != null)
+                    {
+                        Notification noti = new Notification();
+                        noti.FromEmp = empId;
+                        noti.ToEmp = repId;
+                        noti.NotificationDateTime = System.DateTime.Now;
+                        noti.RouteUri = "";
+                        noti.Type = "Request Submitted";
+                        noti.Content = "Request Submitted";
+                        noti.IsRead = true;                        
+                        entities.Notifications.Add(noti);
+                        entities.SaveChanges();
+
+                        //Notification noti2 = new Notification();
+                        //noti2.FromEmp = empId;
+                        //noti2.ToEmp = (int)request.ToEmp;
+                        //noti2.NotificationDateTime = System.DateTime.Now;
+                        //noti2.RouteUri = "";
+                        //noti2.Type = "Request Submitted";
+                        //noti2.Content = "Request Submitted";
+                        //noti2.IsRead = true;
+                        //entities.Notifications.Add(noti2);
+
+                        //entities.SaveChanges();
+                    }
                 }
             }
         }
@@ -94,13 +134,31 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                Notification acptNoti = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
-                if (acptNoti != null)
+                try
                 {
-                    acptNoti.Employee.Department.DeptRepId = repId;
-                    entities.Notifications.Add(acptNoti);
+                    Notification noti = new Notification();
+                    noti.FromEmp = 104;
+                    noti.ToEmp = repId;
+                    noti.NotificationDateTime = System.DateTime.Now;
+                    noti.RouteUri = "";
+                    noti.Type = "Request Submitted";
+                    noti.Content = "Request Submitted";
+                    noti.IsRead = true;
+                    entities.Notifications.Add(noti);
                     entities.SaveChanges();
                 }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                //Notification acptNoti = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
+                //if (acptNoti != null)
+                //{
+                //    acptNoti.Employee.Department.DeptRepId = repId;
+                //    entities.Notifications.Add(acptNoti);
+                //    entities.SaveChanges();
+                //}
             }
         }
 
@@ -150,18 +208,36 @@ namespace Group8AD_WebAPI.BusinessLogic
             NotificationVM adjApprNoti = new NotificationVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                adjApprNoti = entities.Notifications.Select(r => new NotificationVM()
+                try
                 {
-                    FromEmp = fromEmpId,
-                    ToEmp = toEmpId,
-                    NotificationId = n.NotificationId,
-                    NotificationDateTime = n.NotificationDateTime,
-                    RouteUri = n.RouteUri,
-                    Type = n.Type,
-                    Content = n.Content,
-                    IsRead = n.IsRead
+                    Notification noti = new Notification();
+                    noti.FromEmp = fromEmpId;
+                    noti.ToEmp = toEmpId;
+                    noti.NotificationDateTime = System.DateTime.Now;
+                    noti.RouteUri = "";
+                    noti.Type = "Adjustment Submitted";
+                    noti.Content = "Missing Stock";
+                    noti.IsRead = true;
+                    entities.Notifications.Add(noti);
+                    entities.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
 
-                }).First<NotificationVM>();
+                //adjApprNoti = entities.Notifications.Select(r => new NotificationVM()
+                //{
+                //    FromEmp = fromEmpId,
+                //    ToEmp = toEmpId,
+                //    NotificationId = n.NotificationId,
+                //    NotificationDateTime = n.NotificationDateTime,
+                //    RouteUri = n.RouteUri,
+                //    Type = n.Type,
+                //    Content = n.Content,
+                //    IsRead = n.IsRead
+
+                //}).First<NotificationVM>();
             }
         }
     }
