@@ -100,7 +100,7 @@ namespace Group8AD_WebAPI.Controllers
         //AddAcptNotification(int repId)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Notification/AddFulfillNotification")]
+        [Route("api/Notification/AddAcptNotification")]
         public HttpResponseMessage AddAcptNotification(int repId)
         {
             try
