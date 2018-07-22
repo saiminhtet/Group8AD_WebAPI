@@ -416,6 +416,29 @@ namespace Group8AD_WebAPI.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK);
         }
+
+
+
+        //For Testing 
+        [System.Web.Http.AcceptVerbs("POST")]
+        [System.Web.Http.HttpPost]
+        [Route("api/Item/Test")]
+        public HttpResponseMessage Test(int empId, List<ItemVM> items, string cat, string desc, double threshold)
+        {
+            
+           List<ItemVM> itemlist = BusinessLogic.ItemBL.GetItems(cat,desc,threshold);
+             return Request.CreateResponse(HttpStatusCode.OK, itemlist);
+            //try
+            //{
+            //BusinessLogic.ItemBL.GetDeptDisbList(empId);
+            //}
+            //catch (Exception)
+            //{
+
+            //    return Request.CreateResponse(HttpStatusCode.BadGateway);
+            //}
+            //return Request.CreateResponse(HttpStatusCode.OK);
+        }
     }
 
 

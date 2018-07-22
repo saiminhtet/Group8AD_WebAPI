@@ -27,5 +27,14 @@ namespace Group8AD_WebAPI.Models.ViewModels
 
         public int TempQtyAcpt { get; set; }
         public int TempQtyReq { get; set; }
+
+        public string TempReason { get; set; }
+
+        public int TempOrderQty { get; set; }
+        public int ReccReorderLvl { get; set; }
+        public int ReccReorderQty { get; set; }
+
+        public double lvlDiff { get; set; }
+        public double qtyDiff { get; set; }
     }
 }
