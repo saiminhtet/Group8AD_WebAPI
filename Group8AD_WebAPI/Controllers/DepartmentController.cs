@@ -70,7 +70,8 @@ namespace Group8AD_WebAPI.Controllers
         //setCollPt(string deptCode, int collPt)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Department/setCollPt/{deptCode}/{collPt}")]
+        [Route("api/Department/setCollPt")]
+        //[Route("api/Department/setCollPt/{deptCode}/{collPt}")]
         public HttpResponseMessage setCollPt(string deptCode, int collPt)
         {
             try
@@ -131,7 +132,8 @@ namespace Group8AD_WebAPI.Controllers
 
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Department/GetDept/{empId}")]
+        [Route("api/Department/GetDept")]
+        //[Route("api/Department/GetDept/{empId}")]
         public HttpResponseMessage GetDept(int empId)
         {
             DepartmentVM dep = BusinessLogic.DepartmentBL.GetDept(empId);
