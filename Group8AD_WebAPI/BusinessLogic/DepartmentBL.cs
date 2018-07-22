@@ -27,15 +27,19 @@ namespace Group8AD_WebAPI.BusinessLogic
         //set Delegate by DepartmentCode , fromDate , toDate and empId
         public static void setDelegate(string deptCode, DateTime fromDate, DateTime toDate, int empId)
         {
+            DepartmentVM deptVM = new DepartmentVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                Department department = entities.Departments.Where(d => d.DeptCode.Equals(deptCode)).First<Department>();
+                //DepartmentVM department = entities.Departments.Where(d => d.DeptCode.Equals(deptCode)).First();
+                deptVM = entities.Departments.Where(d => d.DeptCode.Equals(deptCode)).Select(n => new DepartmentVM()
                 {
-                    department.DelegateApproverId = empId;
-                    department.DelegateFromDate = fromDate;
-                    department.DelegateToDate = toDate;
-                    entities.SaveChanges();                    
-                };
+                    DeptCode = deptCode,
+                    DelegateApproverId = empId,
+                    DelegateFromDate = fromDate,
+                    DelegateToDate = toDate
+                }).First<DepartmentVM>();
+                entities.SaveChanges();             
+                
             }            
         }
 
