@@ -16,6 +16,8 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public Nullable<int> DeptHeadId { get; set; }
         public Nullable<int> DeptRepId { get; set; }
         public Nullable<int> DelegateApproverId { get; set; }
+		public Nullable<System.DateTime> DelegateFromDate { get; set; }
+        public Nullable<System.DateTime> DelegateToDate { get; set; }
         public int EmpId { get; set; }
 
     }
