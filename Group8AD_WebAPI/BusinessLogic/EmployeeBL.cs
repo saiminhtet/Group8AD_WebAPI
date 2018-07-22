@@ -16,7 +16,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             EmployeeVM employee = new EmployeeVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                
+
                 employee = entities.Employees.Where(e => e.EmpId == empId).Select(e => new EmployeeVM()
                 {
                     EmpId = e.EmpId,
@@ -55,7 +55,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //                       DeptHeadId = b.DeptHeadId
                 //                    }).ToString();
                 string deptCode = GetDeptCode(empId);
-                string DeptHeadId = entities.Departments.Where(x => x.DeptCode == deptCode).Select(x => x.DeptHeadId).First().ToString();             
+                string DeptHeadId = entities.Departments.Where(x => x.DeptCode == deptCode).Select(x => x.DeptHeadId).First().ToString();
                 return DeptHeadId;
             }
         }
@@ -79,7 +79,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-              
+
                 emplists = entities.Employees.Select(e => new EmployeeVM()
                 {
                     EmpId = e.EmpId,
@@ -90,19 +90,19 @@ namespace Group8AD_WebAPI.BusinessLogic
                     EmpEmail = e.EmpEmail,
                     Role = e.Role
                 }).ToList<EmployeeVM>();
-               
+
             }
             return emplists;
         }
 
         ////Get Employee 
-        //public static List<EmployeeVM> GetEmp(string deptCode, string name)
+        //public static List<EmployeeVM> GetEmplistsbyDeptCode(string deptCode)
         //{
+        //    using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+        //    {
 
-        //    //if (deptCode=null)
-        //    //{
 
-        //    //}
+        //    }
         //}
     }
 }
