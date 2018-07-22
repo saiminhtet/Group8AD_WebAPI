@@ -131,7 +131,7 @@ namespace Group8AD_WebAPI.Controllers
 
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Department/GetDept")]
+        [Route("api/Department/GetDept/{empId}")]
         public HttpResponseMessage GetDept(int empId)
         {
             DepartmentVM dep = BusinessLogic.DepartmentBL.GetDept(empId);
