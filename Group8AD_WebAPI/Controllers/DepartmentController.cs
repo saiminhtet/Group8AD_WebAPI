@@ -33,11 +33,11 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Department/setDelegate")]
-        public HttpResponseMessage setDelegate(SetDelegateVM delegateVM)
+         public HttpResponseMessage setDelegate(string deptCode, DateTime fromDate, DateTime toDate, int empId)
         {
             try
             {
-                BusinessLogic.DepartmentBL.setDelegate(delegateVM.DeptCode, delegateVM.DelegateFromDate, delegateVM.DelegateToDate, delegateVM.EmpId);
+                BusinessLogic.DepartmentBL.setDelegate(deptCode,fromDate,toDate,empId);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
