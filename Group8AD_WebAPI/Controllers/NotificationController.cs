@@ -106,7 +106,7 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Notification/AddAcptNotification")]
-        public HttpResponseMessage AddAcptNotification(int repId)
+        public HttpResponseMessage AddAcptNotification(string repId)
         {
             int RepId = Convert.ToInt16(repId);
             try
