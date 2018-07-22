@@ -32,8 +32,9 @@ namespace Group8AD_WebAPI.Controllers
         //set Delegate by DepartmentCode , fromDate , toDate and empId
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Department/setDelegate")]
-         public HttpResponseMessage setDelegate(string deptCode, DateTime fromDate, DateTime toDate, int empId)
+        //[Route("api/Department/setDelegate")]
+        [Route("api/Department/setDelegate/{deptCode}/{fromDate}/{toDate}/{empId}")]
+        public HttpResponseMessage setDelegate(string deptCode, DateTime fromDate, DateTime toDate, int empId)
         {
             try
             {
