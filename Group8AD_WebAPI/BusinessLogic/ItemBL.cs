@@ -18,78 +18,31 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                if (cat == null || desc == null)
+
+                if (desc != null && cat == null)
                 {
-                    if (cat == null)
-                    {
-                        itemlist = entities.Items.Where(i => i.Desc == desc).Select(i => new ItemVM()
-                        {
-                            ItemCode = i.ItemCode,
-                            Cat = i.Cat,
-                            Desc = i.Desc,
-                            Location = i.Location,
-                            UOM = i.UOM,
-                            IsActive = i.IsActive,
-                            Balance = i.Balance,
-                            ReorderLevel = i.ReorderLevel,
-                            ReorderQty = i.ReorderQty,
-                            TempQtyDisb = i.TempQtyDisb,
-                            TempQtyCheck = i.TempQtyCheck,
-                            SuppCode1 = i.SuppCode1,
-                            SuppCode2 = i.SuppCode2,
-                            SuppCode3 = i.SuppCode3,
-                            Price1 = i.Price1,
-                            Price2 = i.Price2,
-                            Price3 = i.Price3
-                        }).ToList<ItemVM>();
-                        return itemlist;
-                    }
-                    if (desc == null)
-                    {
-                        itemlist = entities.Items.Where(i => i.Cat == cat).Select(i => new ItemVM()
-                        {
-                            ItemCode = i.ItemCode,
-                            Cat = i.Cat,
-                            Desc = i.Desc,
-                            Location = i.Location,
-                            UOM = i.UOM,
-                            IsActive = i.IsActive,
-                            Balance = i.Balance,
-                            ReorderLevel = i.ReorderLevel,
-                            ReorderQty = i.ReorderQty,
-                            TempQtyDisb = i.TempQtyDisb,
-                            TempQtyCheck = i.TempQtyCheck,
-                            SuppCode1 = i.SuppCode1,
-                            SuppCode2 = i.SuppCode2,
-                            SuppCode3 = i.SuppCode3,
-                            Price1 = i.Price1,
-                            Price2 = i.Price2,
-                            Price3 = i.Price3
-                        }).ToList<ItemVM>();
-                        return itemlist;
-                    }
+                    List<Item> ilist1 = entities.Items.Where(i => i.Desc == desc).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist1));
+                    return itemlist;
                 }
-                itemlist = entities.Items.Where(i => i.Cat == cat && i.Desc.Contains(desc)).Select(i => new ItemVM()
+                else if (cat != null && desc == null)
                 {
-                    ItemCode = i.ItemCode,
-                    Cat = i.Cat,
-                    Desc = i.Desc,
-                    Location = i.Location,
-                    UOM = i.UOM,
-                    IsActive = i.IsActive,
-                    Balance = i.Balance,
-                    ReorderLevel = i.ReorderLevel,
-                    ReorderQty = i.ReorderQty,
-                    TempQtyDisb = i.TempQtyDisb,
-                    TempQtyCheck = i.TempQtyCheck,
-                    SuppCode1 = i.SuppCode1,
-                    SuppCode2 = i.SuppCode2,
-                    SuppCode3 = i.SuppCode3,
-                    Price1 = i.Price1,
-                    Price2 = i.Price2,
-                    Price3 = i.Price3
-                }).ToList<ItemVM>();
-                return itemlist;
+                    List<Item> ilist2 = entities.Items.Where(i => i.Cat == cat).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist2));
+                    return itemlist;
+                }
+                else if (cat != null && desc != null)
+                {
+                    List<Item> ilist = entities.Items.Where(i => i.Cat == cat && i.Desc.Contains(desc)).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist));
+                    return itemlist;
+                }
+                else
+                {
+                    List<Item> ilist = entities.Items.ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist));
+                    return itemlist;
+                }
             }
         }
 
@@ -151,123 +104,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
             }
             return frequent_itemlists;
-        }
-
-
-        //get All Category list
-        public static List<String> GetCatList()
-        {
-            List<String> category = new List<string>();
-
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                category = entities.Items
-                            .Select(c => c.Cat).Distinct()
-                            .ToList<String>();
-            }
-
-            return category;
-        }
-
-
-        //get low stock Items
-        public static List<ItemVM> GetLowStockItems()
-        {
-            List<ItemVM> itemlist = new List<ItemVM>();
-
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                itemlist = entities.Items
-                            .Where(i => i.Balance < i.ReorderLevel)
-                            .Select(i => new ItemVM()
-                            {
-                                ItemCode = i.ItemCode,
-                                Cat = i.Cat,
-                                Desc = i.Desc,
-                                Location = i.Location,
-                                UOM = i.UOM,
-                                IsActive = i.IsActive,
-                                Balance = i.Balance,
-                                ReorderLevel = i.ReorderLevel,
-                                ReorderQty = i.ReorderQty,
-                                TempQtyDisb = i.TempQtyDisb,
-                                TempQtyCheck = i.TempQtyCheck,
-                                SuppCode1 = i.SuppCode1,
-                                SuppCode2 = i.SuppCode2,
-                                SuppCode3 = i.SuppCode3,
-                                Price1 = i.Price1,
-                                Price2 = i.Price2,
-                                Price3 = i.Price3
-                            }).ToList<ItemVM>();
-            }
-            return itemlist;
-        }
-
-        //get All Items
-        public static List<ItemVM> GetAllItems()
-        {
-            List<ItemVM> itemlist = new List<ItemVM>();
-
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                itemlist = entities.Items
-                           .Select(i => new ItemVM()
-                           {
-                               ItemCode = i.ItemCode,
-                               Cat = i.Cat,
-                               Desc = i.Desc,
-                               Location = i.Location,
-                               UOM = i.UOM,
-                               IsActive = i.IsActive,
-                               Balance = i.Balance,
-                               ReorderLevel = i.ReorderLevel,
-                               ReorderQty = i.ReorderQty,
-                               TempQtyDisb = i.TempQtyDisb,
-                               TempQtyCheck = i.TempQtyCheck,
-                               SuppCode1 = i.SuppCode1,
-                               SuppCode2 = i.SuppCode2,
-                               SuppCode3 = i.SuppCode3,
-                               Price1 = i.Price1,
-                               Price2 = i.Price2,
-                               Price3 = i.Price3
-                           }).ToList<ItemVM>();
-            }
-            return itemlist;
-        }
-
-
-
-        //get Items by ItemCode
-        public static ItemVM GetItem(string itemCode)
-        {
-            ItemVM item = new ItemVM();
-
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                item = entities.Items
-                            .Where(i => i.ItemCode == itemCode)
-                            .Select(i => new ItemVM()
-                            {
-                                ItemCode = i.ItemCode,
-                                Cat = i.Cat,
-                                Desc = i.Desc,
-                                Location = i.Location,
-                                UOM = i.UOM,
-                                IsActive = i.IsActive,
-                                Balance = i.Balance,
-                                ReorderLevel = i.ReorderLevel,
-                                ReorderQty = i.ReorderQty,
-                                TempQtyDisb = i.TempQtyDisb,
-                                TempQtyCheck = i.TempQtyCheck,
-                                SuppCode1 = i.SuppCode1,
-                                SuppCode2 = i.SuppCode2,
-                                SuppCode3 = i.SuppCode3,
-                                Price1 = i.Price1,
-                                Price2 = i.Price2,
-                                Price3 = i.Price3
-                            }).SingleOrDefault<ItemVM>();
-            }
-            return item;
         }
 
 
@@ -336,6 +172,210 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
 
+        //AcceptDisbursement
+        public static void AcceptDisbursement(int empId, List<ItemVM> iList)
+        {
+            //List<Item> itemsList = Utility.ItemUtility.Convert_ItemVM_To_Item(iList);
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                foreach (ItemVM i in iList)
+                {
+                    if (i.TempQtyReq - i.TempQtyAcpt > 0)
+                    {
+                        Adjustment a = new Adjustment();
+                        a.EmpId = empId;
+                        a.DateTimeIssued = DateTime.Now;
+                        a.ItemCode = i.ItemCode;
+
+                        int index = iList.FindIndex(x => x.ItemCode.Equals(i.ItemCode));
+
+                        a.Reason = i.TempReason;
+                        a.QtyChange = i.TempQtyAcpt - i.TempQtyReq;
+                        a.Status = "Submitted";
+
+                        entities.Adjustments.Add(a);
+                        entities.SaveChanges();
+
+                        double chgVal = a.QtyChange * i.Price1 ?? default(double);
+
+                        if (chgVal >= 250)
+                        {
+                            //Notify Manager
+                        }
+                        else
+                        {
+                            //Notify Manager
+                        }
+
+                        //3. Distribute i.TempQtyAcpt across RequestDetails ******************UnClear Method******************
+
+
+
+                        string deptcode = EmployeeBL.GetDeptCode(empId);
+
+                        var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).ToList();
+
+
+                        List<Request> rList = new List<Request>();
+                        List<RequestDetail> rdList = new List<RequestDetail>();
+
+                        foreach (var e in EmpIds)
+                        {
+                            List<Request> reqList = entities.Requests.Where(x => x.EmpId == e.EmpId && x.Status.Equals("Approved")).ToList();
+                            rList.AddRange(reqList);
+                        }
+
+                        foreach (Request r in rList)
+                        {
+                            List<RequestDetail> reqdList = entities.RequestDetails.Where(x => x.ReqId == r.ReqId).ToList();
+                            rdList.AddRange(reqdList);
+                        }
+
+
+                        int count = i.TempQtyAcpt;
+
+                        foreach (Request r in rList)
+                        {
+                            if (count > 0)
+                            {
+                                foreach (RequestDetail rd in rdList.Where(rd => rd.ReqId == r.ReqId))
+                                {
+                                    if (count > 0)
+                                    {
+                                        if (rd.AwaitQty > 0 && rd.AwaitQty <= count)
+                                        {
+                                            rd.FulfilledQty += rd.AwaitQty;
+                                            count -= rd.AwaitQty;
+                                            rd.AwaitQty = 0;
+
+                                            //Save Changes for rd.AwaitQty, Rd.FulfilledQty
+                                            UpdateAwait(r.ReqId, rd.ItemCode, rd.AwaitQty);
+                                            UpdateFulfilled(r.ReqId, rd.ItemCode, rd.FulfilledQty);
+
+                                            TransactionVM t = new TransactionVM();
+                                            t.TranDateTime = DateTime.Now;
+                                            t.ItemCode = i.ItemCode;
+                                            t.QtyChange = rd.AwaitQty - 1;
+                                            t.UnitPrice = i.Price1 ?? default(double);
+                                            t.Desc = "DISBURSEMENT";
+                                            t.DeptCode = deptcode;
+
+                                            TransactionBL.AddTran(t);
+                                        }
+
+                                        else if (rd.AwaitQty > 0 && rd.AwaitQty > count)
+                                        {
+                                            rd.FulfilledQty += count;
+                                            rd.AwaitQty -= count;
+                                            count = 0;
+
+                                            //Save Changes for rd.AwaitQty, Rd.FulfilledQty
+                                            UpdateAwait(r.ReqId, rd.ItemCode, rd.AwaitQty);
+                                            UpdateFulfilled(r.ReqId, rd.ItemCode, rd.FulfilledQty);
+
+                                            TransactionVM t = new TransactionVM();
+                                            t.TranDateTime = DateTime.Now;
+                                            t.ItemCode = i.ItemCode;
+                                            t.QtyChange = rd.AwaitQty - 1;
+                                            t.UnitPrice = i.Price1 ?? default(double);
+                                            t.Desc = "DISBURSEMENT";
+                                            t.DeptCode = deptcode;
+
+                                            TransactionBL.AddTran(t);
+                                        }
+
+                                    }
+                                    else break;
+                                }
+
+                                //Check if Request Fulfilled
+                                RequestBL.UpdateFulfilledRequestStatus();
+                                int openCount = 0;
+                                foreach (RequestDetail rd in rdList.Where(rd => rd.ReqId == r.ReqId))
+                                {
+                                    int shortQty = (rd.ReqQty - rd.FulfilledQty);
+                                    openCount += shortQty;
+                                }
+
+                                if (openCount == 0)
+                                {
+                                    r.Status = "Fulfilled";
+
+                                    RequestVM request = RequestBL.GetReq(r.ReqId);
+
+                                    request.Status = r.Status;
+                                    RequestBL.UpdateReq(request); //save changes for this request object
+                                }
+                            }
+
+                            //Check Low Stock item
+                            bool status = CheckLowStk(i);
+
+                            if (status)
+                            {
+                                Item item = Utility.ItemUtility.Convert_ItemVMObj_To_ItemObj(i);
+                                NotificationBL.AddLowStkNotification(empId, item);
+                            }
+
+                            //send email acknowledgement to rep, specific head and all clerks
+                            NotificationBL.AddAcptNotification(r.ReqId);
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+        //get All Category list
+        public static List<String> GetCatList()
+        {
+            List<String> category = new List<string>();
+
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                category = entities.Items
+                            .Select(c => c.Cat).Distinct()
+                            .ToList<String>();
+            }
+
+            return category;
+        }
+
+
+        //get low stock Items
+        public static List<ItemVM> GetLowStockItems()
+        {
+            List<ItemVM> itemlist = new List<ItemVM>();
+
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                itemlist = entities.Items
+                            .Where(i => i.Balance < i.ReorderLevel)
+                            .Select(i => new ItemVM()
+                            {
+                                ItemCode = i.ItemCode,
+                                Cat = i.Cat,
+                                Desc = i.Desc,
+                                Location = i.Location,
+                                UOM = i.UOM,
+                                IsActive = i.IsActive,
+                                Balance = i.Balance,
+                                ReorderLevel = i.ReorderLevel,
+                                ReorderQty = i.ReorderQty,
+                                TempQtyDisb = i.TempQtyDisb,
+                                TempQtyCheck = i.TempQtyCheck,
+                                SuppCode1 = i.SuppCode1,
+                                SuppCode2 = i.SuppCode2,
+                                SuppCode3 = i.SuppCode3,
+                                Price1 = i.Price1,
+                                Price2 = i.Price2,
+                                Price3 = i.Price3
+                            }).ToList<ItemVM>();
+            }
+            return itemlist;
+        }
+
         //Get Retrieve Items
         public static List<ItemVM> GetRetrieveItems()
         {
@@ -370,6 +410,39 @@ namespace Group8AD_WebAPI.BusinessLogic
                 return ritemlist;
             }
         }
+
+        //get All Items
+        public static List<ItemVM> GetAllItems()
+        {
+            List<ItemVM> itemlist = new List<ItemVM>();
+
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                itemlist = entities.Items
+                           .Select(i => new ItemVM()
+                           {
+                               ItemCode = i.ItemCode,
+                               Cat = i.Cat,
+                               Desc = i.Desc,
+                               Location = i.Location,
+                               UOM = i.UOM,
+                               IsActive = i.IsActive,
+                               Balance = i.Balance,
+                               ReorderLevel = i.ReorderLevel,
+                               ReorderQty = i.ReorderQty,
+                               TempQtyDisb = i.TempQtyDisb,
+                               TempQtyCheck = i.TempQtyCheck,
+                               SuppCode1 = i.SuppCode1,
+                               SuppCode2 = i.SuppCode2,
+                               SuppCode3 = i.SuppCode3,
+                               Price1 = i.Price1,
+                               Price2 = i.Price2,
+                               Price3 = i.Price3
+                           }).ToList<ItemVM>();
+            }
+            return itemlist;
+        }
+
 
         //ResetQtyDisb
         public static List<ItemVM> ResetQtyDisb()
@@ -504,6 +577,103 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         }
 
+
+        //FulfillRequestUrgent
+        public static void FulfillRequestUrgent(int empId,List<ItemVM> items)
+        {
+            List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
+
+            foreach (ItemVM i in items)
+            {
+                int count = (i.TempQtyDisb > i.Balance) ? i.Balance : i.TempQtyDisb ?? default(int);
+
+                foreach (RequestVM r in RequestBL.GetReq(empId,"Approved"))
+                {
+                    if (count > 0)
+                    {
+                        string deptCode = EmployeeBL.GetEmp(r.EmpId).DeptCode;
+
+                        foreach (RequestDetailVM rd in RequestDetailBL.GetReqDetList(r.ReqId))
+                        {
+                            if (count > 0)
+                            {
+                                if (i.ItemCode.Equals(rd.ItemCode))
+                                {
+                                    int shortQty = (rd.ReqQty - rd.FulfilledQty);
+
+                                    if (shortQty <= count)
+                                    {
+                                        shortQty = 0;
+                                        count -= shortQty;
+                                        i.Balance -= shortQty;
+                                        rd.AwaitQty += shortQty;
+                                        try
+                                        {
+                                            UpdateBal(rd.ItemCode, i.Balance);
+                                            fulfilledList.Add(rd);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        shortQty -= count;
+                                        count = 0;
+                                        i.Balance -= count;
+                                        rd.AwaitQty += count;
+                                        try
+                                        {
+                                            UpdateBal(rd.ItemCode, i.Balance);
+                                            fulfilledList.Add(rd);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            //Making PDF Reports
+            //Group By Department then By Item
+            List<RequestDetailVM> ListByDept = new List<RequestDetailVM>();
+
+            foreach (string d in DepartmentBL.GetDeptCodes())
+            {
+                List<RequestDetailVM> rdList = new List<RequestDetailVM>();
+
+                foreach (RequestDetailVM rd in fulfilledList)
+                {
+                    if (GetDeptCode(rd.ReqId).Equals(d))
+                    {
+                        if (rdList.Contains(rd))
+                        {
+                            rdList.Find(x => x.ItemCode.Equals(rd.ItemCode)).AwaitQty += rd.AwaitQty;
+                        }
+                        else
+                        {
+                            rdList.Add(rd);
+                        }
+
+                        ListByDept.AddRange(rdList);
+                    }
+                }
+            }
+
+
+        }
         //Get DeptCode by request id
         public static string GetDeptCode(int reqId)
         {
@@ -529,160 +699,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
-        //AcceptDisbursement
-        public static void AcceptDisbursement(int empId, List<ItemVM> iList)
-        {
-            //List<Item> itemsList = Utility.ItemUtility.Convert_ItemVM_To_Item(iList);
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                foreach (ItemVM i in iList)
-                {
-                    if (i.TempQtyReq - i.TempQtyAcpt > 0)
-                    {
-                        Adjustment a = new Adjustment();
-                        a.EmpId = empId;
-                        a.DateTimeIssued = DateTime.Now;
-                        a.ItemCode = i.ItemCode;
 
-                        int index = iList.FindIndex(x => x.ItemCode.Equals(i.ItemCode));
-
-                        a.Reason = i.TempReason;
-                        a.QtyChange = i.TempQtyAcpt - i.TempQtyReq;
-                        a.Status = "Submitted";
-
-                        entities.Adjustments.Add(a);
-                        entities.SaveChanges();
-
-                        double chgVal = a.QtyChange * i.Price1 ?? default(double);
-
-                        if (chgVal >= 250)
-                        {
-                            //Notify Manager
-                        }
-                        else
-                        {
-                            //Notify Manager
-                        }
-
-                        //3. Distribute i.TempQtyAcpt across RequestDetails ******************UnClear Method******************
-
-
-
-                        string deptcode = EmployeeBL.GetDeptCode(empId);
-
-                        var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).ToList();
-
-
-                        List<Request> rList = new List<Request>();
-                        List<RequestDetail> rdList = new List<RequestDetail>();
-
-                        foreach (var e in EmpIds)
-                        {
-                            List<Request> reqList = entities.Requests.Where(x => x.EmpId == e.EmpId && x.Status.Equals("Approved")).ToList();
-                            rList.AddRange(reqList);
-                        }
-
-                        foreach (Request r in rList)
-                        {
-                            List<RequestDetail> reqdList = entities.RequestDetails.Where(x => x.ReqId == r.ReqId).ToList();
-                            rdList.AddRange(reqdList);
-                        }
-
-
-                        int count = i.TempQtyAcpt;
-
-                        foreach (Request r in rList)
-                        {
-                            if (count > 0)
-                            {
-                                foreach (RequestDetail rd in rdList.Where(rd => rd.ReqId == r.ReqId))
-                                {
-                                    if (count > 0)
-                                    {
-                                        if (rd.AwaitQty > 0 && rd.AwaitQty <= count)
-                                        {
-                                            rd.FulfilledQty += rd.AwaitQty;
-                                            count -= rd.AwaitQty;
-                                            rd.AwaitQty = 0;
-
-                                            //Save Changes for rd.AwaitQty, Rd.FulfilledQty
-                                            UpdateAwait(r.ReqId, rd.ItemCode, rd.AwaitQty);
-                                            UpdateFulfilled(r.ReqId, rd.ItemCode, rd.FulfilledQty);
-
-                                            TransactionVM t = new TransactionVM();
-                                            t.TranDateTime = DateTime.Now;
-                                            t.ItemCode = i.ItemCode;
-                                            t.QtyChange = rd.AwaitQty - 1;
-                                            t.UnitPrice = i.Price1 ?? default(double);
-                                            t.Desc = "DISBURSEMENT";
-                                            t.Desc = deptcode;
-
-                                            TransactionBL.AddTran(t);
-                                        }
-
-                                        else if (rd.AwaitQty > 0 && rd.AwaitQty > count)
-                                        {
-                                            rd.FulfilledQty += count;
-                                            rd.AwaitQty -= count;
-                                            count = 0;
-
-                                            //Save Changes for rd.AwaitQty, Rd.FulfilledQty
-                                            UpdateAwait(r.ReqId, rd.ItemCode, rd.AwaitQty);
-                                            UpdateFulfilled(r.ReqId, rd.ItemCode, rd.FulfilledQty);
-
-                                            TransactionVM t = new TransactionVM();
-                                            t.TranDateTime = DateTime.Now;
-                                            t.ItemCode = i.ItemCode;
-                                            t.QtyChange = rd.AwaitQty - 1;
-                                            t.UnitPrice = i.Price1 ?? default(double);
-                                            t.Desc = "DISBURSEMENT";
-                                            t.Desc = deptcode;
-
-                                            TransactionBL.AddTran(t);
-                                        }
-
-                                    }
-                                    else break;
-                                }
-
-                                //Check if Request Fulfilled
-                                RequestBL.UpdateFulfilledRequestStatus();
-                                int openCount = 0;
-                                foreach (RequestDetail rd in rdList.Where(rd => rd.ReqId == r.ReqId))
-                                {
-                                    int shortQty = (rd.ReqQty - rd.FulfilledQty);
-                                    openCount += shortQty;
-                                }
-
-                                if (openCount == 0)
-                                {
-                                    r.Status = "Fulfilled";
-
-                                    RequestVM request = RequestBL.GetReq(r.ReqId);
-
-                                    request.Status = r.Status;
-                                    RequestBL.UpdateReq(request); //save changes for this request object
-                                }
-                            }
-
-                            //Check Low Stock item
-                            bool status = CheckLowStk(i);
-
-                            if (status)
-                            {
-                                Item item = Utility.ItemUtility.Convert_ItemVMObj_To_ItemObj(i);
-                                NotificationBL.AddLowStkNotification(empId, item);
-                            }
-
-                            //send email acknowledgement to rep, specific head and all clerks
-                            NotificationBL.AddAcptNotification(r.ReqId);
-                        }
-                    }
-
-
-                }
-            }
-        }
 
         //Check Low Stock By Item
         public static bool CheckLowStk(ItemVM i)
@@ -702,6 +719,90 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         }
 
+
+        //GetEmpItems by empId
+        public static List<ItemVM> GetEmpItems(int empId)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<Request> rList = entities.Requests.Where(r => r.EmpId == empId).ToList();
+
+                List<RequestDetail> rdList = new List<RequestDetail>();
+
+                List<ItemVM> iList = new List<ItemVM>();
+
+                foreach (Request r in rList)
+                {
+                    List<RequestDetail> reqdetailLists = entities.RequestDetails.Where(rd => rd.ReqId == r.ReqId).ToList();
+                    rdList.AddRange(reqdetailLists);
+                }
+
+                foreach (RequestDetail rd in rdList)
+                {
+                    List<Item> itemlists = entities.Items.Where(i => i.ItemCode.Equals(rd.ItemCode)).ToList();
+
+                    iList.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(itemlists));
+                }
+
+                return iList;
+
+            }
+        }
+        //get Items by ItemCode
+        public static ItemVM GetItem(string itemCode)
+        {
+            ItemVM item = new ItemVM();
+
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                item = entities.Items
+                            .Where(i => i.ItemCode == itemCode)
+                            .Select(i => new ItemVM()
+                            {
+                                ItemCode = i.ItemCode,
+                                Cat = i.Cat,
+                                Desc = i.Desc,
+                                Location = i.Location,
+                                UOM = i.UOM,
+                                IsActive = i.IsActive,
+                                Balance = i.Balance,
+                                ReorderLevel = i.ReorderLevel,
+                                ReorderQty = i.ReorderQty,
+                                TempQtyDisb = i.TempQtyDisb,
+                                TempQtyCheck = i.TempQtyCheck,
+                                SuppCode1 = i.SuppCode1,
+                                SuppCode2 = i.SuppCode2,
+                                SuppCode3 = i.SuppCode3,
+                                Price1 = i.Price1,
+                                Price2 = i.Price2,
+                                Price3 = i.Price3
+                            }).SingleOrDefault<ItemVM>();
+            }
+            return item;
+        }
+
+
+        //ReceiveItem
+        public static void ReceiveItem(string suppCode, int qty, string ItemCode)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                Item item = entities.Items.Where(i => i.ItemCode.Equals(ItemCode)).First();
+                item.SuppCode1 = suppCode;
+                item.Balance = qty;
+                entities.SaveChanges();
+
+                TransactionVM t = new TransactionVM();
+                t.TranDateTime = DateTime.Now;
+                t.ItemCode = item.ItemCode;
+                t.QtyChange = qty;
+                t.UnitPrice = item.Price1 ?? default(double);
+                t.Desc = "PURCHASED";
+
+                TransactionBL.AddTran(t);
+            }
+        }
+
         //SaveQtyDisb
         public static void SaveQtyDisb(string ItemCode, int qtyDisb)
         {
@@ -711,6 +812,160 @@ namespace Group8AD_WebAPI.BusinessLogic
                 item.TempQtyDisb = qtyDisb;
             }
         }
+
+        //ResetQtyChk
+        public static List<ItemVM> ResetQtyChk()
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<Item> itemlist = entities.Items.ToList<Item>();
+                List<Item> updateditemlist = new List<Item>();
+                List<ItemVM> itemlistvm = new List<ItemVM>();
+                foreach (Item item in itemlist)
+                {
+                    Item updateitem = entities.Items.Where(i => i.ItemCode == item.ItemCode).First<Item>();
+                    updateitem.TempQtyCheck = 0;
+                    entities.SaveChanges();
+
+                    updateditemlist.Add(updateitem);
+                }
+
+                itemlistvm = Utility.ItemUtility.Convert_Item_To_ItemVM(updateditemlist);
+                return itemlistvm;
+            }
+        }
+
+        //GetQtyChk
+        public static List<ItemVM> GetQtyChk()
+        {
+            List<ItemVM> itemvmlist = new List<ItemVM>();
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<Item> items = entities.Items.ToList<Item>();
+
+                itemvmlist = Utility.ItemUtility.Convert_Item_To_ItemVM(items);
+                return itemvmlist;
+            }
+        }
+
+        //SaveQtyChk
+        public static void SaveQtyChk(string ItemCode, int qtyChk)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                Item item = entities.Items.Where(i => i.ItemCode.Equals(ItemCode)).First();
+                item.TempQtyCheck = qtyChk;
+            }
+        }
+
+
+        //UpdateItem
+        public static void UpdateItem(string itemCode, int reorderLvl, int reorderQty, string s1, double p1, string s2, double p2, string s3, double p3)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                Item item = entities.Items.Where(i => i.ItemCode.Equals(itemCode)).First();
+                item.ReorderLevel = reorderLvl;
+                item.ReorderQty = reorderQty;
+                item.SuppCode1 = s1;
+                item.SuppCode2 = s2;
+                item.SuppCode3 = s3;
+                item.Price1 = p1;
+                item.Price2 = p2;
+                item.Price3 = p3;
+                entities.SaveChanges();
+            }
+        }
+
+        //UpdateItemLists
+        public static void UpdateItemLists(List<ItemVM> iList)
+        {
+            foreach (ItemVM i in iList)
+            {
+                UpdateItem(i.ItemCode, i.ReccReorderLvl, i.ReccReorderQty, i.SuppCode1, i.Price1 ?? default(double), i.SuppCode2, i.Price2 ?? default(double), i.SuppCode3, i.Price3 ?? default(double));
+            }
+        }
+
+
+        //GetItems by Cat, Desc and Threshold
+        public static List<ItemVM> GetItems(string cat, string desc, double threshold)
+        {
+            List<ItemVM> itemlist = new List<ItemVM>();
+
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                if (cat != null && desc == null && threshold.Equals(null))
+                {
+                    List<Item> ilist1 = entities.Items.Where(i => i.Cat == cat).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist1));
+                    return itemlist;
+                }
+                else if (desc != null && cat == null && threshold.Equals(null))
+                {
+                    List<Item> ilist2 = entities.Items.Where(i => i.Desc == desc).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist2));
+                    return itemlist;
+                }
+
+                else if (cat != null && !threshold.Equals(null) && desc == null)
+                {
+                    List<Item> ilist1 = entities.Items.Where(i => i.Cat == cat).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist1));
+
+
+                    foreach (ItemVM item in itemlist)
+                    {
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReorderLevel) / item.ReorderLevel;
+                        item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
+                    }
+
+                    itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
+                    return itemlist;
+                }
+                else if (desc != null && !threshold.Equals(null) && cat == null)
+                {
+                    List<Item> ilist2 = entities.Items.Where(i => i.Desc == desc).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist2));
+
+
+                    foreach (ItemVM item in itemlist)
+                    {
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReorderLevel) / item.ReorderLevel;
+                        item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
+                    }
+
+                    itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
+                    return itemlist;
+                }
+                else if (cat != null && desc != null && threshold.Equals(null))
+                {
+                    List<Item> ilist = entities.Items.Where(i => i.Cat == cat && i.Desc.Contains(desc)).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist));
+                    return itemlist;
+                }
+                else if (cat != null && desc != null && !threshold.Equals(null))
+                {
+                    List<Item> ilist = entities.Items.Where(i => i.Cat == cat && i.Desc.Contains(desc)).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist));
+
+                    foreach (ItemVM item in itemlist)
+                    {
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReorderLevel) / item.ReorderLevel;
+                        item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
+                    }
+
+                    itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
+                    return itemlist;
+                }
+                else
+                {
+                    List<Item> ilist = entities.Items.ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist));
+                    return itemlist;
+                }
+            }
+        }
+
 
 
         //Update Await
