@@ -99,9 +99,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                 var emploeeses=entities.Employees.Where(n => n.EmpId == empId).FirstOrDefault();
                 if (emploeeses != null)
                 {
-                    var request = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
-                    if (request != null)
-                    {
+                    //var request = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
+                    //if (request != null)
+                    //{
                         Notification noti = new Notification();
                         noti.FromEmp = empId;
                         noti.ToEmp = repId;
@@ -112,19 +112,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                         noti.IsRead = true;                        
                         entities.Notifications.Add(noti);
                         entities.SaveChanges();
-
-                        //Notification noti2 = new Notification();
-                        //noti2.FromEmp = empId;
-                        //noti2.ToEmp = (int)request.ToEmp;
-                        //noti2.NotificationDateTime = System.DateTime.Now;
-                        //noti2.RouteUri = "";
-                        //noti2.Type = "Request Submitted";
-                        //noti2.Content = "Request Submitted";
-                        //noti2.IsRead = true;
-                        //entities.Notifications.Add(noti2);
-
-                        //entities.SaveChanges();
-                    }
+                    
+                    //}
                 }
             }
         }
