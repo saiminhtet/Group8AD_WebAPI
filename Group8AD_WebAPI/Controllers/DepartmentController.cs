@@ -69,7 +69,7 @@ namespace Group8AD_WebAPI.Controllers
         //setCollPt(string deptCode, int collPt)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Department/setCollPt")]
+        [Route("api/Department/setCollPt/{deptCode}/{collPt}")]
         public HttpResponseMessage setCollPt(string deptCode, int collPt)
         {
             try
