@@ -14,7 +14,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                Department department = entities.Departments.Where(d => d.DeptCode == deptCode).First<Department>();
+                Department department = entities.Departments.Where(d => d.DeptCode.Equals(deptCode)).First<Department>();
                 {
                     department.DelegateApproverId = null;
                     department.DelegateFromDate = null;
@@ -29,7 +29,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                Department department = entities.Departments.Where(d => d.DeptCode == deptCode).First<Department>();
+                Department department = entities.Departments.Where(d => d.DeptCode.Equals(deptCode)).First<Department>();
                 {
                     department.DelegateApproverId = empId;
                     department.DelegateFromDate = fromDate;
