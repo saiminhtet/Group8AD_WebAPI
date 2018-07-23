@@ -178,11 +178,13 @@ namespace Group8AD_WebAPI.BusinessLogic
             //List<Item> itemsList = Utility.ItemUtility.Convert_ItemVM_To_Item(iList);
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
+                string vNum = AdjustmentBL.GenerateVoucherNo();
                 foreach (ItemVM i in iList)
                 {
                     if (i.TempQtyReq - i.TempQtyAcpt > 0)
                     {
                         Adjustment a = new Adjustment();
+                        a.VoucherNo = vNum;
                         a.EmpId = empId;
                         a.DateTimeIssued = DateTime.Now;
                         a.ItemCode = i.ItemCode;
