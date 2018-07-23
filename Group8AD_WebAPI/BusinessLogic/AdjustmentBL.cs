@@ -118,7 +118,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                         a.EmpId = empId;
                         a.DateTimeIssued = DateTime.Now;
                         a.ItemCode = iList[i].ItemCode;
-                        // a.Reason = iList[i].TempReason;
+                        a.Reason = iList[i].TempReason;
                         a.Reason = "";
                         a.QtyChange = (int)iList[i].TempQtyCheck - iList[i].Balance;
                         a.Status = "Submitted";
@@ -211,11 +211,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
                 // will implement when Email service method is done
                 // send email to clerk
-                //SendAdjReqEmail(empId, adjlist);
+                // EmailBL.SendAdjReqEmail(empId, adjlist);
                 //// send email to manager
-                //SendAdjReqEmail(104, adjlist);
+                // EmailBL.SendAdjReqEmail(104, adjlist);
                 //// send email to supervisor
-                //SendAdjReqEmail(105, adjlist);
+                // EmailBL.SendAdjReqEmail(105, adjlist);
                 return adjlist;
             }
 
@@ -293,7 +293,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 NotificationBL.AdjApprNotification(fromEmpId, toEmpId, notification);
                 //// will uncomment when email service method is done
-                // SendAdjApprEmail(empId, adjustment);
+                // EmailBL.SendAdjApprEmail(empId, adjustment);
             }
             return;
         }
@@ -346,7 +346,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 NotificationBL.AdjApprNotification(fromEmpId, toEmpId, notification);
                 //// will uncomment when email and notification service method is done
-                // SendAdjApprEmail(empId, adjustment);
+                // EmailBL.SendAdjApprEmail(empId, adjustment);
             }
             return;
         }
