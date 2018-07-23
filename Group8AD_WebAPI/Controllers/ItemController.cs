@@ -426,7 +426,7 @@ namespace Group8AD_WebAPI.Controllers
         public HttpResponseMessage Test(int empId, List<ItemVM> items, string cat, string desc, double threshold)
         {
             
-           List<ItemVM> itemlist = BusinessLogic.ItemBL.GetItems(cat,desc,threshold);
+           List<ItemVM> itemlist = BusinessLogic.ItemBL.GetRetrieveItems();
              return Request.CreateResponse(HttpStatusCode.OK, itemlist);
             //try
             //{
