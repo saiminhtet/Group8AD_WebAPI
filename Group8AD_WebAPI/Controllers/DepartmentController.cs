@@ -25,7 +25,7 @@ namespace Group8AD_WebAPI.Controllers
             catch (Exception e)
             {
 
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
 
@@ -47,7 +47,7 @@ namespace Group8AD_WebAPI.Controllers
             catch (Exception e)
             {
 
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }            
         }
 
@@ -67,7 +67,7 @@ namespace Group8AD_WebAPI.Controllers
             catch (Exception e)
             {
 
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Group8AD_WebAPI.Controllers
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
 
@@ -100,7 +100,7 @@ namespace Group8AD_WebAPI.Controllers
 
             if (departments == null)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
             return Request.CreateResponse(HttpStatusCode.OK, departments);
         }
@@ -115,7 +115,7 @@ namespace Group8AD_WebAPI.Controllers
 
             if (colPt == null)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
             return Request.CreateResponse(HttpStatusCode.OK, colPt);
         }
@@ -130,7 +130,7 @@ namespace Group8AD_WebAPI.Controllers
 
             if (departments == null)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
             return Request.CreateResponse(HttpStatusCode.OK, departments);
         }
@@ -145,7 +145,7 @@ namespace Group8AD_WebAPI.Controllers
             DepartmentVM dep = BusinessLogic.DepartmentBL.GetDept(EmpId);
             if (dep == null)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
             return Request.CreateResponse(HttpStatusCode.OK, dep);
         }
