@@ -467,25 +467,6 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 int reqId = req.ReqId;
-                //List<Request> rlist = entities.Requests.ToList();
-                //for (int i = 0; i < rlist.Count; i++)
-                //{
-                //    if (rlist[i].ReqId == reqId)
-                //    {
-                //        rlist[i].EmpId = req.EmpId;
-                //        rlist[i].ApproverId = req.ApproverId;
-                //        rlist[i].ApproverComment = req.ApproverComment;
-                //        if (req.ReqDateTime != null && DateTime.Compare(req.ReqDateTime, new DateTime(1800, 01, 01)) > 0)
-                //            rlist[i].ReqDateTime = req.ReqDateTime;
-                //        if (req.ApprovedDateTime != null && DateTime.Compare(req.ApprovedDateTime, new DateTime(1800, 01, 01)) > 0)
-                //            rlist[i].ApprovedDateTime = req.ApprovedDateTime;
-                //        if (req.CancelledDateTime != null && DateTime.Compare(req.CancelledDateTime, new DateTime(1800, 01, 01)) > 0)
-                //            rlist[i].CancelledDateTime = req.CancelledDateTime;
-                //        if (req.FulfilledDateTime != null && DateTime.Compare(req.FulfilledDateTime, new DateTime(1800, 01, 01)) > 0)
-                //            rlist[i].FulfilledDateTime = req.FulfilledDateTime;
-                //        rlist[i].Status = req.Status;
-                //    }
-                //}
                 Request request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
                 request.EmpId = req.EmpId;
                 request.ApproverId = req.ApproverId;
