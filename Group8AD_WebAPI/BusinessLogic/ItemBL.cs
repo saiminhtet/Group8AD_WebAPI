@@ -799,7 +799,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 t.ItemCode = item.ItemCode;
                 t.QtyChange = qty;
                 t.UnitPrice = item.Price1 ?? default(double);
-                t.Desc = "PURCHASED";
+                t.Desc = "Purchase";
 
                 TransactionBL.AddTran(t);
             }
@@ -812,6 +812,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 Item item = entities.Items.Where(i => i.ItemCode.Equals(ItemCode)).First();
                 item.TempQtyDisb = qtyDisb;
+                entities.SaveChanges();
             }
         }
 
@@ -857,6 +858,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 Item item = entities.Items.Where(i => i.ItemCode.Equals(ItemCode)).First();
                 item.TempQtyCheck = qtyChk;
+                entities.SaveChanges();
             }
         }
 
