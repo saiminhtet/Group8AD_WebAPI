@@ -321,6 +321,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utility\EmployeeUtility.cs" />
     <Compile Include="Utility\ItemUtility.cs" />
   </ItemGroup>
   <ItemGroup>
