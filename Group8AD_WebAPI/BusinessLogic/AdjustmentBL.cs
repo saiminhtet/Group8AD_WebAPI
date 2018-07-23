@@ -16,7 +16,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 Adjustment a = new Adjustment();
-                a.VoucherNo = adj.VoucherNo;
+                a.VoucherNo = GenerateVoucherNo();
                 a.EmpId = adj.EmpId;
                 a.DateTimeIssued = adj.DateTimeIssued;
                 a.ItemCode = adj.ItemCode;
@@ -29,9 +29,20 @@ namespace Group8AD_WebAPI.BusinessLogic
                 entities.Adjustments.Add(a);
                 entities.SaveChanges();
 
-                //List<AdjustmentVM> adjlist = 
-                //AdjustmentVM adjustment = new AdjustmentVM();
-                return adj;
+                List<Adjustment> adjList = entities.Adjustments.ToList();
+
+                AdjustmentVM avm = new AdjustmentVM();
+                avm.VoucherNo = adjList[adjList.Count - 1].VoucherNo;
+                avm.EmpId = adjList[adjList.Count - 1].EmpId;
+                avm.DateTimeIssued = adjList[adjList.Count - 1].DateTimeIssued;
+                avm.ItemCode = adjList[adjList.Count - 1].ItemCode;
+                avm.Reason = adjList[adjList.Count - 1].Reason;
+                avm.QtyChange = adjList[adjList.Count - 1].QtyChange;
+                avm.Status = adjList[adjList.Count - 1].Status;
+                if (adjList[adjList.Count - 1].ApproverId != null)
+                    avm.ApproverId = (int)adjList[adjList.Count - 1].ApproverId;
+                avm.ApproverComment = adjList[adjList.Count - 1].ApproverComment;
+                return avm;
             }
         }
 
@@ -90,7 +101,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // raise adjustment
-        // not dummy, not tested
+        // done, except email
         public static List<AdjustmentVM> RaiseAdjustments(int empId, List<ItemVM> iList)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -208,6 +219,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 return adjlist;
             }
 
+            // dummy codes
             //List<Adjustment> adjList = new List<Adjustment>();
             //foreach (Item i in iList)
             //  if (TempQtyChk - i.Balance > 0) {
@@ -235,7 +247,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // reject adjustment request
-        // done, except email and notification
+        // done, except email
         public static void RejectRequest(string voucherNo, int empId, string cmt)
         {
             // Call GetAdj(voucherNo)
@@ -287,7 +299,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // accept adjustment request
-        // done, except email and notification
+        // done, except email
         public static void AcceptRequest(string voucherNo, int empId, string cmt)
         {
             // Call GetAdj(empId)
