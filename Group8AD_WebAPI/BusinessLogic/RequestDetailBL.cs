@@ -10,59 +10,82 @@ namespace Group8AD_WebAPI.BusinessLogic
     public static class RequestDetailBL
     {
         //add RequestDetail with empId , reqDet and status
-        
-        public static RequestDetailVM AddReqDet(int empId, string itemCode,int reqQty, string status)
+
+        public static RequestDetailVM AddReqDet(int empId, string itemCode, int reqQty, string status)
         {
+
             RequestDetailVM reqDetail = new RequestDetailVM();
-            RequestVM req = new RequestVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 List<RequestVM> requestlists = RequestBL.GetReq(empId, status);
+
+                List<RequestDetailVM> rdList = new List<RequestDetailVM>();
+
                 foreach (RequestVM r in requestlists)
                 {
-                    req.ReqId = r.ReqId;
-                }
+                    List<RequestDetailVM> rrdlist = entities.RequestDetails.Where(rd => rd.ReqId == r.ReqId).Select(rd => new RequestDetailVM()
+                    {
+                        ReqId = rd.ReqId,
+                        ReqLineNo = rd.ReqLineNo,
+                        ItemCode = rd.ItemCode,
+                        ReqQty = rd.ReqQty,
+                        AwaitQty = rd.AwaitQty,
+                        FulfilledQty = rd.FulfilledQty
+                    }).ToList<RequestDetailVM>();
+
+                    rdList.AddRange(rrdlist);
+
+
+                    foreach (RequestDetailVM rd in rdList)
+                    {
+                        string ICode = "";                        
+                        foreach (RequestDetailVM reqd in rdList)
+                        {
+                            if (reqd.ItemCode.Equals(itemCode))
+                            {
+                                ICode = reqd.ItemCode;
+                            }
+                        }
+                        if (status == "Unsubmitted")
+                        { 
+                            if (ICode.Equals(itemCode))                              
+                            {
+                                reqDetail = rdList.Where(x => x.ItemCode.Equals(itemCode)).First();
+                                reqDetail.ItemCode = itemCode;
+                                reqDetail.ReqQty += reqQty;
+                                UpdateReqDet(r.ReqId, reqDetail);
+                                return reqDetail;
+                            }
+                            else if(!ICode.Equals(itemCode))                            
+                            {
+                                reqDetail.ReqId = r.ReqId;
+                                reqDetail.ItemCode = itemCode;
+                                reqDetail.ReqQty = reqQty;
+                                reqDetail.ReqLineNo = rdList.OrderByDescending(x => x.ReqLineNo).Select(x => x.ReqLineNo).First() + 1;
+                                AddReqDet(r.ReqId, reqDetail);//create reqDet
+                                return reqDetail;
+                            }
+                        }
+                        if (status == "Bookmarked")
+                        {
+                            if (!ICode.Equals(itemCode))
+                                //rdList.Find(rq => rq.ItemCode.Equals(itemCode)).ItemCode.Equals(itemCode))//if reqDet does not exist  with itemCode
+                            {
+                                reqDetail.ReqId = r.ReqId;
+                                reqDetail.ItemCode = itemCode;
+                                reqDetail.ReqQty = reqQty;
+                                reqDetail.ReqLineNo = rdList.OrderByDescending(x => x.ReqLineNo).Select(x => x.ReqLineNo).First() + 1;
+                                AddReqDet(r.ReqId, reqDetail);//create reqDet
+                                return reqDetail;
+                            }
+                        }
+                    }
+                }                             
 
                 if (requestlists.Count == 0)
                 {
+                    //RequestDetailVM reqDetail = new RequestDetailVM();
                     RequestBL.AddReq(empId, status);
-                }
-
-                List<RequestDetail> requestDetailList = entities.RequestDetails.Where(x => x.ReqId == req.ReqId).ToList<RequestDetail>();
-
-                reqDetail = entities.RequestDetails.Where(r => r.ReqId == req.ReqId).Select(r => new RequestDetailVM()
-                {
-                    ReqId = req.ReqId,
-                    ReqLineNo = r.ReqLineNo,
-                    ItemCode = itemCode,
-                    ReqQty = reqQty,
-                    AwaitQty = r.AwaitQty,
-                    FulfilledQty = r.FulfilledQty
-                }).First<RequestDetailVM>();
-
-                foreach (RequestDetail rd in requestDetailList)
-                {
-                    if (status == "Unsubmitted")
-                    {
-                        if (reqDetail.ItemCode == rd.ItemCode)//if exist reqDet with same itemCode
-                        {
-                            reqDetail.ReqQty++;//increase reqQty
-
-                            UpdateReqDet(reqDetail.ReqId, reqDetail);
-                        }
-                        else
-                        {
-                            AddReqDet(req.ReqId, reqDetail);//create reqDet
-                        }
-                    }
-
-                    if (status == "Bookmarked")
-                    {
-                        if (reqDetail.ItemCode != rd.ItemCode)//if reqDet does not exist  with itemCode
-                        {
-                            AddReqDet(reqDetail.ReqId, reqDetail);//create reqDet
-                        }
-                    }
                 }
 
             }
@@ -102,22 +125,27 @@ namespace Group8AD_WebAPI.BusinessLogic
         //update RequestDetail with reqId and reqDet
         public static RequestDetailVM UpdateReqDet(int reqId, RequestDetailVM reqDet)
         {
-            RequestDetailVM updateReqDetail = new RequestDetailVM();
+            RequestDetailVM ReqDetailVM = new RequestDetailVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                updateReqDetail = entities.RequestDetails.Where(r => r.ReqId == reqId).Select(r => new RequestDetailVM()
-                {
-                    ReqId = reqId,
-                    ReqLineNo = r.ReqLineNo,
-                    ItemCode = r.ItemCode,
-                    ReqQty = r.ReqQty,
-                    AwaitQty = r.AwaitQty,
-                    FulfilledQty = r.FulfilledQty,
-                    //Request = r.Request
-                }).First<RequestDetailVM>();
+                RequestDetail updateReqDetail = entities.RequestDetails.Where(r => r.ReqId == reqId && r.ItemCode.Equals(reqDet.ItemCode)).First();
+
+                updateReqDetail.ReqId = reqId;
+                updateReqDetail.ItemCode = reqDet.ItemCode;
+                updateReqDetail.ReqQty = reqDet.ReqQty;
+                updateReqDetail.AwaitQty = reqDet.AwaitQty;
+                updateReqDetail.FulfilledQty = reqDet.FulfilledQty;
                 entities.SaveChanges();
+
+                List<RequestDetail> lst = entities.RequestDetails.ToList();
+                RequestDetail rd = lst[lst.Count - 1];
+                ReqDetailVM.ReqId = rd.ReqId;
+                ReqDetailVM.ItemCode = rd.ItemCode;
+                ReqDetailVM.ReqQty = rd.ReqQty;
+                ReqDetailVM.AwaitQty = rd.AwaitQty;
+                ReqDetailVM.FulfilledQty = rd.FulfilledQty;
             }
-            return updateReqDetail;
+            return ReqDetailVM;
         }
         //remove removeReqDet by empId and reqId 
         public static void removeReqDet(int empId, string itemCode, string status)
@@ -196,7 +224,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 RequestDetail await = entities.RequestDetails.Where(r => r.ReqId == reqId).First<RequestDetail>();
                 if (await != null)
                 {
-                    await.AwaitQty = awaitQty;                    
+                    await.AwaitQty = awaitQty;
                 }
                 entities.SaveChanges();
             }

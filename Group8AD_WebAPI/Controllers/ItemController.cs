@@ -374,7 +374,7 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Item/SaveQtyChk")]
-        public HttpResponseMessage SaveQtyChk(string ItemCode,int qtyChk)
+        public HttpResponseMessage SaveQtyChk(string ItemCode, int qtyChk)
         {
 
             try
