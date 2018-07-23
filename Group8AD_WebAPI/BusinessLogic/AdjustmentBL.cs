@@ -108,24 +108,26 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // raise adjustment
         // not dummy, not tested
-        public static List<AdjustmentVM> RaiseAdjustments(int empId, List<ItemVM> iList)
+        public static bool RaiseAdjustments(int empId, List<ItemVM> iList)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<AdjustmentVM> adjlist = new List<AdjustmentVM>();
+                string vNum = GenerateVoucherNo();
+                List<AdjustmentVM> adjlist1 = new List<AdjustmentVM>();
+                List<AdjustmentVM> adjlist2 = new List<AdjustmentVM>();
                 for (int i = 0; i < iList.Count; i++)
                 {
-                    if (iList[i].TempQtyCheck - iList[i].Balance > 0)
+                    if ((iList[i].TempQtyCheck - iList[i].Balance) != 0)
                     {
                         AdjustmentVM avm = new AdjustmentVM();
                         Adjustment a = new Adjustment();
-                        string vNum = GenerateVoucherNo();
+                        
                         a.VoucherNo = vNum;
                         a.EmpId = empId;
                         a.DateTimeIssued = DateTime.Now;
                         a.ItemCode = iList[i].ItemCode;
-                        // a.Reason = iList[i].TempReason;
-                        a.Reason = "";
+                        a.Reason = iList[i].TempReason;
+                        // a.Reason = "";
                         a.QtyChange = (int)iList[i].TempQtyCheck - iList[i].Balance;
                         a.Status = "Submitted";
                         a.ApproverComment = "";
@@ -141,80 +143,90 @@ namespace Group8AD_WebAPI.BusinessLogic
                         avm.QtyChange = temp.QtyChange;
                         avm.Status = temp.Status;
                         avm.ApproverComment = temp.ApproverComment;
-                        adjlist.Add(avm);
+                        
 
                         double chgVal = a.QtyChange * (double)iList[i].Price1;
                         if (chgVal >= 250)
                         {
-                            Notification notif = new Notification();
-                            notif.NotificationDateTime = DateTime.Now;
-                            notif.FromEmp = empId;
-                            notif.ToEmp = 104;
-                            notif.RouteUri = "";
-                            notif.Type = "Adjustment Submitted";
-                            notif.Content = a.Reason;
-                            notif.IsRead = false;
-                            entities.Notifications.Add(notif);
-                            entities.SaveChanges();
-                            List<Notification> nlist = entities.Notifications.ToList();
-                            Notification tempNotif = nlist[nlist.Count - 1];
-                            NotificationVM nvm = new NotificationVM();
-                            nvm.NotificationId = tempNotif.NotificationId;
-                            nvm.NotificationDateTime = tempNotif.NotificationDateTime;
-                            nvm.FromEmp = tempNotif.FromEmp;
-                            nvm.ToEmp = tempNotif.ToEmp;
-                            nvm.RouteUri = tempNotif.RouteUri;
-                            nvm.Type = tempNotif.Type;
-                            nvm.Content = tempNotif.Content;
-                            nvm.IsRead = tempNotif.IsRead;
-                            NotificationBL.NotifyManager(nvm);
+                            adjlist1.Add(avm);
                         }
                         else
                         {
-                            Notification notif = new Notification();
-                            notif.NotificationDateTime = DateTime.Now;
-                            notif.FromEmp = empId;
-                            notif.ToEmp = 105;
-                            notif.RouteUri = "";
-                            notif.Type = "Adjustment Submitted";
-                            notif.Content = a.Reason;
-                            notif.IsRead = false;
-                            entities.Notifications.Add(notif);
-                            entities.SaveChanges();
-                            List<Notification> nlist = entities.Notifications.ToList();
-                            Notification tempNotif = nlist[nlist.Count - 1];
-                            NotificationVM nvm = new NotificationVM();
-                            nvm.NotificationId = tempNotif.NotificationId;
-                            nvm.NotificationDateTime = tempNotif.NotificationDateTime;
-                            nvm.FromEmp = tempNotif.FromEmp;
-                            nvm.ToEmp = tempNotif.ToEmp;
-                            nvm.RouteUri = tempNotif.RouteUri;
-                            nvm.Type = tempNotif.Type;
-                            nvm.Content = tempNotif.Content;
-                            nvm.IsRead = tempNotif.IsRead;
-                            NotificationBL.NotifySupervisor(nvm);
+                            adjlist2.Add(avm);
                         }
-                        Item item = new Item();
-                        item.ItemCode = iList[i].ItemCode;
-                        item.Cat = iList[i].Cat;
-                        item.Desc = iList[i].Desc;
-                        item.Location = iList[i].Location;
-                        item.UOM = iList[i].UOM;
-                        item.IsActive = iList[i].IsActive;
-                        item.Balance = iList[i].Balance;
-                        item.ReorderLevel = iList[i].ReorderLevel;
-                        item.ReorderQty = iList[i].ReorderQty;
-                        item.TempQtyDisb = iList[i].TempQtyDisb;
-                        item.TempQtyCheck = iList[i].TempQtyCheck;
-                        item.SuppCode1 = iList[i].SuppCode1;
-                        item.Price1 = iList[i].Price1;
-                        item.SuppCode2 = iList[i].SuppCode2;
-                        item.Price2 = iList[i].Price2;
-                        item.SuppCode3 = iList[i].SuppCode3;
-                        item.Price3 = iList[i].Price3;
-                        NotificationBL.AddLowStkNotification(empId, item);
+
+                        //Item item = new Item();
+                        //item.ItemCode = iList[i].ItemCode;
+                        //item.Cat = iList[i].Cat;
+                        //item.Desc = iList[i].Desc;
+                        //item.Location = iList[i].Location;
+                        //item.UOM = iList[i].UOM;
+                        //item.IsActive = iList[i].IsActive;
+                        //item.Balance = iList[i].Balance;
+                        //item.ReorderLevel = iList[i].ReorderLevel;
+                        //item.ReorderQty = iList[i].ReorderQty;
+                        //item.TempQtyDisb = iList[i].TempQtyDisb;
+                        //item.TempQtyCheck = iList[i].TempQtyCheck;
+                        //item.SuppCode1 = iList[i].SuppCode1;
+                        //item.Price1 = iList[i].Price1;
+                        //item.SuppCode2 = iList[i].SuppCode2;
+                        //item.Price2 = iList[i].Price2;
+                        //item.SuppCode3 = iList[i].SuppCode3;
+                        //item.Price3 = iList[i].Price3;
+                        //NotificationBL.AddLowStkNotification(empId, item);
                     }
                 }
+
+                // SEND NOTIFICATION FOR SUPERVISOR
+                Notification notif = new Notification();
+                notif.NotificationDateTime = DateTime.Now;
+                notif.FromEmp = empId;
+                notif.ToEmp = 105; // *********************HARD CODED********************************
+                notif.RouteUri = "";
+                notif.Type = "Adjustment Request";
+                notif.Content = "Submitted";
+                notif.IsRead = false;
+                entities.Notifications.Add(notif);
+                entities.SaveChanges();
+
+                List<Notification> nlist = entities.Notifications.ToList();
+                Notification tempNotif = nlist[nlist.Count - 1];
+                NotificationVM nvm = new NotificationVM();
+                nvm.NotificationId = tempNotif.NotificationId;
+                nvm.NotificationDateTime = tempNotif.NotificationDateTime;
+                nvm.FromEmp = tempNotif.FromEmp;
+                nvm.ToEmp = tempNotif.ToEmp;
+                nvm.RouteUri = tempNotif.RouteUri;
+                nvm.Type = tempNotif.Type;
+                nvm.Content = tempNotif.Content;
+                nvm.IsRead = tempNotif.IsRead;
+                NotificationBL.NotifySupervisor(nvm);
+
+                // SEND NOTIFICATION FOR MANAGER
+                notif = new Notification();
+                notif.NotificationDateTime = DateTime.Now;
+                notif.FromEmp = empId;
+                notif.ToEmp = 104; // *********************HARD CODED********************************
+                notif.RouteUri = "";
+                notif.Type = "Adjustment Request";
+                notif.Content = "Submitted";
+                notif.IsRead = false;
+                entities.Notifications.Add(notif);
+                entities.SaveChanges();
+
+                nlist = entities.Notifications.ToList();
+                tempNotif = nlist[nlist.Count - 1];
+                nvm = new NotificationVM();
+                nvm.NotificationId = tempNotif.NotificationId;
+                nvm.NotificationDateTime = tempNotif.NotificationDateTime;
+                nvm.FromEmp = tempNotif.FromEmp;
+                nvm.ToEmp = tempNotif.ToEmp;
+                nvm.RouteUri = tempNotif.RouteUri;
+                nvm.Type = tempNotif.Type;
+                nvm.Content = tempNotif.Content;
+                nvm.IsRead = tempNotif.IsRead;
+                NotificationBL.NotifyManager(nvm);
+
                 // will implement when Email service method is done
                 // send email to clerk
                 //SendAdjReqEmail(empId, adjlist);
@@ -222,7 +234,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //SendAdjReqEmail(104, adjlist);
                 //// send email to supervisor
                 //SendAdjReqEmail(105, adjlist);
-                return adjlist;
+                return true;
             }
 
             //List<Adjustment> adjList = new List<Adjustment>();
@@ -249,6 +261,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             //loop through each i in iList
             //Send email notification to all clerks, supervisor and manager with SendAdjReqEmail(empId, adjList)
             //Item controller displays toast message on StockTake page
+            
         }
 
         // reject adjustment request
@@ -278,8 +291,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                 notif.FromEmp = fromEmpId;
                 notif.ToEmp = toEmpId;
                 notif.RouteUri = "";
-                notif.Type = "Adjustment rejected";
-                notif.Content = cmt;
+                notif.Type = "Adjustment Request";
+                notif.Content = "Rejected: " + cmt;
                 notif.IsRead = false;
                 entities.Notifications.Add(notif);
 
@@ -330,8 +343,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                 notif.FromEmp = fromEmpId;
                 notif.ToEmp = toEmpId;
                 notif.RouteUri = "";
-                notif.Type = "Adjustment approved";
-                notif.Content = cmt;
+                notif.Type = "Adjustment Request";
+                notif.Content = "Approved: " + cmt;
                 notif.IsRead = false;
                 entities.Notifications.Add(notif);
 

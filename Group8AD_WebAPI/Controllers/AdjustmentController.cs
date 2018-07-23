@@ -61,12 +61,11 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Adjustment/raise")]
         public HttpResponseMessage RaiseAdjustment(int empId, List<ItemVM> iList)
         {
-            List<AdjustmentVM> adjlist = AdjustmentBL.RaiseAdjustments(empId, iList);
-            if (adjlist == null)
+            if (!AdjustmentBL.RaiseAdjustments(empId, iList))
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, adjlist);
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         // tested
