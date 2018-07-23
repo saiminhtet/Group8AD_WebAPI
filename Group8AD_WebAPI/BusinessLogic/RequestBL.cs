@@ -516,7 +516,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             // Add ApprovalDateTime as DateTime.Now()
             // Update Status as “Approved”
 
-            List<RequestVM> reqlist = GetReq(empId, "Unsubmitted");
+            List<RequestVM> reqlist = GetReq(empId, "Submitted");
             for (int i = 0; i < reqlist.Count; i++)
             {
                 if (reqlist[i].ReqId == reqId)
@@ -546,7 +546,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             // Add ApprovalDateTime as DateTime.Now()
             // Update Status as “Rejected”
 
-            List<RequestVM> reqlist = GetReq(empId, "Unsubmitted");
+            List<RequestVM> reqlist = GetReq(empId, "Submitted");
             for (int i = 0; i < reqlist.Count; i++)
             {
                 if (reqlist[i].ReqId == reqId)
