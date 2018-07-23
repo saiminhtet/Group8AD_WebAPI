@@ -152,8 +152,17 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.HttpPost]
         [Route("api/Item/AcceptDisbursement/")]
         public HttpResponseMessage AcceptDisbursement(int empId, List<ItemVM> iList)
-        {          
-            return Request.CreateResponse(HttpStatusCode.OK);
+        {
+            try
+            {
+                BusinessLogic.ItemBL.AcceptDisbursement(empId, iList);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
+            
         }
 
         //void AcceptDisbursement
@@ -162,7 +171,15 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/AcceptDisbursement/")]
         public HttpResponseMessage AcceptDisbursement(int empId, int rcvEmpId, List<ItemVM> iList)
         {
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                BusinessLogic.ItemBL.AcceptDisbursement(empId, iList);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
         //get Retrieve Items
@@ -216,9 +233,17 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Item/SaveQtyDisb")]
-        public HttpResponseMessage SaveQtyDisb(int qtyDisb)
+        public HttpResponseMessage SaveQtyDisb(string itemCode, int qtyDisb)
         {
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                BusinessLogic.ItemBL.SaveQtyDisb(itemCode, qtyDisb);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
         //FulfillRequest
@@ -227,16 +252,15 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/FulfillRequest")]
         public HttpResponseMessage FulfillRequest(List<ItemVM> item)
         {
-            //try
-            //{
-            //    BusinessLogic.ItemBL.FulfillRequest(item);
+            try
+            {
+                BusinessLogic.ItemBL.FulfillRequest(item);
                 return Request.CreateResponse(HttpStatusCode.OK);
-            //}
-            //catch (Exception e)
-            //{
-
-            //    return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
-            //}
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
         //UpdateBal
@@ -245,8 +269,16 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/UpdateBal")]
         public HttpResponseMessage UpdateBal(string iCode, int bal)
         {
-          
-            return Request.CreateResponse(HttpStatusCode.OK);            
+
+            try
+            {
+                BusinessLogic.ItemBL.UpdateBal(iCode, bal);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
 
@@ -254,10 +286,17 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Item/CheckLowStock")]
-        public HttpResponseMessage CheckLowStk(Item i)
+        public HttpResponseMessage CheckLowStk(ItemVM i)
         {
-
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                BusinessLogic.ItemBL.CheckLowStk(i);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
         //ReceiveItem
@@ -267,7 +306,15 @@ namespace Group8AD_WebAPI.Controllers
         public HttpResponseMessage ReceiveItem(string suppCode, int qty, string ItemCode)
         {
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                BusinessLogic.ItemBL.ReceiveItem(suppCode,qty,ItemCode);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
         //GetEmpItems
@@ -276,36 +323,16 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/GetEmpItems/{empid}")]
         public HttpResponseMessage GetEmpItems(int empid)
         {
-            SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
-            List<Item> ilist = ctx.Items.Take(10).ToList<Item>();
 
-            List<ItemVM> itemlists = new List<ItemVM>();
+            List<ItemVM> empitemlists = BusinessLogic.ItemBL.GetEmpItems(empid);
 
-            foreach (Item item in ilist)
+            if (empitemlists == null)
             {
-                ItemVM itemVM = new ItemVM();
-                itemVM.ItemCode = item.ItemCode;
-                itemVM.Cat = item.Cat;
-
-                itemVM.Desc = item.Desc;
-                itemVM.Location = item.Location;
-                itemVM.UOM = item.UOM;
-                itemVM.IsActive = item.IsActive;
-                itemVM.Balance = item.Balance;
-                itemVM.ReorderLevel = item.ReorderLevel;
-                itemVM.ReorderQty = item.ReorderQty;
-                itemVM.TempQtyDisb = item.TempQtyDisb;
-                itemVM.TempQtyCheck = item.TempQtyCheck;
-                itemVM.SuppCode1 = item.SuppCode1;
-                itemVM.SuppCode2 = item.SuppCode2;
-                itemVM.SuppCode3 = item.SuppCode3;
-                itemVM.Price1 = item.Price1;
-                itemVM.Price2 = item.Price2;
-                itemVM.Price3 = item.Price3;
-
-                itemlists.Add(itemVM);
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+             
             }
-            return Request.CreateResponse(HttpStatusCode.OK, itemlists);
+            return Request.CreateResponse(HttpStatusCode.OK, empitemlists);
+      
         }
 
 
@@ -315,34 +342,12 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/ResetQtyChk")]
         public HttpResponseMessage ResetQtyChk()
         {
-            SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
-            List<Item> ilist = ctx.Items.Take(10).ToList<Item>();
+            List<ItemVM> itemlists = BusinessLogic.ItemBL.ResetQtyChk();
 
-            List<ItemVM> itemlists = new List<ItemVM>();
-
-            foreach (Item item in ilist)
+            if (itemlists == null)
             {
-                ItemVM itemVM = new ItemVM();
-                itemVM.ItemCode = item.ItemCode;
-                itemVM.Cat = item.Cat;
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
 
-                itemVM.Desc = item.Desc;
-                itemVM.Location = item.Location;
-                itemVM.UOM = item.UOM;
-                itemVM.IsActive = item.IsActive;
-                itemVM.Balance = item.Balance;
-                itemVM.ReorderLevel = item.ReorderLevel;
-                itemVM.ReorderQty = item.ReorderQty;
-                itemVM.TempQtyDisb = item.TempQtyDisb;
-                itemVM.TempQtyCheck = item.TempQtyCheck;
-                itemVM.SuppCode1 = item.SuppCode1;
-                itemVM.SuppCode2 = item.SuppCode2;
-                itemVM.SuppCode3 = item.SuppCode3;
-                itemVM.Price1 = item.Price1;
-                itemVM.Price2 = item.Price2;
-                itemVM.Price3 = item.Price3;
-
-                itemlists.Add(itemVM);
             }
             return Request.CreateResponse(HttpStatusCode.OK, itemlists);
         }
@@ -355,34 +360,12 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/GetQtyChk")]
         public HttpResponseMessage GetQtyChk()
         {
-            SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
-            List<Item> ilist = ctx.Items.Take(10).ToList<Item>();
+            List<ItemVM> itemlists = BusinessLogic.ItemBL.GetQtyChk();
 
-            List<ItemVM> itemlists = new List<ItemVM>();
-
-            foreach (Item item in ilist)
+            if (itemlists == null)
             {
-                ItemVM itemVM = new ItemVM();
-                itemVM.ItemCode = item.ItemCode;
-                itemVM.Cat = item.Cat;
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
 
-                itemVM.Desc = item.Desc;
-                itemVM.Location = item.Location;
-                itemVM.UOM = item.UOM;
-                itemVM.IsActive = item.IsActive;
-                itemVM.Balance = item.Balance;
-                itemVM.ReorderLevel = item.ReorderLevel;
-                itemVM.ReorderQty = item.ReorderQty;
-                itemVM.TempQtyDisb = item.TempQtyDisb;
-                itemVM.TempQtyCheck = item.TempQtyCheck;
-                itemVM.SuppCode1 = item.SuppCode1;
-                itemVM.SuppCode2 = item.SuppCode2;
-                itemVM.SuppCode3 = item.SuppCode3;
-                itemVM.Price1 = item.Price1;
-                itemVM.Price2 = item.Price2;
-                itemVM.Price3 = item.Price3;
-
-                itemlists.Add(itemVM);
             }
             return Request.CreateResponse(HttpStatusCode.OK, itemlists);
         }
@@ -391,10 +374,18 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Item/SaveQtyChk")]
-        public HttpResponseMessage SaveQtyChk(int qtyChk)
+        public HttpResponseMessage SaveQtyChk(string ItemCode,int qtyChk)
         {
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                BusinessLogic.ItemBL.SaveQtyChk(ItemCode,qtyChk);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
 
@@ -402,11 +393,36 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Item/UpdateItem")]
-        public HttpResponseMessage UpdateItem(int reorderLvl, int reorderQty, string s1, double p1, string s2, double p2, string s3, double p3)
+        public HttpResponseMessage UpdateItem(string itemCode,int reorderLvl, int reorderQty, string s1, double p1, string s2, double p2, string s3, double p3)
         {
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                BusinessLogic.ItemBL.UpdateItem(itemCode, reorderLvl,reorderQty,s1,p1,s2,p2,s3,p3);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
+
+        //UpdateItem
+        [System.Web.Http.AcceptVerbs("POST")]
+        [System.Web.Http.HttpPost]
+        [Route("api/Item/UpdateItems")]
+        public HttpResponseMessage UpdateItemList(List<ItemVM> iList)
+        {
+            try
+            {
+                BusinessLogic.ItemBL.UpdateItemLists(iList);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
+        }
 
         //FulfillRequestUrgent
         [System.Web.Http.AcceptVerbs("POST")]
@@ -414,11 +430,19 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/FulfillRequestUrgent")]
         public HttpResponseMessage FulfillRequestUrgent(int empId, List<ItemVM> items)
         {
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                BusinessLogic.ItemBL.FulfillRequestUrgent(empId, items);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
 
-
+   
         //For Testing 
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]

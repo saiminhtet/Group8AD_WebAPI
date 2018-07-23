@@ -41,7 +41,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                notilists = entities.Notifications.Where(n => n.Employee.EmpId == empId).Select(n => new NotificationVM()
+                notilists = entities.Notifications.Where(n => n.ToEmp == empId).Select(n => new NotificationVM()
                 {
                     NotificationId = n.NotificationId,
                     NotificationDateTime = n.NotificationDateTime,
