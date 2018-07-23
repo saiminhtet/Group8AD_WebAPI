@@ -85,7 +85,7 @@ namespace Group8AD_WebAPI.Controllers
         // tested
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Transaction/VolMonthly")]
+        [Route("api/Transaction/getVolume")]
         public HttpResponseMessage VolMonthly(DateTime toDate)
         {
             List<ReportItemVM> translist = ReportItemBL.GetVolMonthly(toDate);
