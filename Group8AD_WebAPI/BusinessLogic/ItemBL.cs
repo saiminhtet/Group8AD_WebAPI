@@ -103,7 +103,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 }
             }
-            return frequent_itemlists;
+            return frequent_itemlists.Take(5).ToList();
         }
 
 
