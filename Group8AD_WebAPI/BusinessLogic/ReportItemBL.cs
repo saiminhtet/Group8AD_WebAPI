@@ -218,7 +218,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<Request> rlist = entities.Requests.ToList();
+                // Create Item List and Clear TempQyuReq
                 List<Item> ilist = entities.Items.ToList();
                 List<ItemVM> ivmlist = new List<ItemVM>();
                 for (int i = 0; i < ilist.Count; i++)
@@ -242,27 +242,25 @@ namespace Group8AD_WebAPI.BusinessLogic
                     item.SuppCode3 = ilist[i].SuppCode3;
                     item.Price3 = ilist[i].Price3;
 
-                    int reqQty = 0;
+                    item.TempQtyReq = 0;
 
-                    // by request detail
-                    for (int j = 0; j < rlist.Count; j++)
-                    {
-                        if (rlist[j].ApprovedDateTime != null && DateTime.Compare((DateTime)rlist[j].ApprovedDateTime, fromDate) >= 0 &&
-                            DateTime.Compare((DateTime)rlist[j].ApprovedDateTime, toDate) < 0)
-                        {
-                            int reqId = rlist[j].ReqId;
-                            string itemCode = ilist[i].ItemCode;
-                            List<RequestDetail> rdlist = entities.RequestDetails.Where(x => x.ReqId == reqId && x.ItemCode == itemCode).ToList();
-                            for (int k = 0; k < rdlist.Count; k++)
-                            {
-                                reqQty = reqQty + rdlist[k].ReqQty;
-                            }
-                        }
-                    }
-
-                    item.TempQtyReq = reqQty;
                     ivmlist.Add(item);
                 }
+
+                // Loop through all Requests Fulfilling Criteria
+                List<Request> rlist = entities.Requests.Where(x => (x.Status.Equals("Fulfilled") || x.Status.Equals("Approved")) && (x.ReqDateTime <= toDate && x.ReqDateTime >= fromDate)).ToList();
+                for (int j = 0; j < rlist.Count; j++)
+                {
+                    int reqId = rlist[j].ReqId;
+
+                    // Loop through all RequestDetails And Add ReqQty to Respective Item in ivmlist
+                    List<RequestDetail> rdlist = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
+                    for (int k = 0; k < rdlist.Count; k++)
+                    {
+                        if (rdlist[k].ReqQty != 0) { ivmlist.Find(x => x.ItemCode.Equals(rdlist[k].ItemCode)).TempQtyReq += rdlist[k].ReqQty; }
+                    } // Loop through rd
+                } // Loop through r
+                
                 return ivmlist;
             }
         }
