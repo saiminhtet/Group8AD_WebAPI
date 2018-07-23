@@ -37,7 +37,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //    DelegateFromDate = fromDate,
                 //    DelegateToDate = toDate
                 //}).First<DepartmentVM>();
-                entities.SaveChanges();
+                //entities.SaveChanges();
                 Department department = entities.Departments.Where(d => d.DeptCode.Equals(deptCode)).First();
 
                 department.DeptCode = deptCode;
