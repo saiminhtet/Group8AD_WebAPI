@@ -9,8 +9,6 @@ namespace Group8AD_WebAPI.BusinessLogic
 {
     public class AdjustmentBL
     {
-        // dummy code
-
         // add an adjustment
         // done
         public static AdjustmentVM AddAdj(AdjustmentVM adj)
@@ -60,21 +58,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 adj.ApproverComment = adjustment.ApproverComment;
                 return adj;
             }
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    adjustment = entities.Adjustments.Where(a => a.VoucherNo == voucherNo).Select(a => new AdjustmentVM()
-            //    {
-            //        VoucherNo = a.VoucherNo,
-            //        EmpId = a.EmpId,
-            //        DateTimeIssued = a.DateTimeIssued,
-            //        ItemCode = a.ItemCode,
-            //        Reason = a.Reason,
-            //        QtyChange = a.QtyChange,
-            //        Status = a.Status,
-            //        //ApproverId = a.ApproverId,
-            //        ApproverComment = a.ApproverComment
-            //    }).First<AdjustmentVM>();
-            //}
         }
 
         // get a list of adjustment by status
@@ -295,8 +278,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                 notification.Type = n.Type;
                 notification.Content = n.Content;
                 notification.IsRead = n.IsRead;
-                //// will uncomment when email and notification service method is done
-                // AdjApprNotification(fromEmpId, toEmpId, notification);
+
+                NotificationBL.AdjApprNotification(fromEmpId, toEmpId, notification);
+                //// will uncomment when email service method is done
                 // SendAdjApprEmail(empId, adjustment);
             }
             return;
@@ -347,8 +331,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                 notification.Type = n.Type;
                 notification.Content = n.Content;
                 notification.IsRead = n.IsRead;
+
+                NotificationBL.AdjApprNotification(fromEmpId, toEmpId, notification);
                 //// will uncomment when email and notification service method is done
-                // AdjApprNotification(fromEmpId, toEmpId, notification);
                 // SendAdjApprEmail(empId, adjustment);
             }
             return;
