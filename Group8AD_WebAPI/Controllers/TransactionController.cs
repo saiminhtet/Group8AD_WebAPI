@@ -99,6 +99,20 @@ namespace Group8AD_WebAPI.Controllers
         // tested
         [AcceptVerbs("POST")]
         [HttpPost]
+        [Route("api/Transaction/getVolume")]
+        public HttpResponseMessage GetVolume(DateTime fromDate, DateTime toDate)
+        {
+            List<ItemVM> translist = ReportItemBL.GetVolume(fromDate, toDate);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
+        }
+
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Transaction/costReport")]
         public HttpResponseMessage ShowCostReport(string dept1, string dept2, string supp1, string supp2,
             string cat, List<DateTime> dates, bool byMonth)

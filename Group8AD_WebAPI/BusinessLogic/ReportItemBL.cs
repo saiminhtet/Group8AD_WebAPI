@@ -214,6 +214,59 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
+        public static List<ItemVM> GetVolume(DateTime fromDate, DateTime toDate)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<Request> rlist = entities.Requests.ToList();
+                List<Item> ilist = entities.Items.ToList();
+                List<ItemVM> ivmlist = new List<ItemVM>();
+                for (int i = 0; i < ilist.Count; i++)
+                {
+                    ItemVM item = new ItemVM();
+                    item.ItemCode = ilist[i].ItemCode;
+                    item.Cat = ilist[i].Cat;
+                    item.Desc = ilist[i].Desc;
+                    item.Location = ilist[i].Location;
+                    item.UOM = ilist[i].UOM;
+                    item.IsActive = ilist[i].IsActive;
+                    item.Balance = ilist[i].Balance;
+                    item.ReorderLevel = ilist[i].ReorderLevel;
+                    item.ReorderQty = ilist[i].ReorderQty;
+                    item.TempQtyDisb = ilist[i].TempQtyDisb;
+                    item.TempQtyCheck = ilist[i].TempQtyCheck;
+                    item.SuppCode1 = ilist[i].SuppCode1;
+                    item.Price1 = ilist[i].Price1;
+                    item.SuppCode2 = ilist[i].SuppCode2;
+                    item.Price2 = ilist[i].Price2;
+                    item.SuppCode3 = ilist[i].SuppCode3;
+                    item.Price3 = ilist[i].Price3;
+
+                    int reqQty = 0;
+
+                    // by request detail
+                    for (int j = 0; j < rlist.Count; j++)
+                    {
+                        if (rlist[j].ApprovedDateTime != null && DateTime.Compare((DateTime)rlist[j].ApprovedDateTime, fromDate) >= 0 &&
+                            DateTime.Compare((DateTime)rlist[j].ApprovedDateTime, toDate) < 0)
+                        {
+                            int reqId = rlist[j].ReqId;
+                            string itemCode = ilist[i].ItemCode;
+                            List<RequestDetail> rdlist = entities.RequestDetails.Where(x => x.ReqId == reqId && x.ItemCode == itemCode).ToList();
+                            for (int k = 0; k < rdlist.Count; k++)
+                            {
+                                reqQty = reqQty + rdlist[k].ReqQty;
+                            }
+                        }
+                    }
+
+                    item.TempQtyReq = reqQty;
+                    ivmlist.Add(item);
+                }
+                return ivmlist;
+            }
+        }
+
         // show cost report
         // done
         public static List<ReportItemVM> ShowCostReport(string dept1, string dept2, string supp1, string supp2,
