@@ -150,7 +150,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
-        // get annual volume
+        // get monthly volume
         // done
         public static List<ReportItemVM> GetVolMonthly(DateTime toDate)
         {
@@ -161,56 +161,87 @@ namespace Group8AD_WebAPI.BusinessLogic
                 DateTime startDate = new DateTime(year, month, 01, 00, 00, 00);
                 DateTime endDate = startDate.AddMonths(1);
                 List<ReportItemVM> rilist = new List<ReportItemVM>();
-                List<Request> rlist = entities.Requests.ToList();
+                //List<Request> rlist = entities.Requests.ToList();
                 List<Item> ilist = entities.Items.ToList();
-                List<Transaction> tlist = entities.Transactions.ToList();
+                //List<Transaction> tlist = entities.Transactions.ToList();
                 for (int i = 0; i < ilist.Count; i++)
                 {
-                    string itemName = ilist[i].Desc;
-                    int reqQty = 0;
-
-                    //// by request detail
-                    //for (int j = 0; j < rlist.Count; j++)
-                    //{
-                    //    if (rlist[j].ReqDateTime != null && DateTime.Compare((DateTime)rlist[j].ReqDateTime, startDate) >= 0 &&
-                    //        DateTime.Compare((DateTime)rlist[j].ReqDateTime, endDate) < 0)
-                    //    {
-                    //        List<RequestDetail> rdlist = entities.RequestDetails.ToList();
-                    //        for (int k = 0; k < rdlist.Count; k++)
-                    //        {
-                    //            if (rdlist[k].ReqId == rlist[j].ReqId && rdlist[k].ItemCode == ilist[i].ItemCode)
-                    //            {
-                    //                reqQty = reqQty + rdlist[k].ReqQty;
-                    //            }
-                    //        }
-                    //        //List<RequestDetail> rdlist = entities.RequestDetails.Where(r => r.ItemCode == ilist[i].ItemCode).ToList();
-                    //        //for (int k = 0; k < rdlist.Count; k++)
-                    //        //{
-                    //        //    if (rdlist[k].ReqId == rlist[j].ReqId)
-                    //        //    {
-                    //        //        reqQty = reqQty + rdlist[k].ReqQty;
-                    //        //    }
-                    //        //}
-                    //    }
-                    //}
-
-                    // by transaction
-                    for (int j = 0;j < tlist.Count; j++)
-                    {
-                        if (tlist[j].ItemCode == ilist[i].ItemCode)
-                        {
-                            reqQty = reqQty + tlist[j].QtyChange;
-                        }
-                    }
-
                     ReportItemVM ri = new ReportItemVM();
                     ri.Period = startDate;
-                    ri.Label = itemName;
-                    ri.Val1 = reqQty;
+                    ri.Label = ilist[i].ItemCode;
+                    ri.Val1 = 0;
                     ri.Val2 = 0;
                     rilist.Add(ri);
                 }
+
+                // Loop through all Requests Fulfilling Criteria
+                List<Request> rlist = entities.Requests.Where(x => (x.Status.Equals("Fulfilled") || x.Status.Equals("Approved")) && (x.ReqDateTime <= endDate && x.ReqDateTime >= startDate)).ToList();
+                for (int j = 0; j < rlist.Count; j++)
+                {
+                    int reqId = rlist[j].ReqId;
+
+                    // Loop through all RequestDetails And Add ReqQty to Respective Item in ivmlist
+                    List<RequestDetail> rdlist = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
+                    for (int k = 0; k < rdlist.Count; k++)
+                    {
+                        if (rdlist[k].ReqQty != 0) { rilist.Find(x => x.Label.Equals(rdlist[k].ItemCode)).Val1 += rdlist[k].ReqQty; }
+                    } // Loop through rd
+                } // Loop through r
+
                 return rilist;
+            }
+        }
+
+        // get volume within a range
+        // done
+        public static List<ItemVM> GetVolume(DateTime fromDate, DateTime toDate)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                // Create Item List and Clear TempQyuReq
+                List<Item> ilist = entities.Items.ToList();
+                List<ItemVM> ivmlist = new List<ItemVM>();
+                for (int i = 0; i < ilist.Count; i++)
+                {
+                    ItemVM item = new ItemVM();
+                    item.ItemCode = ilist[i].ItemCode;
+                    item.Cat = ilist[i].Cat;
+                    item.Desc = ilist[i].Desc;
+                    item.Location = ilist[i].Location;
+                    item.UOM = ilist[i].UOM;
+                    item.IsActive = ilist[i].IsActive;
+                    item.Balance = ilist[i].Balance;
+                    item.ReorderLevel = ilist[i].ReorderLevel;
+                    item.ReorderQty = ilist[i].ReorderQty;
+                    item.TempQtyDisb = ilist[i].TempQtyDisb;
+                    item.TempQtyCheck = ilist[i].TempQtyCheck;
+                    item.SuppCode1 = ilist[i].SuppCode1;
+                    item.Price1 = ilist[i].Price1;
+                    item.SuppCode2 = ilist[i].SuppCode2;
+                    item.Price2 = ilist[i].Price2;
+                    item.SuppCode3 = ilist[i].SuppCode3;
+                    item.Price3 = ilist[i].Price3;
+
+                    item.TempQtyReq = 0;
+
+                    ivmlist.Add(item);
+                }
+
+                // Loop through all Requests Fulfilling Criteria
+                List<Request> rlist = entities.Requests.Where(x => (x.Status.Equals("Fulfilled") || x.Status.Equals("Approved")) && (x.ReqDateTime <= toDate && x.ReqDateTime >= fromDate)).ToList();
+                for (int j = 0; j < rlist.Count; j++)
+                {
+                    int reqId = rlist[j].ReqId;
+
+                    // Loop through all RequestDetails And Add ReqQty to Respective Item in ivmlist
+                    List<RequestDetail> rdlist = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
+                    for (int k = 0; k < rdlist.Count; k++)
+                    {
+                        if (rdlist[k].ReqQty != 0) { ivmlist.Find(x => x.ItemCode.Equals(rdlist[k].ItemCode)).TempQtyReq += rdlist[k].ReqQty; }
+                    } // Loop through rd
+                } // Loop through r
+                
+                return ivmlist;
             }
         }
 

@@ -85,10 +85,24 @@ namespace Group8AD_WebAPI.Controllers
         // tested
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/Transaction/VolMonthly")]
+        [Route("api/Transaction/getVolume")]
         public HttpResponseMessage VolMonthly(DateTime toDate)
         {
             List<ReportItemVM> translist = ReportItemBL.GetVolMonthly(toDate);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
+        }
+
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Transaction/getVolume")]
+        public HttpResponseMessage GetVolume(DateTime fromDate, DateTime toDate)
+        {
+            List<ItemVM> translist = ReportItemBL.GetVolume(fromDate, toDate);
             if (translist == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
@@ -124,33 +138,6 @@ namespace Group8AD_WebAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
             return Request.CreateResponse(HttpStatusCode.OK, translist);
-        }
-
-        // GET api/<controller>
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<controller>/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<controller>
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
         }
     }
 }

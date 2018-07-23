@@ -103,7 +103,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 }
             }
-            return frequent_itemlists;
+            return frequent_itemlists.Take(5).ToList();
         }
 
 
@@ -881,6 +881,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 Item item = entities.Items.Where(i => i.ItemCode.Equals(ItemCode)).First();
                 item.TempQtyDisb = qtyDisb;
+                entities.SaveChanges();
             }
         }
 
@@ -926,6 +927,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 Item item = entities.Items.Where(i => i.ItemCode.Equals(ItemCode)).First();
                 item.TempQtyCheck = qtyChk;
+                entities.SaveChanges();
             }
         }
 
