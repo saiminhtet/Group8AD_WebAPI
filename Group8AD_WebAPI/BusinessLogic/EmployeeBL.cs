@@ -110,18 +110,66 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 if (dCode != null && name == null)
                 {
-                     
+
+                    empvmList = entities.Departments.Where(d => d.DeptCode.Equals(dCode))
+                                                .Join(entities.Employees, d => d.DeptCode, e => e.DeptCode, (d, e) => new { d, e })
+                                                .Join(entities.Requests, r => r.e.EmpId, req => req.EmpId, (r, req) => new { r, req })
+                                                .Where(requ => requ.req.Status.Equals("Approved"))
+                                                .Select(result => new EmployeeVM
+                                                {
+                                                    EmpId = result.r.e.EmpId,
+                                                    DeptCode = result.r.e.DeptCode,
+                                                    EmpName = result.r.e.EmpName,
+                                                    EmpAddr = result.r.e.EmpAddr,
+                                                    EmpEmail = result.r.e.EmpEmail,
+                                                    EmpCtcNo = result.r.e.EmpCtcNo
+                                                }).ToList();
                 }
                 else if (name != null && dCode == null)
                 {
-
+                    empvmList = entities.Employees.Where(e => e.EmpName.Contains(name))
+                                .Join(entities.Requests, r => r.EmpId, req => req.EmpId, (r, req) => new { r, req })
+                                                .Where(requ => requ.req.Status.Equals("Approved"))
+                                                .Select(result => new EmployeeVM
+                                                {
+                                                    EmpId = result.r.EmpId,
+                                                    DeptCode = result.r.DeptCode,
+                                                    EmpName = result.r.EmpName,
+                                                    EmpAddr = result.r.EmpAddr,
+                                                    EmpEmail = result.r.EmpEmail,
+                                                    EmpCtcNo = result.r.EmpCtcNo
+                                                }).ToList();
                 }
                 else if (name != null && dCode != null)
                 {
-
+                    empvmList = entities.Departments.Where(d => d.DeptCode.Equals(dCode))
+                                               .Join(entities.Employees, d => d.DeptCode, e => e.DeptCode, (d, e) => new { d, e })
+                                               .Join(entities.Requests, r => r.e.EmpId, req => req.EmpId, (r, req) => new { r, req })
+                                               .Where(requ => requ.req.Status.Equals("Approved") && requ.r.e.EmpName.Contains(name))
+                                               .Select(result => new EmployeeVM
+                                               {
+                                                   EmpId = result.r.e.EmpId,
+                                                   DeptCode = result.r.e.DeptCode,
+                                                   EmpName = result.r.e.EmpName,
+                                                   EmpAddr = result.r.e.EmpAddr,
+                                                   EmpEmail = result.r.e.EmpEmail,
+                                                   EmpCtcNo = result.r.e.EmpCtcNo
+                                               }).ToList();
                 }
                 else
-                    return empvmList;
+                    empvmList = entities.Employees
+                                .Join(entities.Requests, r => r.EmpId, req => req.EmpId, (r, req) => new { r, req })
+                                                .Where(requ => requ.req.Status.Equals("Approved"))
+                                                .Select(result => new EmployeeVM
+                                                {
+                                                    EmpId = result.r.EmpId,
+                                                    DeptCode = result.r.DeptCode,
+                                                    EmpName = result.r.EmpName,
+                                                    EmpAddr = result.r.EmpAddr,
+                                                    EmpEmail = result.r.EmpEmail,
+                                                    EmpCtcNo = result.r.EmpCtcNo
+                                                }).ToList();
+
             }
             return empvmList;
         }

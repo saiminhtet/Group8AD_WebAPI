@@ -94,7 +94,7 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Employee/GetEmp")]
         public HttpResponseMessage GetEmp(string dCode, string name)
         {
-             List<EmployeeVM> emplist = BusinessLogic.EmployeeBL.GetAllEmp();
+             List<EmployeeVM> emplist = BusinessLogic.EmployeeBL.GetEmp(dCode, name);
 
             if (emplist == null)
             {
