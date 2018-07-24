@@ -150,6 +150,40 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
+        // get monthly chargeback by fromDate and toDate
+        // done
+        public static List<ReportItemVM> GetCBMonthly(DateTime fromDate, DateTime toDate)
+        {
+            // by default, fromDate will be the first day of the month and toDate will be the last day of the month
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<ReportItemVM> rilist = new List<ReportItemVM>();
+                List<Transaction> translist = entities.Transactions.ToList();
+                List<Department> deptlist = entities.Departments.Where(d => d.DeptCode != "STOR").ToList();
+                for (int i = 0; i < deptlist.Count; i++)
+                {
+                    double chargeBack = 0;
+                    for (int j = 0; j < translist.Count; j++)
+                    {
+                        if (translist[j].UnitPrice != null && deptlist[i].DeptCode == translist[j].DeptCode &&
+                            DateTime.Compare(translist[j].TranDateTime, fromDate) >= 0 &&
+                            DateTime.Compare(translist[j].TranDateTime, toDate) < 0)
+                        {
+                            chargeBack = chargeBack + translist[j].QtyChange * (double)translist[j].UnitPrice;
+                        }
+                    }
+                    ReportItemVM ri = new ReportItemVM();
+                    chargeBack = Math.Round(chargeBack, 2);
+                    ri.Period = fromDate;
+                    ri.Label = deptlist[i].DeptName;
+                    ri.Val1 = chargeBack;
+                    ri.Val2 = 0;
+                    rilist.Add(ri);
+                }
+                return rilist;
+            }
+        }
+
         // get monthly volume
         // done
         public static List<ReportItemVM> GetVolMonthly(DateTime toDate)
