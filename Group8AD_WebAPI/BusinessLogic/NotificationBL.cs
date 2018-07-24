@@ -9,6 +9,23 @@ namespace Group8AD_WebAPI.BusinessLogic
 {
     public static class NotificationBL
     {
+        // add new notification
+        public static void AddNewNotification(int fromEmpId, int toEmpId, string type, string content)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                Notification notif = new Notification();
+                notif.NotificationDateTime = DateTime.Now;
+                notif.FromEmp = fromEmpId;
+                notif.ToEmp = toEmpId;
+                notif.Type = type;
+                notif.Content = content;
+                notif.IsRead = false;
+                entities.Notifications.Add(notif);
+                entities.SaveChanges();
+            }
+        }
+
         //add new reqNoti
         public static void AddNewReqNotification(int empId, RequestVM currReq)
         {
