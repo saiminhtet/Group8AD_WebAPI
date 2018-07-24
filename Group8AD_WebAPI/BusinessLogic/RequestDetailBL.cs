@@ -203,26 +203,25 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 RequestDetail req = new RequestDetail();
                 req.ReqId = reqId;
-                req.ReqLineNo = reqDet.ReqLineNo;
+                request.ReqId = req.ReqId;
+                List<RequestDetail> rd = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
+                if (rd.Count == 0)
+                    req.ReqLineNo = 1;
+                else
+                    req.ReqLineNo = rd[rd.Count - 1].ReqLineNo + 1;
+                request.ReqLineNo = req.ReqLineNo;
                 req.ItemCode = reqDet.ItemCode;
+                request.ItemCode = req.ItemCode;
                 req.ReqQty = reqDet.ReqQty;
+                request.ReqQty = req.ReqQty;
                 req.AwaitQty = reqDet.AwaitQty;
+                request.AwaitQty = req.AwaitQty;
                 req.FulfilledQty = reqDet.FulfilledQty;
+                request.FulfilledQty = req.FulfilledQty;
                 entities.RequestDetails.Add(req);
                 entities.SaveChanges();
-
-                List<RequestDetail> lst = entities.RequestDetails.ToList();
-                RequestDetail r = lst[lst.Count - 1];
-                request.ReqId = r.ReqId;
-                request.ReqLineNo = r.ReqLineNo;
-                request.ItemCode = r.ItemCode;
-                request.ReqQty = r.ReqQty;
-                request.AwaitQty = r.AwaitQty;
-                request.FulfilledQty = r.FulfilledQty;
             }
-
             return request;
-
         }
 
         //update RequestDetail with reqId and reqDet

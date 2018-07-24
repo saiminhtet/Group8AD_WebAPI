@@ -44,11 +44,10 @@ namespace Group8AD_WebAPI.Controllers
         //AddReqDet(int reqId, RequestDetail reqDet)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/RequestDetail/addReqDet/{reqId}")]
-        public HttpResponseMessage AddReqDet_reqId(string reqId, RequestDetailVM reqDetVM)
+        [Route("api/RequestDetail/addReqDet")]
+        public HttpResponseMessage AddReqDet_reqId(int reqId, RequestDetailVM reqDetVM)
         {
-            int RepId = Convert.ToInt16(reqId);
-            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(RepId, reqDetVM);
+            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(reqId, reqDetVM);
             if (req == null)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
