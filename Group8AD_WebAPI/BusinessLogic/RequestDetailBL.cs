@@ -104,7 +104,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                         rvm.ReqLineNo = rd.ReqLineNo;
                         rd.ItemCode = itemCode;
                         rvm.ItemCode = rd.ItemCode;
-                        rd.ReqQty = 1;
+                        rd.ReqQty = 0;
                         rvm.ReqQty = rd.ReqQty;
                         rd.AwaitQty = 0;
                         rvm.AwaitQty = rd.AwaitQty;
@@ -116,6 +116,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
                 return rvm;
             }
+
             //RequestDetailVM reqDetail = new RequestDetailVM();
             //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             //{
