@@ -370,7 +370,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 ReorderQty = i.ReorderQty,
                                 TempQtyDisb = i.TempQtyDisb,
                                 TempQtyCheck = i.TempQtyCheck,
-                             //   ReccReorderQty = (Math.Max(i.ReorderQty, ((GetThreeMonthReqQty(i.ItemCode) / 6) + GetOutstandingReqQty(i.ItemCode)))), //need to update with sub method
+                                //   ReccReorderQty = (Math.Max(i.ReorderQty, ((GetThreeMonthReqQty(i.ItemCode) / 6) + GetOutstandingReqQty(i.ItemCode)))), //need to update with sub method
                                 SuppCode1 = i.SuppCode1,
                                 SuppCode2 = i.SuppCode2,
                                 SuppCode3 = i.SuppCode3,
@@ -378,9 +378,27 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 Price2 = i.Price2,
                                 Price3 = i.Price3
                             }).ToList<ItemVM>();
+
+                foreach (ItemVM item in itemlist)
+                {
+                    int ReccReorderQtys = 0;
+                    double threeMonQty = GetThreeMonthReqQty(item.ItemCode) / 6;
+                    double OutReqQty = GetOutstandingReqQty(item.ItemCode);
+
+                    int recReorderqty = Convert.ToInt16(threeMonQty + OutReqQty);
+
+                    ReccReorderQtys = Math.Max(item.ReorderQty, recReorderqty);
+
+                    item.ReccReorderQty = ReccReorderQtys;
+                }
             }
             return itemlist;
         }
+
+        //public static double ReccReorderQty(string iCode)
+        //{
+           
+        //}
 
         private static double GetThreeMonthReqQty(string iCode)
         {
