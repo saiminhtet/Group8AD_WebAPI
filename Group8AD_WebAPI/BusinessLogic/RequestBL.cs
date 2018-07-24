@@ -415,7 +415,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         //}
 
         // submit request
-        // done
+        // done, except email
         public static RequestVM SubmitReq(int reqId, List<RequestDetailVM> reqDetList)
         {
             // make requestId in reqDetList is the same as reqId
