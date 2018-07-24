@@ -48,26 +48,30 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // get an adjustment by voucher number
         // done
-        public static AdjustmentVM GetAdj(string voucherNo)
+        public static List<AdjustmentVM> GetAdj(string voucherNo)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                AdjustmentVM adj = new AdjustmentVM();
-                Adjustment adjustment = new Adjustment();
-                adjustment = entities.Adjustments.Where(a => a.VoucherNo == voucherNo).FirstOrDefault();
-                adj.VoucherNo = adjustment.VoucherNo;
-                adj.EmpId = adjustment.EmpId;
-                adj.DateTimeIssued = adjustment.DateTimeIssued;
-                adj.ItemCode = adjustment.ItemCode;
-                adj.Reason = adjustment.Reason;
-                adj.QtyChange = adjustment.QtyChange;
-                adj.Status = adjustment.Status;
-                if (adjustment.ApproverId != null)
-                    adj.ApproverId = (int)adjustment.ApproverId;
-                else
-                    adjustment.ApproverId = 0;
-                adj.ApproverComment = adjustment.ApproverComment;
-                return adj;
+                List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo == voucherNo).ToList();
+                List<AdjustmentVM> avmList = new List<AdjustmentVM>();
+                for (int i = 0; i < adjList.Count; i++)
+                {
+                    AdjustmentVM adj = new AdjustmentVM();
+                    adj.VoucherNo = adjList[i].VoucherNo;
+                    adj.EmpId = adjList[i].EmpId;
+                    adj.DateTimeIssued = adjList[i].DateTimeIssued;
+                    adj.ItemCode = adjList[i].ItemCode;
+                    adj.Reason = adjList[i].Reason;
+                    adj.QtyChange = adjList[i].QtyChange;
+                    adj.Status = adjList[i].Status;
+                    if (adjList[i].ApproverId != null)
+                        adj.ApproverId = (int)adjList[i].ApproverId;
+                    else
+                        adjList[i].ApproverId = 0;
+                    adj.ApproverComment = adjList[i].ApproverComment;
+                    avmList.Add(adj);
+                }
+                return avmList;
             }
         }
 

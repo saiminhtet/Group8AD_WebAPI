@@ -33,7 +33,7 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Adjustment/get")]
         public HttpResponseMessage GetAdjustment(string voucherNo)
         {
-            AdjustmentVM adjustment = AdjustmentBL.GetAdj(voucherNo);
+            List<AdjustmentVM> adjustment = AdjustmentBL.GetAdj(voucherNo);
             if (adjustment == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
