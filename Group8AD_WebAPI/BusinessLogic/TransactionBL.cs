@@ -9,8 +9,6 @@ namespace Group8AD_WebAPI.BusinessLogic
 {
     public class TransactionBL
     {
-        // dummy code
-
         // add a transaction
         // done
         public static TransactionVM AddTran(TransactionVM t)

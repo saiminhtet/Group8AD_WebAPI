@@ -325,7 +325,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     for (int i = 0; i < reqlist.Count; i++)
                     {
-                        entities.Requests.Remove(reqlist[i]);
+                        reqlist[i].Status = "Cancelled";
                         entities.SaveChanges();
                     }
                 }
@@ -342,7 +342,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 Request request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
                 if (request != null)
                 {
-                    //entities.Requests.Remove(request);
                     request.Status = "Cancelled";
                     entities.SaveChanges();
                 }
@@ -455,7 +454,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             int empId = req.EmpId;
             //// will call when method is completed
-            //EmailBL.SendNewReqEmail(empId, req);
+            // EmailBL.SendNewReqEmail(empId, req);
             NotificationBL.AddNewReqNotification(empId, req);
             // redirect to SubmittedRequestDetails page
             return req;
@@ -468,25 +467,6 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 int reqId = req.ReqId;
-                //List<Request> rlist = entities.Requests.ToList();
-                //for (int i = 0; i < rlist.Count; i++)
-                //{
-                //    if (rlist[i].ReqId == reqId)
-                //    {
-                //        rlist[i].EmpId = req.EmpId;
-                //        rlist[i].ApproverId = req.ApproverId;
-                //        rlist[i].ApproverComment = req.ApproverComment;
-                //        if (req.ReqDateTime != null && DateTime.Compare(req.ReqDateTime, new DateTime(1800, 01, 01)) > 0)
-                //            rlist[i].ReqDateTime = req.ReqDateTime;
-                //        if (req.ApprovedDateTime != null && DateTime.Compare(req.ApprovedDateTime, new DateTime(1800, 01, 01)) > 0)
-                //            rlist[i].ApprovedDateTime = req.ApprovedDateTime;
-                //        if (req.CancelledDateTime != null && DateTime.Compare(req.CancelledDateTime, new DateTime(1800, 01, 01)) > 0)
-                //            rlist[i].CancelledDateTime = req.CancelledDateTime;
-                //        if (req.FulfilledDateTime != null && DateTime.Compare(req.FulfilledDateTime, new DateTime(1800, 01, 01)) > 0)
-                //            rlist[i].FulfilledDateTime = req.FulfilledDateTime;
-                //        rlist[i].Status = req.Status;
-                //    }
-                //}
                 Request request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
                 request.EmpId = req.EmpId;
                 request.ApproverId = req.ApproverId;
@@ -510,7 +490,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static void AcceptRequest(int reqId, int empId, string cmt)
         {
             // This is only to explain code steps at Web Api service
-            // Call GetReq(empId, “Unsubmitted”)
+            // Call GetReq(empId, “Submitted”)
             // Update ApproverId as empId
             // Add ApproverComment as cmt
             // Add ApprovalDateTime as DateTime.Now()
@@ -540,7 +520,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static void RejectRequest(int reqId, int empId,string cmt)
         {
             // This is only to explain code steps at Web Api service
-            // Call GetReq(empId, “Unsubmitted”)
+            // Call GetReq(empId, “Submitted”)
             // Update ApproverId as empId
             // Add ApproverComment as cmt
             // Add ApprovalDateTime as DateTime.Now()

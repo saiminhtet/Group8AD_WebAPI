@@ -331,13 +331,6 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Images\Employees\1.png" />
-    <Content Include="Images\Employees\101.png" />
-    <Content Include="Images\Employees\104.png" />
-    <Content Include="Images\Employees\105.png" />
-    <Content Include="Images\Employees\11.png" />
-    <Content Include="Images\Employees\12.png" />
-    <Content Include="Images\Employees\13.png" />
     <Content Include="Models\SA46Team08ADProjectContext.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>SA46Team08ADProjectContext.edmx</DependentUpon>
@@ -379,6 +372,7 @@
     <Content Include="Models\SA46Team08ADProjectContext.edmx.diagram">
       <DependentUpon>SA46Team08ADProjectContext.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
