@@ -369,8 +369,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 ReorderLevel = i.ReorderLevel,
                                 ReorderQty = i.ReorderQty,
                                 TempQtyDisb = i.TempQtyDisb,
-                                TempQtyCheck = i.TempQtyCheck,
-                                //   ReccReorderQty = (Math.Max(i.ReorderQty, ((GetThreeMonthReqQty(i.ItemCode) / 6) + GetOutstandingReqQty(i.ItemCode)))), //need to update with sub method
+                                TempQtyCheck = i.TempQtyCheck,                          
                                 SuppCode1 = i.SuppCode1,
                                 SuppCode2 = i.SuppCode2,
                                 SuppCode3 = i.SuppCode3,
@@ -381,30 +380,59 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 foreach (ItemVM item in itemlist)
                 {
-                    int ReccReorderQtys = 0;
-                    double threeMonQty = GetThreeMonthReqQty(item.ItemCode) / 6;
-                    double OutReqQty = GetOutstandingReqQty(item.ItemCode);
-
-                    int recReorderqty = Convert.ToInt16(threeMonQty + OutReqQty);
-
-                    ReccReorderQtys = Math.Max(item.ReorderQty, recReorderqty);
-
-                    item.ReccReorderQty = ReccReorderQtys;
+                    item.ReccReorderQty = Math.Max(item.ReorderQty, GetReccReorderQty(item.ItemCode));
                 }
             }
             return itemlist;
         }
 
-        //public static double ReccReorderQty(string iCode)
-        //{
-           
-        //}
+        //Get Recommand ReOrderQty
+        public static int GetReccReorderQty(string iCode)
+        {
+            int recReorderqty = 0;
+            double threeMthReqQty = 0;
+            DateTime d1 = DateTime.Now;
+            DateTime d2 = d1.AddMonths(-3);
+            double outReqQty = 0;
 
+
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+
+                List<RequestDetailVM> rdList = entities.Requests.Where(x => x.ReqDateTime <= d1 && x.ReqDateTime >= d2 && x.Status.Equals("Approved"))
+                                       .Join(entities.RequestDetails, r => r.ReqId, rd => rd.ReqId,
+                                       (r, rd) => new { r, rd }).Select(x => new RequestDetailVM
+                                       {
+                                           ReqId = x.rd.ReqId,
+                                           ItemCode = x.rd.ItemCode,
+                                           ReqQty = x.rd.ReqQty,
+                                           AwaitQty = x.rd.AwaitQty,
+                                           FulfilledQty = x.rd.FulfilledQty
+
+                                       }).ToList();
+
+               
+                    foreach (RequestDetailVM rd in rdList)
+                    {
+                        if (rd.ItemCode.Equals(iCode))
+                        {
+                            threeMthReqQty += rd.ReqQty / 6;
+                            outReqQty += (rd.ReqQty - rd.AwaitQty - rd.FulfilledQty);
+                            recReorderqty = Convert.ToInt16(threeMthReqQty + outReqQty);
+                        }
+                    }
+
+            }
+            return recReorderqty;
+        }
+
+        //Get ThreeMonthReqQty
         private static double GetThreeMonthReqQty(string iCode)
         {
             double threeMthReqQty = 0;
             DateTime d1 = DateTime.Now;
             DateTime d2 = d1.AddMonths(-3);
+
 
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -426,6 +454,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             return threeMthReqQty;
         }
 
+        //Get OutstandingReqQty
         private static double GetOutstandingReqQty(string iCode)
         {
             double outReqQty = 0;
@@ -812,7 +841,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 foreach (RequestDetail rd in rdList)
                 {
                     List<Item> itemlists = entities.Items.Where(i => i.ItemCode.Equals(rd.ItemCode)).ToList(); //need to refer to retrieve item method *************************************************************************
-                    
+
                     iList.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(itemlists));
                 }
 
