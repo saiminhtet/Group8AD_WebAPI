@@ -1,4 +1,5 @@
-﻿using Group8AD_WebAPI.Models;
+﻿using Group8AD_WebAPI.BusinessLogic;
+using Group8AD_WebAPI.Models;
 using Group8AD_WebAPI.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -78,17 +79,16 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/RequestDetail/removeReqDet")]
-        public HttpResponseMessage removeReqDet(string empId, string itemCode, string status)
+        public HttpResponseMessage removeReqDet(int empId, string itemCode, string status)
         {
-            int EmpId = Convert.ToInt16(empId);
             try
             {
-                BusinessLogic.RequestDetailBL.removeReqDet(EmpId,itemCode,status);
+                RequestDetailBL.removeReqDet(empId,itemCode,status);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
-            catch (Exception e)
+            catch
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "error");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }
 

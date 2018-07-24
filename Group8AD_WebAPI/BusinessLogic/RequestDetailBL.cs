@@ -152,14 +152,13 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<RequestDetail> reqDetlist = entities.RequestDetails.Where(r => r.ItemCode == itemCode).ToList();
-                if (reqDetlist.Count > 0)
+                List<RequestVM> rvmList = RequestBL.GetReq(empId, status);
+                for (int i = 0; i < rvmList.Count; i++)
                 {
-                    for (int i = 0; i < reqDetlist.Count; i++)
-                    {
-                        entities.RequestDetails.Remove(reqDetlist[i]);
-                        entities.SaveChanges();
-                    }
+                    int reqId = rvmList[i].ReqId;
+                    RequestDetail rd = entities.RequestDetails.Where(x => x.ReqId == reqId && x.ItemCode == itemCode).FirstOrDefault();
+                    entities.RequestDetails.Remove(rd);
+                    entities.SaveChanges();
                 }
             }
         }
