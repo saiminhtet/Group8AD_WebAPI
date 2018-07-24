@@ -794,7 +794,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 foreach (RequestDetail rd in rdList)
                 {
                     List<Item> itemlists = entities.Items.Where(i => i.ItemCode.Equals(rd.ItemCode)).ToList(); //need to refer to retrieve item method *************************************************************************
-
+                    
                     iList.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(itemlists));
                 }
 
