@@ -209,8 +209,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                             //Notify Manager
                         }
 
-                        //3. Distribute i.TempQtyAcpt across RequestDetails ******************UnClear Method******************
-
 
 
                         string deptcode = EmployeeBL.GetDeptCode(empId);
@@ -369,7 +367,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 ReorderLevel = i.ReorderLevel,
                                 ReorderQty = i.ReorderQty,
                                 TempQtyDisb = i.TempQtyDisb,
-                                TempQtyCheck = i.TempQtyCheck,                          
+                                TempQtyCheck = i.TempQtyCheck,
                                 SuppCode1 = i.SuppCode1,
                                 SuppCode2 = i.SuppCode2,
                                 SuppCode3 = i.SuppCode3,
@@ -411,16 +409,16 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                                        }).ToList();
 
-               
-                    foreach (RequestDetailVM rd in rdList)
+
+                foreach (RequestDetailVM rd in rdList)
+                {
+                    if (rd.ItemCode.Equals(iCode))
                     {
-                        if (rd.ItemCode.Equals(iCode))
-                        {
-                            threeMthReqQty += rd.ReqQty / 6;
-                            outReqQty += (rd.ReqQty - rd.AwaitQty - rd.FulfilledQty);
-                            recReorderqty = Convert.ToInt16(threeMthReqQty + outReqQty);
-                        }
+                        threeMthReqQty += rd.ReqQty / 6;
+                        outReqQty += (rd.ReqQty - rd.AwaitQty - rd.FulfilledQty);
+                        recReorderqty = Convert.ToInt16(threeMthReqQty + outReqQty);
                     }
+                }
 
             }
             return recReorderqty;
@@ -482,33 +480,53 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static List<ItemVM> GetRetrieveItems()
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-
-                List<RequestVM> rlist = BusinessLogic.RequestBL.GetReq("Approved");
+            {          
+                List<RequestDetailVM> reqdList = entities.Requests.Where(r=>r.Status.Equals("Approved"))
+                    .Join(entities.RequestDetails, r => r.ReqId, rd => rd.ReqId, (r, rd) => new { r, rd })
+                    .Select(rd => new RequestDetailVM
+                    {
+                        ReqId = rd.rd.ReqId,
+                        ReqLineNo = rd.rd.ReqLineNo,
+                        ItemCode = rd.rd.ItemCode,
+                        ReqQty = rd.rd.ReqQty,
+                        AwaitQty = rd.rd.AwaitQty,
+                        FulfilledQty = rd.rd.FulfilledQty
+                    }).ToList();              
 
                 List<ItemVM> iList = GetAllItems();
-
+                List<ItemVM> ritemlist = new List<ItemVM>();
                 foreach (ItemVM item in iList)
                 {
                     item.TempQtyReq = 0;
-                }
-
-                List<ItemVM> ritemlist = new List<ItemVM>();
-                foreach (RequestVM r in rlist)
-                {
-                    List<RequestDetail> rdlist = entities.RequestDetails.Where(rd => rd.ReqId == r.ReqId).ToList();
-
-                    foreach (RequestDetail rd in rdlist)
+                    foreach (RequestDetailVM rd in reqdList)
                     {
-                        if (rd.ReqQty - rd.FulfilledQty > 0)
+                        if (rd.ReqQty - rd.FulfilledQty > 0 && item.ItemCode.Equals(rd.ItemCode))
                         {
-                            iList.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.ReqQty;
-
-                            ritemlist = iList.Where(x => x.TempQtyReq > 0).ToList();
+                         //   item.TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
+                            iList.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
 
                         }
-                    }
+                    }                   
                 }
+
+                ritemlist = iList.Where(x => x.TempQtyReq > 0).ToList();
+
+                //  List<RequestVM> rlist = BusinessLogic.RequestBL.GetReq("Approved");
+                //foreach (RequestVM r in rlist)
+                //{
+                //    List<RequestDetail> rdlist = entities.RequestDetails.Where(rd => rd.ReqId == r.ReqId).ToList();
+
+                //    foreach (RequestDetail rd in rdlist)
+                //    {
+                //        if (rd.ReqQty - rd.FulfilledQty > 0)
+                //        {
+                //            iList.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
+
+
+
+                //        }
+                //    }
+                //}
                 return ritemlist;
             }
         }
@@ -826,26 +844,57 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<Request> rList = entities.Requests.Where(r => r.EmpId == empId && r.Status.Equals("Approved")).ToList();
 
-                List<RequestDetail> rdList = new List<RequestDetail>();
+                List<RequestDetailVM> reqdList = entities.Requests.Where(r => r.Status.Equals("Approved") && r.EmpId == empId)
+                   .Join(entities.RequestDetails, r => r.ReqId, rd => rd.ReqId, (r, rd) => new { r, rd })
+                   .Select(rd => new RequestDetailVM
+                   {
+                       ReqId = rd.rd.ReqId,
+                       ReqLineNo = rd.rd.ReqLineNo,
+                       ItemCode = rd.rd.ItemCode,
+                       ReqQty = rd.rd.ReqQty,
+                       AwaitQty = rd.rd.AwaitQty,
+                       FulfilledQty = rd.rd.FulfilledQty
+                   }).ToList();
 
-                List<ItemVM> iList = new List<ItemVM>();
-
-                foreach (Request r in rList)
+                List<ItemVM> iList = GetAllItems();
+                List<ItemVM> ritemlist = new List<ItemVM>();
+                foreach (ItemVM item in iList)
                 {
-                    List<RequestDetail> reqdetailLists = entities.RequestDetails.Where(rd => rd.ReqId == r.ReqId).ToList();
-                    rdList.AddRange(reqdetailLists);
+                    item.TempQtyReq = 0;
+                    foreach (RequestDetailVM rd in reqdList)
+                    {
+                        if (rd.ReqQty - rd.FulfilledQty > 0 && item.ItemCode.Equals(rd.ItemCode))
+                        {
+                            //   item.TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
+                            iList.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
+
+                        }
+                    }
                 }
 
-                foreach (RequestDetail rd in rdList)
-                {
-                    List<Item> itemlists = entities.Items.Where(i => i.ItemCode.Equals(rd.ItemCode)).ToList(); //need to refer to retrieve item method *************************************************************************
+                ritemlist = iList.Where(x => x.TempQtyReq > 0).ToList();
 
-                    iList.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(itemlists));
-                }
+                //List<Request> rList = entities.Requests.Where(r => r.EmpId == empId && r.Status.Equals("Approved")).ToList();
 
-                return iList;
+                //List<RequestDetail> rdList = new List<RequestDetail>();
+
+                //List<ItemVM> iList = new List<ItemVM>();
+
+                //foreach (Request r in rList)
+                //{
+                //    List<RequestDetail> reqdetailLists = entities.RequestDetails.Where(rd => rd.ReqId == r.ReqId).ToList();
+                //    rdList.AddRange(reqdetailLists);
+                //}
+
+                //foreach (RequestDetail rd in rdList)
+                //{
+                //    List<Item> itemlists = entities.Items.Where(i => i.ItemCode.Equals(rd.ItemCode)).ToList(); //need to refer to retrieve item method *************************************************************************
+
+                //    iList.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(itemlists));
+                //}
+
+                return ritemlist;
 
             }
         }
