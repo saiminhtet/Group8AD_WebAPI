@@ -146,5 +146,13 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             return department;
         }
+
+        public static List<Department> GetAllDept()
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                return entities.Departments.ToList();
+            }
+        }
     }
 }

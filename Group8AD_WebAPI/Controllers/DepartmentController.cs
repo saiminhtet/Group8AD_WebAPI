@@ -149,5 +149,19 @@ namespace Group8AD_WebAPI.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, dep);
         }
+
+        [AcceptVerbs("GET")]
+        [HttpGet]
+        [Route("api/Department")]
+        public HttpResponseMessage GetAllDept()
+        {
+            List<Department> departments = BusinessLogic.DepartmentBL.GetAllDept();
+
+            if (departments == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, departments);
+        }
     }
 }
