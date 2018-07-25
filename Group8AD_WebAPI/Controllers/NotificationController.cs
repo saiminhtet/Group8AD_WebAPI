@@ -206,5 +206,22 @@ namespace Group8AD_WebAPI.Controllers
         //{
         //    return Request.CreateResponse(HttpStatusCode.OK);
         //}
+
+        //ReadNotification(NotificationVM n)
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Notification/ToggleReadNotification")]
+        public HttpResponseMessage ToggleReadNotification(NotificationVM n)
+        {
+            try
+            {
+                BusinessLogic.NotificationBL.ToggleReadNotification(n);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
     }
 }

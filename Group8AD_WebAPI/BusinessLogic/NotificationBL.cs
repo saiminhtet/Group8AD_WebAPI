@@ -26,6 +26,17 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
+        // toggle read notification
+        public static void ToggleReadNotification(NotificationVM n)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == n.NotificationId);
+                n_orig.IsRead = !n_orig.IsRead;
+                entities.SaveChanges();
+            }
+        }
+
         //add new reqNoti
         public static void AddNewReqNotification(int empId, RequestVM currReq)
         {
