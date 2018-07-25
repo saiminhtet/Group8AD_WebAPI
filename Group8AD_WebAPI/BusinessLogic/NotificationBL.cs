@@ -67,6 +67,44 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
+        // mark all notification as read
+        public static bool MarkAllAsRead(int empId)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                try
+                {
+                    List<Notification> nList = entities.Notifications.Where(x => x.ToEmp == empId).ToList();
+                    nList.ForEach(x => x.IsRead = true);
+                    entities.SaveChanges();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        // mark one notification as read
+        public static bool MarkOneAsRead(NotificationVM n)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                try
+                {
+                    Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == n.NotificationId);
+                    n_orig.IsRead = true;
+                    entities.SaveChanges();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
         //add new reqNoti
         public static void AddNewReqNotification(int empId, RequestVM currReq)
         {
