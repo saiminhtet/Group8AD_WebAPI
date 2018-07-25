@@ -922,6 +922,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 ReorderQty = i.ReorderQty,
                                 TempQtyDisb = i.TempQtyDisb,
                                 TempQtyCheck = i.TempQtyCheck,
+                                TempQtyReq = 0,
                                 SuppCode1 = i.SuppCode1,
                                 SuppCode2 = i.SuppCode2,
                                 SuppCode3 = i.SuppCode3,
