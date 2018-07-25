@@ -162,7 +162,7 @@ namespace Group8AD_WebAPI.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
             }
-            
+
         }
 
         //void AcceptDisbursement
@@ -308,7 +308,7 @@ namespace Group8AD_WebAPI.Controllers
 
             try
             {
-                BusinessLogic.ItemBL.ReceiveItem(suppCode,qty,ItemCode);
+                BusinessLogic.ItemBL.ReceiveItem(suppCode, qty, ItemCode);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -329,10 +329,10 @@ namespace Group8AD_WebAPI.Controllers
             if (empitemlists == null)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
-             
+
             }
             return Request.CreateResponse(HttpStatusCode.OK, empitemlists);
-      
+
         }
 
 
@@ -379,7 +379,7 @@ namespace Group8AD_WebAPI.Controllers
 
             try
             {
-                BusinessLogic.ItemBL.SaveQtyChk(ItemCode,qtyChk);
+                BusinessLogic.ItemBL.SaveQtyChk(ItemCode, qtyChk);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -393,11 +393,11 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Item/UpdateItem")]
-        public HttpResponseMessage UpdateItem(string itemCode,int reorderLvl, int reorderQty, string s1, double p1, string s2, double p2, string s3, double p3)
+        public HttpResponseMessage UpdateItem(string itemCode, int reorderLvl, int reorderQty, string s1, double p1, string s2, double p2, string s3, double p3)
         {
             try
             {
-                BusinessLogic.ItemBL.UpdateItem(itemCode, reorderLvl,reorderQty,s1,p1,s2,p2,s3,p3);
+                BusinessLogic.ItemBL.UpdateItem(itemCode, reorderLvl, reorderQty, s1, p1, s2, p2, s3, p3);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -442,16 +442,16 @@ namespace Group8AD_WebAPI.Controllers
         }
 
 
-   
+
         //For Testing 
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Item/Test")]
         public HttpResponseMessage Test(int empId, List<ItemVM> items, string cat, string desc, double threshold)
         {
-            
-           List<ItemVM> itemlist = BusinessLogic.ItemBL.GetItems(cat,desc,threshold);
-             return Request.CreateResponse(HttpStatusCode.OK, itemlist);
+
+            List<ItemVM> itemlist = BusinessLogic.ItemBL.GetItems(cat, desc, threshold);
+            return Request.CreateResponse(HttpStatusCode.OK, itemlist);
             //try
             //{
             //BusinessLogic.ItemBL.GetDeptDisbList(empId);

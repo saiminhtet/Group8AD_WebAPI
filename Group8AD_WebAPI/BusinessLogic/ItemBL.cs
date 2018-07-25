@@ -115,59 +115,60 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 string deptcode = EmployeeBL.GetDeptCode(empId);
 
-                var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).ToList();
+                List<RequestDetailVM> requestDetailLists = entities.Employees.Where(e => e.DeptCode.Equals(deptcode))
+                                                         .Join(entities.Requests.Where(r => r.Status.Equals("Approved")), e => e.EmpId, r => r.EmpId, (e, r) => new { e, r })
+                                                         .Join(entities.RequestDetails.Where(x => x.AwaitQty > 0), x => x.r.ReqId, rd => rd.ReqId, (x, rd) => new { x, rd })
+                                                         .Select(rd => new RequestDetailVM
+                                                         {
+                                                             ReqId = rd.rd.ReqId,
+                                                             ReqLineNo = rd.rd.ReqLineNo,
+                                                             ItemCode = rd.rd.ItemCode,
+                                                             ReqQty = rd.rd.ReqQty,
+                                                             AwaitQty = rd.rd.AwaitQty,
+                                                             FulfilledQty = rd.rd.FulfilledQty
+                                                         }).ToList();
 
-
-                List<Request> rList = new List<Request>();
-                List<RequestDetail> rdList = new List<RequestDetail>();
-                List<ItemVM> iList = new List<ItemVM>();
-                foreach (var e in EmpIds)
+                List<ItemVM> iList = GetAllItems();
+                List<ItemVM> ritemlist = new List<ItemVM>();
+                foreach (ItemVM item in iList)
                 {
-                    List<Request> reqList = entities.Requests.Where(x => x.EmpId == e.EmpId && x.Status.Equals("Approved")).ToList();
-                    rList.AddRange(reqList);
-                }
-
-                foreach (Request r in rList)
-                {
-                    List<RequestDetail> reqdList = entities.RequestDetails.Where(x => x.ReqId == r.ReqId).ToList();
-                    rdList.AddRange(reqdList);
-                }
-
-
-                foreach (Request r in rList)
-                {
-                    foreach (RequestDetail rd in rdList.Where(rqd => rqd.ReqId == r.ReqId))
+                    foreach (RequestDetailVM rd in requestDetailLists)
                     {
 
-                        if (rd.AwaitQty > 0 && iList.Where(x => x.ItemCode.Equals(rd.ItemCode)).ToList().Count == 0)
+                        if (rd.AwaitQty > 0 && ritemlist.Where(x => x.ItemCode.Equals(rd.ItemCode)).ToList().Count == 0 && item.ItemCode.Equals(rd.ItemCode))
                         {
                             ItemVM i = new ItemVM();
                             i.ItemCode = rd.ItemCode;
                             ItemVM io = GetItem(i.ItemCode);
+                            i.Balance = io.Balance;
+                            i.ReccReorderLvl = io.ReccReorderLvl;
+                            i.ReorderQty = io.ReorderQty;
                             i.Cat = io.Cat;
                             i.Desc = io.Desc;
                             i.UOM = io.UOM;
+                            i.SuppCode1 = io.SuppCode1;
                             i.Price1 = io.Price1;
+                            i.TempQtyDisb = io.TempQtyDisb;
+                            i.TempQtyCheck = io.TempQtyCheck;
                             i.TempQtyAcpt = io.TempQtyAcpt;
                             i.TempQtyReq = io.TempQtyReq;
-
-                            iList.Add(i);
+                            ritemlist.Add(i);
                         }
-
                     }
 
-                    foreach (RequestDetail rd in rdList.Where(rqd => rqd.ReqId == r.ReqId))
+                    foreach (RequestDetailVM rd in requestDetailLists)
                     {
-                        if (rd.AwaitQty > 0 && iList.Count > 0)                   //iList.Where(x => x.ItemCode.Equals(rd.ItemCode)).ToList().Count
+                        if (rd.AwaitQty > 0 && iList.Count > 0 && item.ItemCode.Equals(rd.ItemCode))
                         {
-                            foreach (ItemVM item in iList.Where(x => x.ItemCode.Equals(rd.ItemCode)))
+                            foreach (ItemVM i in iList.Where(x => x.ItemCode.Equals(rd.ItemCode)))
                             {
-                                iList.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.AwaitQty;
+                                ritemlist.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.AwaitQty;
                             }
                         }
                     }
                 }
-                return iList;
+
+                return ritemlist;
             }
         }
 
