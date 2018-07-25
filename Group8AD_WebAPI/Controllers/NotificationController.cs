@@ -207,7 +207,6 @@ namespace Group8AD_WebAPI.Controllers
         //    return Request.CreateResponse(HttpStatusCode.OK);
         //}
 
-        //ReadNotification(NotificationVM n)
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Notification/ToggleReadNotification")]
@@ -215,8 +214,26 @@ namespace Group8AD_WebAPI.Controllers
         {
             try
             {
-                BusinessLogic.NotificationBL.ToggleReadNotification(n);
-                return Request.CreateResponse(HttpStatusCode.OK);
+                if(BusinessLogic.NotificationBL.ToggleReadNotification(n))
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                else return Request.CreateResponse(HttpStatusCode.NotModified);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Notification/MarkAllAsRead")]
+        public HttpResponseMessage MarkAllAsRead(List<NotificationVM> nList)
+        {
+            try
+            {
+                if (BusinessLogic.NotificationBL.MarkAllAsRead(nList))
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                else return Request.CreateResponse(HttpStatusCode.NotModified);
             }
             catch (Exception e)
             {

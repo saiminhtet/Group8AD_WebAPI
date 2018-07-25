@@ -27,13 +27,43 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // toggle read notification
-        public static void ToggleReadNotification(NotificationVM n)
+        public static bool ToggleReadNotification(NotificationVM n)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == n.NotificationId);
-                n_orig.IsRead = !n_orig.IsRead;
-                entities.SaveChanges();
+                try
+                {
+                    Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == n.NotificationId);
+                    n_orig.IsRead = !n_orig.IsRead;
+                    entities.SaveChanges();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        // mark all notification as read
+        public static bool MarkAllAsRead(List<NotificationVM> nList)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                try
+                {
+                    foreach (NotificationVM nvm in nList)
+                    {
+                        Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == nvm.NotificationId);
+                        n_orig.IsRead = true;
+                    }
+                    entities.SaveChanges();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
