@@ -45,11 +45,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                 department.DelegateToDate = toDate;
                 department.DelegateApproverId = empId;
                 entities.SaveChanges();
-            }            
+            }
         }
 
         //set Rep by DepartmentCode , fromEmpId and toEmpId
-       
+
         public static void setRep(string deptCode, int empId)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -62,7 +62,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             return;
         }
-        
+
         public static List<CollectionPointVM> GetCollPtList()
         {
             List<CollectionPointVM> collist = new List<CollectionPointVM>();
@@ -89,7 +89,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     Location = c.Location
                 }).First<CollectionPointVM>();
             }
-            return collectionPoint;            
+            return collectionPoint;
         }
 
         //set CollPt by DepartmentCode , collPt

@@ -81,7 +81,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     }
                 }
                 return reqlist;
-            } 
+            }
         }
 
         // get request by empId, status, fromDate and toDate
@@ -507,12 +507,14 @@ namespace Group8AD_WebAPI.BusinessLogic
                     }
                 }
             }
+            // send accept notification
+            NotificationBL.AddAcptNotification(reqId);
             return;
         }
 
         // reject request
         // done
-        public static void RejectRequest(int reqId, int empId,string cmt)
+        public static void RejectRequest(int reqId, int empId, string cmt)
         {
             // This is only to explain code steps at Web Api service
             // Call GetReq(empId, “Submitted”)
@@ -522,6 +524,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             // Update Status as “Rejected”
 
             List<RequestVM> reqlist = GetReq(empId, "Submitted");
+            int toId;
             for (int i = 0; i < reqlist.Count; i++)
             {
                 if (reqlist[i].ReqId == reqId)
@@ -529,6 +532,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
                     {
                         Request req = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
+                        toId = req.EmpId;
                         req.ApproverId = empId;
                         req.ApproverComment = cmt;
                         req.ApprovedDateTime = DateTime.Now;
@@ -537,6 +541,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                     }
                 }
             }
+            // send reject notification
+            //NotificationBL.AddAcptNotification(reqId);
+
+            // pending notification
+
+            int fromId = empId;
             return;
         }
 

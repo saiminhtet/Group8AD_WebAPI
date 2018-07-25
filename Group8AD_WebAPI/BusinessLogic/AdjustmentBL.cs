@@ -125,14 +125,13 @@ namespace Group8AD_WebAPI.BusinessLogic
                         adj.ApproverComment = adjlist[i].ApproverComment;
                         list.Add(adj);
                     }
-                } 
+                }
             }
             return list;
         }
 
         // raise adjustment
-
-        // not dummy, not tested
+        // done, except email
         public static bool RaiseAdjustments(int empId, List<ItemVM> iList)
 
         {
@@ -147,7 +146,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     {
                         AdjustmentVM avm = new AdjustmentVM();
                         Adjustment a = new Adjustment();
-                        
+
                         a.VoucherNo = vNum;
                         a.EmpId = empId;
                         a.DateTimeIssued = DateTime.Now;
@@ -171,7 +170,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                         avm.QtyChange = temp.QtyChange;
                         avm.Status = temp.Status;
                         avm.ApproverComment = temp.ApproverComment;
-                        
+
 
                         double chgVal = a.QtyChange * (double)iList[i].Price1;
                         if (chgVal >= 250)
@@ -294,7 +293,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             //loop through each i in iList
             //Send email notification to all clerks, supervisor and manager with SendAdjReqEmail(empId, adjList)
             //Item controller displays toast message on StockTake page
-            
+
         }
 
         // reject adjustment request

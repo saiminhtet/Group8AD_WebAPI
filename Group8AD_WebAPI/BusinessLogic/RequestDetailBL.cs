@@ -10,7 +10,7 @@ namespace Group8AD_WebAPI.BusinessLogic
     public static class RequestDetailBL
     {
         //add RequestDetail with empId , reqDet and status
-        // done
+
         public static RequestDetailVM AddReqDet(int empId, string itemCode, int reqQty, string status)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -116,83 +116,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
                 return rvm;
             }
-
-            //RequestDetailVM reqDetail = new RequestDetailVM();
-            //using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            //{
-            //    List<RequestVM> requestlists = RequestBL.GetReq(empId, status);
-
-            //    List<RequestDetailVM> rdList = new List<RequestDetailVM>();
-
-            //    foreach (RequestVM r in requestlists)
-            //    {
-            //        List<RequestDetailVM> rrdlist = entities.RequestDetails.Where(rd => rd.ReqId == r.ReqId).Select(rd => new RequestDetailVM()
-            //        {
-            //            ReqId = rd.ReqId,
-            //            ReqLineNo = rd.ReqLineNo,
-            //            ItemCode = rd.ItemCode,
-            //            ReqQty = rd.ReqQty,
-            //            AwaitQty = rd.AwaitQty,
-            //            FulfilledQty = rd.FulfilledQty
-            //        }).ToList<RequestDetailVM>();
-
-            //        rdList.AddRange(rrdlist);
-
-
-            //        foreach (RequestDetailVM rd in rdList)
-            //        {
-            //            string ICode = "";
-            //            foreach (RequestDetailVM reqd in rdList)
-            //            {
-            //                if (reqd.ItemCode.Equals(itemCode))
-            //                {
-            //                    ICode = reqd.ItemCode;
-            //                }
-            //            }
-            //            if (status == "Unsubmitted")
-            //            {
-            //                if (ICode.Equals(itemCode))
-            //                {
-            //                    reqDetail = rdList.Where(x => x.ItemCode.Equals(itemCode)).First();
-            //                    reqDetail.ItemCode = itemCode;
-            //                    reqDetail.ReqQty += reqQty;
-            //                    UpdateReqDet(r.ReqId, reqDetail);
-            //                    return reqDetail;
-            //                }
-            //                else if (!ICode.Equals(itemCode))
-            //                {
-            //                    reqDetail.ReqId = r.ReqId;
-            //                    reqDetail.ItemCode = itemCode;
-            //                    reqDetail.ReqQty = reqQty;
-            //                    reqDetail.ReqLineNo = rdList.OrderByDescending(x => x.ReqLineNo).Select(x => x.ReqLineNo).First() + 1;
-            //                    AddReqDet(r.ReqId, reqDetail);//create reqDet
-            //                    return reqDetail;
-            //                }
-            //            }
-            //            if (status == "Bookmarked")
-            //            {
-            //                if (!ICode.Equals(itemCode))
-            //                //rdList.Find(rq => rq.ItemCode.Equals(itemCode)).ItemCode.Equals(itemCode))//if reqDet does not exist  with itemCode
-            //                {
-            //                    reqDetail.ReqId = r.ReqId;
-            //                    reqDetail.ItemCode = itemCode;
-            //                    reqDetail.ReqQty = reqQty;
-            //                    reqDetail.ReqLineNo = rdList.OrderByDescending(x => x.ReqLineNo).Select(x => x.ReqLineNo).First() + 1;
-            //                    AddReqDet(r.ReqId, reqDetail);//create reqDet
-            //                    return reqDetail;
-            //                }
-            //            }
-            //        }
-            //    }
-
-            //    if (requestlists.Count == 0)
-            //    {
-            //        //RequestDetailVM reqDetail = new RequestDetailVM();
-            //        RequestBL.AddReq(empId, status);
-            //    }
-
-            //}
-            //return reqDetail;
         }
 
         //add RequestDetail with reqId and reqDet

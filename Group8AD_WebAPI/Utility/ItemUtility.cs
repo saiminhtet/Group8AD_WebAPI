@@ -30,9 +30,9 @@ namespace Group8AD_WebAPI.Utility
                 itemVM.SuppCode1 = item.SuppCode1;
                 itemVM.SuppCode2 = item.SuppCode2;
                 itemVM.SuppCode3 = item.SuppCode3;
-                itemVM.Price1 = item.Price1;
-                itemVM.Price2 = item.Price2;
-                itemVM.Price3 = item.Price3;
+                itemVM.Price1 = (double)item.Price1;
+                itemVM.Price2 = (double)item.Price2;
+                itemVM.Price3 = (double)item.Price3;
 
                 itemlistvm.Add(itemVM);
             }
@@ -90,9 +90,9 @@ namespace Group8AD_WebAPI.Utility
                 itemVM.SuppCode1 = item.SuppCode1;
                 itemVM.SuppCode2 = item.SuppCode2;
                 itemVM.SuppCode3 = item.SuppCode3;
-                itemVM.Price1 = item.Price1;
-                itemVM.Price2 = item.Price2;
-                itemVM.Price3 = item.Price3;
+                itemVM.Price1 = (double)item.Price1;
+                itemVM.Price2 = (double)item.Price2;
+                itemVM.Price3 = (double)item.Price3;
             
             return itemVM;            
         }

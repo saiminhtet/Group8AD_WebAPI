@@ -48,7 +48,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         // done
         public static List<ReportItemVM> GetCBByRng(string deptCode, DateTime fromDate, DateTime toDate)
         {
-            
+
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 List<DateTime> weekList = GetWeekList(fromDate, toDate);
@@ -113,7 +113,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             return translist;
         }
 
-        // get monthly chargeback
+        // get monthly chargeback by a single date
         // done
         public static List<ReportItemVM> GetCBMonthly(DateTime toDate)
         {
@@ -250,11 +250,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                     item.TempQtyDisb = ilist[i].TempQtyDisb;
                     item.TempQtyCheck = ilist[i].TempQtyCheck;
                     item.SuppCode1 = ilist[i].SuppCode1;
-                    item.Price1 = ilist[i].Price1;
+                    item.Price1 = ilist[i].Price1 ?? default(double);
                     item.SuppCode2 = ilist[i].SuppCode2;
-                    item.Price2 = ilist[i].Price2;
+                    item.Price2 = ilist[i].Price2 ?? default(double);
                     item.SuppCode3 = ilist[i].SuppCode3;
-                    item.Price3 = ilist[i].Price3;
+                    item.Price3 = ilist[i].Price3 ?? default(double);
 
                     item.TempQtyReq = 0;
 
@@ -274,7 +274,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                         if (rdlist[k].ReqQty != 0) { ivmlist.Find(x => x.ItemCode.Equals(rdlist[k].ItemCode)).TempQtyReq += rdlist[k].ReqQty; }
                     } // Loop through rd
                 } // Loop through r
-                
+
                 return ivmlist;
             }
         }
@@ -446,7 +446,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     riList.Add(ri);
                                 }
                             }
-                        } 
+                        }
                     }
                 }
                 else if (supp1 != null && supp2 != null && (dept1 == null || dept2 == null))
@@ -612,12 +612,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                     }
                 }
                 return riList;
-            }     
+            }
         }
 
         // show volume report
         // done
-        public static List<ReportItemVM> ShowVolumeReport(string dept1, string dept2, string supp1, string supp2, 
+        public static List<ReportItemVM> ShowVolumeReport(string dept1, string dept2, string supp1, string supp2,
             string cat, List<DateTime> dates, bool byMonth)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())

@@ -110,26 +110,26 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         //AddFulfillNotification with empId and repId
         public static void AddFulfillNotification(int empId, int repId)
-        {            
+        {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var emploeeses=entities.Employees.Where(n => n.EmpId == empId).FirstOrDefault();
+                var emploeeses = entities.Employees.Where(n => n.EmpId == empId).FirstOrDefault();
                 if (emploeeses != null)
                 {
                     //var request = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
                     //if (request != null)
                     //{
-                        Notification noti = new Notification();
-                        noti.FromEmp = empId;
-                        noti.ToEmp = repId;
-                        noti.NotificationDateTime = System.DateTime.Now;
-                        noti.RouteUri = "";
-                        noti.Type = "Request Submitted";
-                        noti.Content = "Request Submitted";
-                        noti.IsRead = true;                        
-                        entities.Notifications.Add(noti);
-                        entities.SaveChanges();
-                    
+                    Notification noti = new Notification();
+                    noti.FromEmp = empId;
+                    noti.ToEmp = repId;
+                    noti.NotificationDateTime = System.DateTime.Now;
+                    noti.RouteUri = "";
+                    noti.Type = "Request Submitted";
+                    noti.Content = "Request Submitted";
+                    noti.IsRead = true;
+                    entities.Notifications.Add(noti);
+                    entities.SaveChanges();
+
                     //}
                 }
             }
@@ -209,7 +209,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             return notiSupervisor;
         }
         //AddAcptNotification with repId
-        public static void AdjApprNotification(int fromEmpId , int toEmpId, NotificationVM n)
+        public static void AdjApprNotification(int fromEmpId, int toEmpId, NotificationVM n)
         {
             NotificationVM adjApprNoti = new NotificationVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())

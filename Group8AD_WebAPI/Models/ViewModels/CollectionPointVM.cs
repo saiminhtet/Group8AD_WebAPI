@@ -8,5 +8,7 @@ namespace Group8AD_WebAPI.Models.ViewModels
     {
         public int ColPtId { get; set; }
         public string Location { get; set; }
+        public string Time { get; set; }
+        public int ClerkId { get; set; }
     }
 }
