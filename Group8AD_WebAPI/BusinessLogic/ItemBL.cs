@@ -115,59 +115,60 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 string deptcode = EmployeeBL.GetDeptCode(empId);
 
-                var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).ToList();
+                List<RequestDetailVM> requestDetailLists = entities.Employees.Where(e => e.DeptCode.Equals(deptcode))
+                                                         .Join(entities.Requests.Where(r => r.Status.Equals("Approved")), e => e.EmpId, r => r.EmpId, (e, r) => new { e, r })
+                                                         .Join(entities.RequestDetails.Where(x => x.AwaitQty > 0), x => x.r.ReqId, rd => rd.ReqId, (x, rd) => new { x, rd })
+                                                         .Select(rd => new RequestDetailVM
+                                                         {
+                                                             ReqId = rd.rd.ReqId,
+                                                             ReqLineNo = rd.rd.ReqLineNo,
+                                                             ItemCode = rd.rd.ItemCode,
+                                                             ReqQty = rd.rd.ReqQty,
+                                                             AwaitQty = rd.rd.AwaitQty,
+                                                             FulfilledQty = rd.rd.FulfilledQty
+                                                         }).ToList();
 
-
-                List<Request> rList = new List<Request>();
-                List<RequestDetail> rdList = new List<RequestDetail>();
-                List<ItemVM> iList = new List<ItemVM>();
-                foreach (var e in EmpIds)
+                List<ItemVM> iList = GetAllItems();
+                List<ItemVM> ritemlist = new List<ItemVM>();
+                foreach (ItemVM item in iList)
                 {
-                    List<Request> reqList = entities.Requests.Where(x => x.EmpId == e.EmpId && x.Status.Equals("Approved")).ToList();
-                    rList.AddRange(reqList);
-                }
-
-                foreach (Request r in rList)
-                {
-                    List<RequestDetail> reqdList = entities.RequestDetails.Where(x => x.ReqId == r.ReqId).ToList();
-                    rdList.AddRange(reqdList);
-                }
-
-
-                foreach (Request r in rList)
-                {
-                    foreach (RequestDetail rd in rdList.Where(rqd => rqd.ReqId == r.ReqId))
+                    foreach (RequestDetailVM rd in requestDetailLists)
                     {
 
-                        if (rd.AwaitQty > 0 && iList.Where(x => x.ItemCode.Equals(rd.ItemCode)).ToList().Count == 0)
+                        if (rd.AwaitQty > 0 && ritemlist.Where(x => x.ItemCode.Equals(rd.ItemCode)).ToList().Count == 0 && item.ItemCode.Equals(rd.ItemCode))
                         {
                             ItemVM i = new ItemVM();
                             i.ItemCode = rd.ItemCode;
                             ItemVM io = GetItem(i.ItemCode);
+                            i.Balance = io.Balance;
+                            i.ReccReorderLvl = io.ReccReorderLvl;
+                            i.ReorderQty = io.ReorderQty;
                             i.Cat = io.Cat;
                             i.Desc = io.Desc;
                             i.UOM = io.UOM;
+                            i.SuppCode1 = io.SuppCode1;
                             i.Price1 = io.Price1;
+                            i.TempQtyDisb = io.TempQtyDisb;
+                            i.TempQtyCheck = io.TempQtyCheck;
                             i.TempQtyAcpt = io.TempQtyAcpt;
                             i.TempQtyReq = io.TempQtyReq;
-
-                            iList.Add(i);
+                            ritemlist.Add(i);
                         }
-
                     }
 
-                    foreach (RequestDetail rd in rdList.Where(rqd => rqd.ReqId == r.ReqId))
+                    foreach (RequestDetailVM rd in requestDetailLists)
                     {
-                        if (rd.AwaitQty > 0 && iList.Count > 0)                   //iList.Where(x => x.ItemCode.Equals(rd.ItemCode)).ToList().Count
+                        if (rd.AwaitQty > 0 && iList.Count > 0 && item.ItemCode.Equals(rd.ItemCode))
                         {
-                            foreach (ItemVM item in iList.Where(x => x.ItemCode.Equals(rd.ItemCode)))
+                            foreach (ItemVM i in iList.Where(x => x.ItemCode.Equals(rd.ItemCode)))
                             {
-                                iList.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.AwaitQty;
+                                ritemlist.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.AwaitQty;
                             }
                         }
                     }
                 }
-                return iList;
+
+                return ritemlist;
             }
         }
 
@@ -378,14 +379,15 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 foreach (ItemVM item in itemlist)
                 {
-                    item.ReccReorderQty = Math.Max(item.ReorderQty, GetReccReorderQty(item.ItemCode));
+                    item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                    item.ReccReorderLvl = item.ReccReorderQty * 2;
                 }
             }
             return itemlist;
         }
 
         //Get Recommand ReOrderQty
-        public static int GetReccReorderQty(string iCode)
+        public static int Get3monthReqandOutstandingReqs(string iCode)
         {
             int recReorderqty = 0;
             double threeMthReqQty = 0;
@@ -480,8 +482,8 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static List<ItemVM> GetRetrieveItems()
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {          
-                List<RequestDetailVM> reqdList = entities.Requests.Where(r=>r.Status.Equals("Approved"))
+            {
+                List<RequestDetailVM> reqdList = entities.Requests.Where(r => r.Status.Equals("Approved"))
                     .Join(entities.RequestDetails, r => r.ReqId, rd => rd.ReqId, (r, rd) => new { r, rd })
                     .Select(rd => new RequestDetailVM
                     {
@@ -491,7 +493,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                         ReqQty = rd.rd.ReqQty,
                         AwaitQty = rd.rd.AwaitQty,
                         FulfilledQty = rd.rd.FulfilledQty
-                    }).ToList();              
+                    }).ToList();
 
                 List<ItemVM> iList = GetAllItems();
                 List<ItemVM> ritemlist = new List<ItemVM>();
@@ -502,11 +504,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                     {
                         if (rd.ReqQty - rd.FulfilledQty > 0 && item.ItemCode.Equals(rd.ItemCode))
                         {
-                         //   item.TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
+                            //   item.TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
                             iList.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
 
                         }
-                    }                   
+                    }
                 }
 
                 ritemlist = iList.Where(x => x.TempQtyReq > 0).ToList();
@@ -1063,73 +1065,141 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                if (cat != null && desc == null && threshold.Equals(null))
+                if (cat == null && desc == null && threshold > 0)  //1
                 {
-                    List<Item> ilist1 = entities.Items.Where(i => i.Cat == cat).ToList();
-                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist1));
-                    return itemlist;
-                }
-                else if (desc != null && cat == null && threshold.Equals(null))
-                {
-                    List<Item> ilist2 = entities.Items.Where(i => i.Desc == desc).ToList();
-                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist2));
-                    return itemlist;
-                }
 
-                else if (cat != null && !threshold.Equals(null) && desc == null)
-                {
-                    List<Item> ilist1 = entities.Items.Where(i => i.Cat == cat).ToList();
-                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist1));
-
-
+                    List<Item> iList = entities.Items.ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(iList));
                     foreach (ItemVM item in itemlist)
                     {
-                        item.lvlDiff = (item.ReccReorderLvl - item.ReorderLevel) / item.ReorderLevel;
+                        item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                        item.ReccReorderLvl = item.ReccReorderQty * 2;
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReccReorderQty) / item.ReccReorderQty;
                         item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
                     }
 
                     itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
                     return itemlist;
                 }
-                else if (desc != null && !threshold.Equals(null) && cat == null)
+                else if (desc != null && cat == null && threshold > 0) //2
                 {
-                    List<Item> ilist2 = entities.Items.Where(i => i.Desc == desc).ToList();
-                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist2));
-
-
+                    List<Item> iList = entities.Items.Where(i => i.Desc.Contains(desc)).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(iList));
                     foreach (ItemVM item in itemlist)
                     {
-                        item.lvlDiff = (item.ReccReorderLvl - item.ReorderLevel) / item.ReorderLevel;
+                        item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                        item.ReccReorderLvl = item.ReccReorderQty * 2;
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReccReorderQty) / item.ReccReorderQty;
                         item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
                     }
 
                     itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
                     return itemlist;
                 }
-                else if (cat != null && desc != null && threshold.Equals(null))
+                else if (desc == null && cat != null && threshold > 0) //3
                 {
-                    List<Item> ilist = entities.Items.Where(i => i.Cat == cat && i.Desc.Contains(desc)).ToList();
-                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist));
-                    return itemlist;
-                }
-                else if (cat != null && desc != null && !threshold.Equals(null))
-                {
-                    List<Item> ilist = entities.Items.Where(i => i.Cat == cat && i.Desc.Contains(desc)).ToList();
-                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist));
-
+                    List<Item> iList = entities.Items.Where(i => i.Cat.Contains(cat)).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(iList));
                     foreach (ItemVM item in itemlist)
                     {
-                        item.lvlDiff = (item.ReccReorderLvl - item.ReorderLevel) / item.ReorderLevel;
+                        item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                        item.ReccReorderLvl = item.ReccReorderQty * 2;
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReccReorderQty) / item.ReccReorderQty;
                         item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
                     }
 
+                    itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
+                    return itemlist;
+                }
+                else if (desc != null && cat != null && threshold > 0) //3
+                {
+                    List<Item> iList = entities.Items.Where(i => i.Cat.Contains(cat) && i.Desc.Contains(desc)).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(iList));
+                    foreach (ItemVM item in itemlist)
+                    {
+                        item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                        item.ReccReorderLvl = item.ReccReorderQty * 2;
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReccReorderQty) / item.ReccReorderQty;
+                        item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
+                    }
+
+                    itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
+                    return itemlist;
+                }
+
+                else if (cat != null && desc != null && threshold == 0) //4
+                {
+                    List<Item> iList = entities.Items.Where(i => i.Cat.Contains(cat) && i.Desc.Contains(desc)).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(iList));
+                    foreach (ItemVM item in itemlist)
+                    {
+                        item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                        item.ReccReorderLvl = item.ReccReorderQty * 2;
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReccReorderQty) / item.ReccReorderQty;
+                        item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
+                    }
+                    threshold = 0.3;
+                    itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
+                    return itemlist;
+                }
+                else if (cat == null && desc == null && threshold == 0) //5
+                {
+                    List<Item> iList = entities.Items.ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(iList));
+                    foreach (ItemVM item in itemlist)
+                    {
+                        item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                        item.ReccReorderLvl = item.ReccReorderQty * 2;
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReccReorderQty) / item.ReccReorderQty;
+                        item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
+                    }
+                    threshold = 0.3;
+                    itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
+                    return itemlist;
+                }
+                else if (cat != null && desc == null && threshold == 0) //6
+                {
+                    List<Item> iList = entities.Items.Where(i => i.Cat.Contains(cat)).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(iList));
+                    foreach (ItemVM item in itemlist)
+                    {
+                        item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                        item.ReccReorderLvl = item.ReccReorderQty * 2;
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReccReorderQty) / item.ReccReorderQty;
+                        item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
+                    }
+                    threshold = 0.3;
+                    itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
+                    return itemlist;
+                }
+                else if (cat == null && desc != null && threshold == 0) //7
+                {
+                    List<Item> iList = entities.Items.Where(i => i.Desc.Contains(desc)).ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(iList));
+                    foreach (ItemVM item in itemlist)
+                    {
+                        item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                        item.ReccReorderLvl = item.ReccReorderQty * 2;
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReccReorderQty) / item.ReccReorderQty;
+                        item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
+                    }
+                    threshold = 0.3;
                     itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
                     return itemlist;
                 }
                 else
                 {
-                    List<Item> ilist = entities.Items.ToList();
-                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist));
+                    List<Item> iList = entities.Items.ToList();
+                    itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(iList));
+                    foreach (ItemVM item in itemlist)
+                    {
+                        item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                        item.ReccReorderLvl = item.ReccReorderQty * 2;
+                        item.lvlDiff = (item.ReccReorderLvl - item.ReccReorderQty) / item.ReccReorderQty;
+                        item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
+                    }
+                    threshold = 0.3;
+                    itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
                     return itemlist;
                 }
             }
