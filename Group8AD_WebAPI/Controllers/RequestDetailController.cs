@@ -1,4 +1,5 @@
-﻿using Group8AD_WebAPI.Models;
+﻿using Group8AD_WebAPI.BusinessLogic;
+using Group8AD_WebAPI.Models;
 using Group8AD_WebAPI.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,9 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/RequestDetail/addReqDet")]
-        public HttpResponseMessage AddReqDet(string empId, string itemCode, string reqQty, string status)
+        public HttpResponseMessage AddReqDet(int empId, string itemCode, int reqQty, string status)
         {
-            int EmpId = Convert.ToInt16(empId);
-            int ReqQty = Convert.ToInt16(reqQty);
-            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(EmpId, itemCode, ReqQty, status);
+            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(empId, itemCode, reqQty, status);
             if (req == null)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
@@ -45,11 +44,10 @@ namespace Group8AD_WebAPI.Controllers
         //AddReqDet(int reqId, RequestDetail reqDet)
         [AcceptVerbs("POST")]
         [HttpPost]
-        [Route("api/RequestDetail/addReqDet/{reqId}")]
-        public HttpResponseMessage AddReqDet_reqId(string reqId, RequestDetailVM reqDetVM)
+        [Route("api/RequestDetail/addReqDet")]
+        public HttpResponseMessage AddReqDet_reqId(int reqId, RequestDetailVM reqDetVM)
         {
-            int RepId = Convert.ToInt16(reqId);
-            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(RepId, reqDetVM);
+            RequestDetailVM req = BusinessLogic.RequestDetailBL.AddReqDet(reqId, reqDetVM);
             if (req == null)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
@@ -78,17 +76,16 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/RequestDetail/removeReqDet")]
-        public HttpResponseMessage removeReqDet(string empId, string itemCode, string status)
+        public HttpResponseMessage removeReqDet(int empId, string itemCode, string status)
         {
-            int EmpId = Convert.ToInt16(empId);
             try
             {
-                BusinessLogic.RequestDetailBL.removeReqDet(EmpId,itemCode,status);
+                RequestDetailBL.removeReqDet(empId,itemCode,status);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
-            catch (Exception e)
+            catch
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "error");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }
 

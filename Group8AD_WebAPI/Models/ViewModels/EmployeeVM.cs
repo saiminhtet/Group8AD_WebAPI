@@ -14,6 +14,5 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public string EmpEmail { get; set; }
         public string EmpCtcNo { get; set; }
         public string Role { get; set; }
-
     }
 }
