@@ -303,7 +303,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
 
                                             TransactionBL.AddTran(t);
-                                          
+
 
                                             count = 0;
                                         }
@@ -311,24 +311,25 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     }
                                     cntFulfilled += (rd.ReqQty - rd.FulfilledQty);
                                 }
-                           
-                            
-                            //Check if Request Fulfilled
-                            if (cntFulfilled == 0)
-                            {
-                                // r.Status = "Fulfilled";
-                                RequestVM rvm = RequestBL.GetReq(r);
-                                rvm.Status = "Fulfilled";
-                                //rvm.EmpId = r.EmpId;
-                                //rvm.ApproverId = r.ApproverId;
-                                //rvm.ApproverComment = r.ApproverComment;
-                                //rvm.ReqDateTime = r.ReqDateTime ?? default(DateTime);
-                                //rvm.CancelledDateTime = r.CancelledDateTime ?? default(DateTime);
-                                //rvm.Status = r.Status;
-                                //rvm.FulfilledDateTime = r.FulfilledDateTime ?? default(DateTime);
-                                RequestBL.UpdateReq(rvm); //save changes for this request object
-                            }
-                              
+
+
+                                //Check if Request Fulfilled
+                                if (cntFulfilled == 0)
+                                {
+                                    // r.Status = "Fulfilled";
+                                    RequestVM rvm = RequestBL.GetReq(r);
+                                    rvm.Status = "Fulfilled";
+                                    rvm.FulfilledDateTime = DateTime.Now;
+                                    //rvm.EmpId = r.EmpId;
+                                    //rvm.ApproverId = r.ApproverId;
+                                    //rvm.ApproverComment = r.ApproverComment;
+                                    //rvm.ReqDateTime = r.ReqDateTime ?? default(DateTime);
+                                    //rvm.CancelledDateTime = r.CancelledDateTime ?? default(DateTime);
+                                    //rvm.Status = r.Status;
+                                    //rvm.FulfilledDateTime = r.FulfilledDateTime ?? default(DateTime);
+                                    RequestBL.UpdateReq(rvm); //save changes for this request object
+                                }
+
                             }
 
                         }
