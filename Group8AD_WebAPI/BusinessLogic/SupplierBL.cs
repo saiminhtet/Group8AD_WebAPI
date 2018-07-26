@@ -23,7 +23,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                              select new SupplierVM
                              {
                                  SuppCode = a.SuppCode,
-                                 SuppName = a.SuppName
+                                 SuppName = a.SuppName,
+                                 SuppCtcName = a.SuppCtcName,
+                                 SuppCtcNo = a.SuppCtcNo,
+                                 SuppFaxNo = a.SuppFaxNo,
+                                 SuppAddr = a.SuppAddr
                              }).ToList<SupplierVM>();
 
             }
