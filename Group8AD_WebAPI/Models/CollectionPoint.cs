@@ -16,5 +16,7 @@ namespace Group8AD_WebAPI.Models
     {
         public int ColPtId { get; set; }
         public string Location { get; set; }
+        public string Time { get; set; }
+        public int ClerkId { get; set; }
     }
 }

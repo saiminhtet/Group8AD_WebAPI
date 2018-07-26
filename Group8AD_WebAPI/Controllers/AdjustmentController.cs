@@ -17,9 +17,9 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/add")]
-        public HttpResponseMessage AddAdjustment(AdjustmentVM adj)
+        public HttpResponseMessage AddAdjustment(List<AdjustmentVM> adj)
         {
-            AdjustmentVM adjustment = AdjustmentBL.AddAdj(adj);
+            List<AdjustmentVM> adjustment = AdjustmentBL.AddAdj(adj);
             if (adjustment == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
