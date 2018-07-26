@@ -13,5 +13,6 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public int ReqQty { get; set; }
         public int AwaitQty { get; set; }
         public int FulfilledQty { get; set; }
+        public string Desc { get; set; }
     }
 }

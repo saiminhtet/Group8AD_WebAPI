@@ -19,14 +19,14 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public Nullable<int> TempQtyDisb { get; set; }
         public Nullable<int> TempQtyCheck { get; set; }
         public string SuppCode1 { get; set; }
-        public Nullable<double> Price1 { get; set; }
+        public double Price1 { get; set; }
         public string SuppCode2 { get; set; }
-        public Nullable<double> Price2 { get; set; }
+        public double Price2 { get; set; }
         public string SuppCode3 { get; set; }
-        public Nullable<double> Price3 { get; set; }
+        public double Price3 { get; set; }
 
         public int TempQtyAcpt { get; set; }
-        public int TempQtyReq { get; set; }
+        public int? TempQtyReq { get; set; }
 
         public string TempReason { get; set; }
 

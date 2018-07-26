@@ -45,11 +45,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                 department.DelegateToDate = toDate;
                 department.DelegateApproverId = empId;
                 entities.SaveChanges();
-            }            
+            }
         }
 
         //set Rep by DepartmentCode , fromEmpId and toEmpId
-       
+
         public static void setRep(string deptCode, int empId)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -62,7 +62,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             return;
         }
-        
+
         public static List<CollectionPointVM> GetCollPtList()
         {
             List<CollectionPointVM> collist = new List<CollectionPointVM>();
@@ -89,7 +89,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     Location = c.Location
                 }).First<CollectionPointVM>();
             }
-            return collectionPoint;            
+            return collectionPoint;
         }
 
         //set CollPt by DepartmentCode , collPt
@@ -145,6 +145,30 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }).First<DepartmentVM>();
             }
             return department;
+        }
+
+        public static List<DepartmentVM> GetAllDept()
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<DepartmentVM> dList = new List<DepartmentVM>();
+                foreach (Department d in entities.Departments.ToList())
+                {
+                    DepartmentVM dVM = new DepartmentVM();
+                    dVM.DeptCode = d.DeptCode;
+                    dVM.DeptName = d.DeptName;
+                    dVM.DeptCtcNo = d.DeptCtcNo;
+                    dVM.DeptFaxNo = d.DeptFaxNo;
+                    dVM.ColPtId = d.ColPtId;
+                    dVM.DeptHeadId = d.DeptHeadId;
+                    dVM.DeptRepId = d.DeptRepId;
+                    dVM.DelegateApproverId = d.DelegateApproverId;
+                    dVM.DelegateFromDate = d.DelegateFromDate;
+                    dVM.DelegateToDate = d.DelegateToDate;
+                    dList.Add(dVM);
+                }
+                return dList;
+            }
         }
     }
 }

@@ -94,9 +94,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                         SuppCode1 = i.SuppCode1,
                         SuppCode2 = i.SuppCode2,
                         SuppCode3 = i.SuppCode3,
-                        Price1 = i.Price1,
-                        Price2 = i.Price2,
-                        Price3 = i.Price3
+                        Price1 = i.Price1 ?? default(double),
+                        Price2 = i.Price2 ?? default(double),
+                        Price3 = i.Price3 ?? default(double)
                     }).FirstOrDefault();
 
                     frequent_itemlists.Add(freqitem);
@@ -193,13 +193,18 @@ namespace Group8AD_WebAPI.BusinessLogic
                         int index = iList.FindIndex(x => x.ItemCode.Equals(i.ItemCode));
 
 
+
                         a.QtyChange = i.TempQtyAcpt - i.TempQtyReq;
+
+                        a.Reason = i.TempReason;
+                     //   a.QtyChange = i.TempQtyAcpt - i.TempQtyReq ?? default(int);
+
                         a.Status = "Submitted";
                         a.Reason = i.TempReason;
                         entities.Adjustments.Add(a);
                         entities.SaveChanges();
 
-                        double chgVal = a.QtyChange * i.Price1 ?? default(double);
+                        double chgVal = a.QtyChange * i.Price1;
 
                         if (chgVal >= 250)
                         {
@@ -248,6 +253,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 {
                                     if (rd.AwaitQty > 0 && rd.AwaitQty <= count)
                                     {
+
                                         int QtyCount = count;
                                         rd.FulfilledQty += rd.AwaitQty;
                                         count -= rd.AwaitQty;
@@ -279,6 +285,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                         UpdateAwait(rd.ReqId, rd.ItemCode, rd.AwaitQty);
                                         UpdateFulfilled(rd.ReqId, rd.ItemCode, rd.FulfilledQty);
 
+
                                         TransactionVM t = new TransactionVM();
                                         t.TranDateTime = DateTime.Now;
                                         t.ItemCode = rd.ItemCode;
@@ -286,6 +293,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                         t.UnitPrice = i.Price1 ?? default(double);
                                         t.Desc = "Disbursement";
                                         t.DeptCode = deptcode;
+
 
                                         TransactionBL.AddTran(t);
 
@@ -374,9 +382,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 SuppCode1 = i.SuppCode1,
                                 SuppCode2 = i.SuppCode2,
                                 SuppCode3 = i.SuppCode3,
-                                Price1 = i.Price1,
-                                Price2 = i.Price2,
-                                Price3 = i.Price3
+                                Price1 = i.Price1 ?? default(double),
+                                Price2 = i.Price2 ?? default(double),
+                                Price3 = i.Price3 ?? default(double)
                             }).ToList<ItemVM>();
 
                 foreach (ItemVM item in itemlist)
@@ -559,9 +567,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                                SuppCode1 = i.SuppCode1,
                                SuppCode2 = i.SuppCode2,
                                SuppCode3 = i.SuppCode3,
-                               Price1 = i.Price1,
-                               Price2 = i.Price2,
-                               Price3 = i.Price3
+                               Price1 = i.Price1 ?? default(double),
+                               Price2 = i.Price2 ?? default(double),
+                               Price3 = i.Price3 ?? default(double)
                            }).ToList<ItemVM>();
             }
             return itemlist;
@@ -928,9 +936,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 SuppCode1 = i.SuppCode1,
                                 SuppCode2 = i.SuppCode2,
                                 SuppCode3 = i.SuppCode3,
-                                Price1 = i.Price1,
-                                Price2 = i.Price2,
-                                Price3 = i.Price3
+                                Price1 = i.Price1 ?? default(double),
+                                Price2 = i.Price2 ?? default(double),
+                                Price3 = i.Price3 ?? default(double)
                             }).SingleOrDefault<ItemVM>();
             }
             return item;
@@ -1056,7 +1064,9 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             foreach (ItemVM i in iList)
             {
+
                 UpdateItem(i.ItemCode, i.ReorderLevel, i.ReorderQty, i.SuppCode1, i.Price1 ?? default(double), i.SuppCode2, i.Price2 ?? default(double), i.SuppCode3, i.Price3 ?? default(double));
+
             }
         }
 

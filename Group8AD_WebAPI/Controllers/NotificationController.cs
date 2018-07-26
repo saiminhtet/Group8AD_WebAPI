@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Group8AD_WebAPI.BusinessLogic;
 using Group8AD_WebAPI.Models;
 using Group8AD_WebAPI.Models.ViewModels;
 
@@ -11,6 +12,23 @@ namespace Group8AD_WebAPI.Controllers
 {
     public class NotificationController : ApiController
     {
+        // add new notification
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Notification/add")]
+        public HttpResponseMessage AddNewNotification(int fromEmpId, int toEmpId, string type, string content)
+        {
+            try
+            {
+                NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
         //addNewReqNotification
         [AcceptVerbs("POST")]
         [HttpPost]
@@ -188,5 +206,39 @@ namespace Group8AD_WebAPI.Controllers
         //{
         //    return Request.CreateResponse(HttpStatusCode.OK);
         //}
+
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Notification/ToggleReadNotification")]
+        public HttpResponseMessage ToggleReadNotification(NotificationVM n)
+        {
+            try
+            {
+                if(BusinessLogic.NotificationBL.ToggleReadNotification(n))
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                else return Request.CreateResponse(HttpStatusCode.NotModified);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Notification/MarkAllAsRead")]
+        public HttpResponseMessage MarkAllAsRead(List<NotificationVM> nList)
+        {
+            try
+            {
+                if (BusinessLogic.NotificationBL.MarkAllAsRead(nList))
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                else return Request.CreateResponse(HttpStatusCode.NotModified);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
     }
 }

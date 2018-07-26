@@ -85,6 +85,20 @@ namespace Group8AD_WebAPI.Controllers
         // tested
         [AcceptVerbs("POST")]
         [HttpPost]
+        [Route("api/Transaction/CBMonthly")]
+        public HttpResponseMessage CBMonthly(DateTime fromDate, DateTime toDate)
+        {
+            List<ReportItemVM> translist = ReportItemBL.GetCBMonthly(fromDate, toDate);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
+        }
+
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
         [Route("api/Transaction/getVolume")]
         public HttpResponseMessage VolMonthly(DateTime toDate)
         {
