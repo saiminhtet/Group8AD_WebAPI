@@ -227,11 +227,11 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Notification/MarkAllAsRead")]
-        public HttpResponseMessage MarkAllAsRead(List<NotificationVM> nList)
+        public HttpResponseMessage MarkAllAsRead(int empId)
         {
             try
             {
-                if (BusinessLogic.NotificationBL.MarkAllAsRead(nList))
+                if (BusinessLogic.NotificationBL.MarkAllAsRead(empId))
                     return Request.CreateResponse(HttpStatusCode.OK);
                 else return Request.CreateResponse(HttpStatusCode.NotModified);
             }

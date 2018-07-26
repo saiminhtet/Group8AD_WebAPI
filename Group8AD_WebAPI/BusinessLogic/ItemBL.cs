@@ -141,7 +141,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                             i.ItemCode = rd.ItemCode;
                             ItemVM io = GetItem(i.ItemCode);
                             i.Balance = io.Balance;
-                            i.ReccReorderLvl = io.ReccReorderLvl;
+                            i.Location = io.Location;
+                            i.ReorderLevel = io.ReorderLevel;
                             i.ReorderQty = io.ReorderQty;
                             i.Cat = io.Cat;
                             i.Desc = io.Desc;

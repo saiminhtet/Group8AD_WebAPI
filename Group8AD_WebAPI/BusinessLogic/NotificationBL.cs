@@ -56,8 +56,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     {
                         Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == nvm.NotificationId);
                         n_orig.IsRead = true;
+                        entities.SaveChanges();
                     }
-                    entities.SaveChanges();
                     return true;
                 }
                 catch (Exception ex)
