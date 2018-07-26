@@ -9,102 +9,6 @@ namespace Group8AD_WebAPI.BusinessLogic
 {
     public static class NotificationBL
     {
-        // add new notification
-        public static void AddNewNotification(int fromEmpId, int toEmpId, string type, string content)
-        {
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                Notification notif = new Notification();
-                notif.NotificationDateTime = DateTime.Now;
-                notif.FromEmp = fromEmpId;
-                notif.ToEmp = toEmpId;
-                notif.Type = type;
-                notif.Content = content;
-                notif.IsRead = false;
-                entities.Notifications.Add(notif);
-                entities.SaveChanges();
-            }
-        }
-
-        // toggle read notification
-        public static bool ToggleReadNotification(NotificationVM n)
-        {
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                try
-                {
-                    Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == n.NotificationId);
-                    n_orig.IsRead = !n_orig.IsRead;
-                    entities.SaveChanges();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
-        }
-
-        // mark all notification as read
-        public static bool MarkAllAsRead(List<NotificationVM> nList)
-        {
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                try
-                {
-                    foreach (NotificationVM nvm in nList)
-                    {
-                        Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == nvm.NotificationId);
-                        n_orig.IsRead = true;
-                    }
-                    entities.SaveChanges();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
-        }
-
-        // mark all notification as read
-        public static bool MarkAllAsRead(int empId)
-        {
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                try
-                {
-                    List<Notification> nList = entities.Notifications.Where(x => x.ToEmp == empId).ToList();
-                    nList.ForEach(x => x.IsRead = true);
-                    entities.SaveChanges();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
-        }
-
-        // mark one notification as read
-        public static bool MarkOneAsRead(NotificationVM n)
-        {
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
-            {
-                try
-                {
-                    Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == n.NotificationId);
-                    n_orig.IsRead = true;
-                    entities.SaveChanges();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
-        }
-
         //add new reqNoti
         public static void AddNewReqNotification(int empId, RequestVM currReq)
         {
@@ -165,8 +69,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     noti.ToEmp = 104;
                     noti.NotificationDateTime = System.DateTime.Now;
                     noti.RouteUri = "";
-                    noti.Type = "Request Submitted";
-                    noti.Content = "Request Submitted";
+                    noti.Type = "Low Stock";
+                    noti.Content = "In a recent stationery request disbursement, there are some items with balance below reorder level.";
                     noti.IsRead = true;
                     entities.Notifications.Add(noti);
                     entities.SaveChanges();
@@ -175,40 +79,29 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     throw ex;
                 }
-
-                //var lowStkNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId).FirstOrDefault();
-                //if (lowStkNoti != null)
-                //{
-                //    lowStkNoti.Employee.EmpId = empId;
-                //    Item item = i;
-                //    entities.Notifications.Add(lowStkNoti);
-                //    entities.SaveChanges();
-                //}
+              
             }
         }
 
         //AddFulfillNotification with empId and repId
         public static void AddFulfillNotification(int empId, int repId)
-        {
+        {            
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                var emploeeses = entities.Employees.Where(n => n.EmpId == empId).FirstOrDefault();
+                var emploeeses=entities.Employees.Where(n => n.EmpId == empId).FirstOrDefault();
                 if (emploeeses != null)
-                {
-                    //var request = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
-                    //if (request != null)
-                    //{
-                    Notification noti = new Notification();
-                    noti.FromEmp = empId;
-                    noti.ToEmp = repId;
-                    noti.NotificationDateTime = System.DateTime.Now;
-                    noti.RouteUri = "";
-                    noti.Type = "Request Submitted";
-                    noti.Content = "Request Submitted";
-                    noti.IsRead = true;
-                    entities.Notifications.Add(noti);
-                    entities.SaveChanges();
-
+                {                  
+                        Notification noti = new Notification();
+                        noti.FromEmp = empId;
+                        noti.ToEmp = repId;
+                        noti.NotificationDateTime = System.DateTime.Now;
+                        noti.RouteUri = "";
+                        noti.Type = "Request Submitted";
+                        noti.Content = "Request Submitted";
+                        noti.IsRead = true;                        
+                        entities.Notifications.Add(noti);
+                        entities.SaveChanges();
+                    
                     //}
                 }
             }
@@ -288,7 +181,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             return notiSupervisor;
         }
         //AddAcptNotification with repId
-        public static void AdjApprNotification(int fromEmpId, int toEmpId, NotificationVM n)
+        public static void AdjApprNotification(int fromEmpId , int toEmpId, NotificationVM n)
         {
             NotificationVM adjApprNoti = new NotificationVM();
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
