@@ -102,15 +102,12 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Request/remove")]
         public HttpResponseMessage DeleteRequestByEmpIdStatus(int empId, string status)
         {
-            try
-            {
-                RequestBL.RemoveReq(empId, status);
-                return Request.CreateResponse(HttpStatusCode.OK);
-            }
-            catch
+            bool isRemoved = RequestBL.RemoveReq(empId, status);
+            if (isRemoved == false)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         // tested
@@ -119,15 +116,12 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Request/remove")]
         public HttpResponseMessage DeleteRequestByReqId(int reqId)
         {
-            try
-            {
-                RequestBL.RemoveReq(reqId);
-                return Request.CreateResponse(HttpStatusCode.OK);
-            }
-            catch
+            bool isRemoved = RequestBL.RemoveReq(reqId);
+            if (isRemoved == false)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         // tested
