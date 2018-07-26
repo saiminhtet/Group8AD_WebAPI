@@ -210,11 +210,11 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Notification/ToggleReadNotification")]
-        public HttpResponseMessage ToggleReadNotification(NotificationVM n)
+        public HttpResponseMessage ToggleReadNotification(int notifId)
         {
             try
             {
-                if(BusinessLogic.NotificationBL.ToggleReadNotification(n))
+                if(BusinessLogic.NotificationBL.ToggleReadNotification(notifId))
                     return Request.CreateResponse(HttpStatusCode.OK);
                 else return Request.CreateResponse(HttpStatusCode.NotModified);
             }

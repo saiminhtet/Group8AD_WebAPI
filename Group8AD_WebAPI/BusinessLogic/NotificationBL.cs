@@ -27,13 +27,13 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // toggle read notification
-        public static bool ToggleReadNotification(NotificationVM n)
+        public static bool ToggleReadNotification(int notifId)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 try
                 {
-                    Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == n.NotificationId);
+                    Notification n_orig = entities.Notifications.ToList().Find(x => x.NotificationId == notifId);
                     n_orig.IsRead = !n_orig.IsRead;
                     entities.SaveChanges();
                     return true;
