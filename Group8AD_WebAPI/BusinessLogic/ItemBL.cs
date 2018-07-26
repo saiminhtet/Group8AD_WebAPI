@@ -309,23 +309,24 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     }
                                     cntFulfilled += (rd.ReqQty - rd.FulfilledQty);
                                 }
-                           
-                            
-                            //Check if Request Fulfilled
-                            if (cntFulfilled == 0)
-                            {
-                                // r.Status = "Fulfilled";
-                                RequestVM rvm = RequestBL.GetReq(r);
-                                rvm.Status = "Fulfilled";
-                                //rvm.EmpId = r.EmpId;
-                                //rvm.ApproverId = r.ApproverId;
-                                //rvm.ApproverComment = r.ApproverComment;
-                                //rvm.ReqDateTime = r.ReqDateTime ?? default(DateTime);
-                                //rvm.CancelledDateTime = r.CancelledDateTime ?? default(DateTime);
-                                //rvm.Status = r.Status;
-                                //rvm.FulfilledDateTime = r.FulfilledDateTime ?? default(DateTime);
-                                RequestBL.UpdateReq(rvm); //save changes for this request object
-                            }
+
+
+                                //Check if Request Fulfilled
+                                if (cntFulfilled == 0)
+                                {
+                                    // r.Status = "Fulfilled";
+                                    RequestVM rvm = RequestBL.GetReq(r);
+                                    rvm.FulfilledDateTime = DateTime.Now;
+                                    rvm.Status = "Fulfilled";
+                                    //rvm.EmpId = r.EmpId;
+                                    //rvm.ApproverId = r.ApproverId;
+                                    //rvm.ApproverComment = r.ApproverComment;
+                                    //rvm.ReqDateTime = r.ReqDateTime ?? default(DateTime);
+                                    //rvm.CancelledDateTime = r.CancelledDateTime ?? default(DateTime);
+                                    //rvm.Status = r.Status;
+                                    //rvm.FulfilledDateTime = r.FulfilledDateTime ?? default(DateTime);
+                                    RequestBL.UpdateReq(rvm); //save changes for this request object
+                                }
                             }
 
                         }
@@ -826,196 +827,196 @@ namespace Group8AD_WebAPI.BusinessLogic
             //    int count = (i.TempQtyDisb > i.Balance) ? i.Balance : i.TempQtyDisb ?? default(int);
 
 
-                //List<RequestDetailVM> reqDetails = entities.RequestDetails.Where(rd => rd.ItemCode.Equals(i.ItemCode))
-                //                                   .Join(entities.Requests.Where(r => r.Status.Equals("Approved")), rd => rd.ReqId, r => r.ReqId, (rd, r) => new { rd, r })
-                //                                   .Select(rd => new RequestDetailVM
-                //                                   {
-                //                                       ReqId = rd.rd.ReqId,
-                //                                       ReqLineNo = rd.rd.ReqLineNo,
-                //                                       ItemCode = rd.rd.ItemCode,
-                //                                       ReqQty = rd.rd.ReqQty,
-                //                                       AwaitQty = rd.rd.AwaitQty,
-                //                                       FulfilledQty = rd.rd.FulfilledQty
-                //                                   }).ToList();
+            //List<RequestDetailVM> reqDetails = entities.RequestDetails.Where(rd => rd.ItemCode.Equals(i.ItemCode))
+            //                                   .Join(entities.Requests.Where(r => r.Status.Equals("Approved")), rd => rd.ReqId, r => r.ReqId, (rd, r) => new { rd, r })
+            //                                   .Select(rd => new RequestDetailVM
+            //                                   {
+            //                                       ReqId = rd.rd.ReqId,
+            //                                       ReqLineNo = rd.rd.ReqLineNo,
+            //                                       ItemCode = rd.rd.ItemCode,
+            //                                       ReqQty = rd.rd.ReqQty,
+            //                                       AwaitQty = rd.rd.AwaitQty,
+            //                                       FulfilledQty = rd.rd.FulfilledQty
+            //                                   }).ToList();
 
-                //foreach (RequestDetailVM rd in reqDetails)
-                //{
-                //    if (count > 0)
-                //    {
-                //        if (i.ItemCode.Equals(rd.ItemCode))
-                //        {
-                //            int shortQty = (rd.ReqQty - rd.FulfilledQty);
+            //foreach (RequestDetailVM rd in reqDetails)
+            //{
+            //    if (count > 0)
+            //    {
+            //        if (i.ItemCode.Equals(rd.ItemCode))
+            //        {
+            //            int shortQty = (rd.ReqQty - rd.FulfilledQty);
 
-                //            if (shortQty <= count)
-                //            {
-                //                count -= shortQty;
-                //                i.Balance -= shortQty;
-                //                rd.AwaitQty += shortQty;
+            //            if (shortQty <= count)
+            //            {
+            //                count -= shortQty;
+            //                i.Balance -= shortQty;
+            //                rd.AwaitQty += shortQty;
 
-                //                UpdateBal(rd.ItemCode, i.Balance);
-                //                UpdateAwait(rd.ReqId, rd.ItemCode, rd.AwaitQty);
-                //                fulfilledList.Add(rd);
+            //                UpdateBal(rd.ItemCode, i.Balance);
+            //                UpdateAwait(rd.ReqId, rd.ItemCode, rd.AwaitQty);
+            //                fulfilledList.Add(rd);
 
-                //            }
-                //            else
-                //            {
-                //                i.Balance -= count;
-                //                rd.AwaitQty += count;
+            //            }
+            //            else
+            //            {
+            //                i.Balance -= count;
+            //                rd.AwaitQty += count;
 
-                //                UpdateBal(rd.ItemCode, i.Balance);
-                //                UpdateAwait(rd.ReqId, rd.ItemCode, rd.AwaitQty);
-                //                fulfilledList.Add(rd);
+            //                UpdateBal(rd.ItemCode, i.Balance);
+            //                UpdateAwait(rd.ReqId, rd.ItemCode, rd.AwaitQty);
+            //                fulfilledList.Add(rd);
 
-                //            }
-                //        }
-                //    }
-                //    else
-                //    {
-                //        break;
-                //    }
-                //}
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        break;
+            //    }
+            //}
 
-                //************************************************************\Old Method/*******************************************************
-
-
+            //************************************************************\Old Method/*******************************************************
 
 
-                for (int i = 0; i < items.Count; i++)
+
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                //items[i].TempQtyAcpt = 0;
+                //items[i].TempOrderQty = 0;
+                int count = 0;
+                if (items[i].TempQtyDisb > items[i].Balance) count = items[i].Balance;
+                else count = (int)items[i].TempQtyDisb;
+                List<RequestVM> rvmList = RequestBL.GetReq("Approved");
+                for (int j = 0; j < rvmList.Count; j++)
                 {
-                    //items[i].TempQtyAcpt = 0;
-                    //items[i].TempOrderQty = 0;
-                    int count = 0;
-                    if (items[i].TempQtyDisb > items[i].Balance) count = items[i].Balance;
-                    else count = (int)items[i].TempQtyDisb;
-                    List<RequestVM> rvmList = RequestBL.GetReq("Approved");
-                    for (int j = 0; j < rvmList.Count; j++)
+                    if (count > 0)
                     {
-                        if (count > 0)
+                        //items[i].TempOrderQty++;
+                        //string deptCode = EmployeeBL.GetEmp(rvmList[j].EmpId).DeptCode;
+                        List<RequestDetailVM> rdvmList = RequestDetailBL.GetReqDetList(rvmList[j].ReqId);
+                        for (int k = 0; k < rdvmList.Count; k++)
+
                         {
-                            //items[i].TempOrderQty++;
-                            //string deptCode = EmployeeBL.GetEmp(rvmList[j].EmpId).DeptCode;
-                            List<RequestDetailVM> rdvmList = RequestDetailBL.GetReqDetList(rvmList[j].ReqId);
-                            for (int k = 0; k < rdvmList.Count; k++)
-
+                            if (items[i].ItemCode.Equals(rdvmList[k].ItemCode))
                             {
-                                if (items[i].ItemCode.Equals(rdvmList[k].ItemCode))
+                                int shortQty = rdvmList[k].ReqQty - rdvmList[k].AwaitQty - rdvmList[k].FulfilledQty;
+                                if (shortQty <= count)
                                 {
-                                    int shortQty = rdvmList[k].ReqQty - rdvmList[k].AwaitQty - rdvmList[k].FulfilledQty;
-                                    if (shortQty <= count)
-                                    {
 
 
-                                        count = count - shortQty;
-                                        items[i].Balance = items[i].Balance - shortQty;
-                                        rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + shortQty;
+                                    count = count - shortQty;
+                                    items[i].Balance = items[i].Balance - shortQty;
+                                    rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + shortQty;
 
-                                    }
-                                    else
-                                    {
-                                        items[i].Balance = items[i].Balance - count;
-                                        rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + count;
-                                        count = 0;
-                                    }
-                                    //items[i].TempQtyCheck = count;
-                                    //items[i].TempQtyAcpt++;
-                                    UpdateBal(items[i].ItemCode, items[i].Balance);
-                                    UpdateAwait(rdvmList[k].ReqId, rdvmList[k].ItemCode, rdvmList[k].AwaitQty);
                                 }
+                                else
+                                {
+                                    items[i].Balance = items[i].Balance - count;
+                                    rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + count;
+                                    count = 0;
+                                }
+                                //items[i].TempQtyCheck = count;
+                                //items[i].TempQtyAcpt++;
+                                UpdateBal(items[i].ItemCode, items[i].Balance);
+                                UpdateAwait(rdvmList[k].ReqId, rdvmList[k].ItemCode, rdvmList[k].AwaitQty);
                             }
                         }
                     }
-
-
                 }
 
-                return items;
-                //List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
-                //foreach (ItemVM i in items)
-                //{
-                //    int count = (i.TempQtyDisb > i.Balance) ? i.Balance : i.TempQtyDisb ?? default(int);
-                //    foreach (RequestVM r in RequestBL.GetReq("Approved"))
-                //    {
-                //        if (count > 0)
-                //        {
-                //            string deptCode = EmployeeBL.GetEmp(r.EmpId).DeptCode;
-                //            foreach (RequestDetailVM rd in RequestDetailBL.GetReqDetList(r.ReqId))
-                //            {
-                //                if (count > 0)
-                //                {
-                //                    if (i.ItemCode.Equals(rd.ItemCode))
-                //                    {
-                //                        int shortQty = (rd.ReqQty - rd.FulfilledQty);
-                //                        if (shortQty <= count)
-                //                        {
-                //                            count -= shortQty;
-                //                            i.Balance -= shortQty;
-                //                            rd.AwaitQty += shortQty;
-                //                            try
-                //                            {
-                //                                UpdateBal(rd.ItemCode, i.Balance);
-                //                                //update to Request Details table
-                //                                fulfilledList.Add(rd);
-                //                            }
-                //                            catch (Exception)
-                //                            {
-                //                                break;
-                //                            }
-                //                        }
-                //                        else
-                //                        {
-                //                            i.Balance -= count;
-                //                            rd.AwaitQty += count;
-                //                            try
-                //                            {
-                //                                UpdateBal(rd.ItemCode, i.Balance);
-                //                                //update to Request Details table
-                //                                fulfilledList.Add(rd);
-                //                            }
-                //                            catch (Exception)
-                //                            {
-                //                                break;
-                //                            }
-                //                        }
-                //                    }
 
-                //                }
-                //                else
-                //                {
-                //                    break;
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
+            }
+
+            return items;
+            //List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
+            //foreach (ItemVM i in items)
+            //{
+            //    int count = (i.TempQtyDisb > i.Balance) ? i.Balance : i.TempQtyDisb ?? default(int);
+            //    foreach (RequestVM r in RequestBL.GetReq("Approved"))
+            //    {
+            //        if (count > 0)
+            //        {
+            //            string deptCode = EmployeeBL.GetEmp(r.EmpId).DeptCode;
+            //            foreach (RequestDetailVM rd in RequestDetailBL.GetReqDetList(r.ReqId))
+            //            {
+            //                if (count > 0)
+            //                {
+            //                    if (i.ItemCode.Equals(rd.ItemCode))
+            //                    {
+            //                        int shortQty = (rd.ReqQty - rd.FulfilledQty);
+            //                        if (shortQty <= count)
+            //                        {
+            //                            count -= shortQty;
+            //                            i.Balance -= shortQty;
+            //                            rd.AwaitQty += shortQty;
+            //                            try
+            //                            {
+            //                                UpdateBal(rd.ItemCode, i.Balance);
+            //                                //update to Request Details table
+            //                                fulfilledList.Add(rd);
+            //                            }
+            //                            catch (Exception)
+            //                            {
+            //                                break;
+            //                            }
+            //                        }
+            //                        else
+            //                        {
+            //                            i.Balance -= count;
+            //                            rd.AwaitQty += count;
+            //                            try
+            //                            {
+            //                                UpdateBal(rd.ItemCode, i.Balance);
+            //                                //update to Request Details table
+            //                                fulfilledList.Add(rd);
+            //                            }
+            //                            catch (Exception)
+            //                            {
+            //                                break;
+            //                            }
+            //                        }
+            //                    }
+
+            //                }
+            //                else
+            //                {
+            //                    break;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
 
-                ////Making PDF Reports
-                ////Group By Department then By Item
-                //List<RequestDetailVM> ListByDept = new List<RequestDetailVM>();
+            ////Making PDF Reports
+            ////Group By Department then By Item
+            //List<RequestDetailVM> ListByDept = new List<RequestDetailVM>();
 
-                //foreach (string d in DepartmentBL.GetDeptCodes())
-                //{
-                //    List<RequestDetailVM> rdList = new List<RequestDetailVM>();
+            //foreach (string d in DepartmentBL.GetDeptCodes())
+            //{
+            //    List<RequestDetailVM> rdList = new List<RequestDetailVM>();
 
-                //    foreach (RequestDetailVM rd in fulfilledList)
-                //    {
-                //        if (GetDeptCode(rd.ReqId).Equals(d))
-                //        {
-                //            if (rdList.Contains(rd))
-                //            {
-                //                rdList.Find(x => x.ItemCode.Equals(rd.ItemCode)).AwaitQty += rd.AwaitQty;
-                //            }
-                //            else
-                //            {
-                //                rdList.Add(rd);
-                //            }
+            //    foreach (RequestDetailVM rd in fulfilledList)
+            //    {
+            //        if (GetDeptCode(rd.ReqId).Equals(d))
+            //        {
+            //            if (rdList.Contains(rd))
+            //            {
+            //                rdList.Find(x => x.ItemCode.Equals(rd.ItemCode)).AwaitQty += rd.AwaitQty;
+            //            }
+            //            else
+            //            {
+            //                rdList.Add(rd);
+            //            }
 
-                //            ListByDept.AddRange(rdList);
-                //        }
-                //    }
-                //}
+            //            ListByDept.AddRange(rdList);
+            //        }
+            //    }
+            //}
 
-            
+
 
         }
 
@@ -1148,7 +1149,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 Item item = entities.Items.Where(x => x.ItemCode.Equals(i.ItemCode) && x.Balance < x.ReorderLevel).FirstOrDefault<Item>();
-                            
+
                 if (item == null)
                 {
                     return false;
