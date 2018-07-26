@@ -147,11 +147,27 @@ namespace Group8AD_WebAPI.BusinessLogic
             return department;
         }
 
-        public static List<Department> GetAllDept()
+        public static List<DepartmentVM> GetAllDept()
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                return entities.Departments.ToList();
+                List<DepartmentVM> dList = new List<DepartmentVM>();
+                foreach (Department d in entities.Departments.ToList())
+                {
+                    DepartmentVM dVM = new DepartmentVM();
+                    dVM.DeptCode = d.DeptCode;
+                    dVM.DeptName = d.DeptName;
+                    dVM.DeptCtcNo = d.DeptCtcNo;
+                    dVM.DeptFaxNo = d.DeptFaxNo;
+                    dVM.ColPtId = d.ColPtId;
+                    dVM.DeptHeadId = d.DeptHeadId;
+                    dVM.DeptRepId = d.DeptRepId;
+                    dVM.DelegateApproverId = d.DelegateApproverId;
+                    dVM.DelegateFromDate = d.DelegateFromDate;
+                    dVM.DelegateToDate = d.DelegateToDate;
+                    dList.Add(dVM);
+                }
+                return dList;
             }
         }
     }

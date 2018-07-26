@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Group8AD_WebAPI.Models;
 using Group8AD_WebAPI.Models.ViewModels;
+using Newtonsoft.Json;
 
 namespace Group8AD_WebAPI.Controllers
 {
@@ -155,7 +156,7 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Department")]
         public HttpResponseMessage GetAllDept()
         {
-            List<Department> departments = BusinessLogic.DepartmentBL.GetAllDept();
+            var departments = BusinessLogic.DepartmentBL.GetAllDept();
 
             if (departments == null)
             {
