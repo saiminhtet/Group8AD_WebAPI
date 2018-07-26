@@ -290,7 +290,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                         t.TranDateTime = DateTime.Now;
                                         t.ItemCode = rd.ItemCode;
                                         t.QtyChange = rd.AwaitQty * -1;
-                                        t.UnitPrice = i.Price1 ;
+                                        t.UnitPrice = i.Price1;
                                         t.Desc = "Disbursement";
                                         t.DeptCode = deptcode;
 
@@ -1065,7 +1065,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             foreach (ItemVM i in iList)
             {
 
-                UpdateItem(i.ItemCode, i.ReorderLevel, i.ReorderQty, i.SuppCode1, i.Price1, i.SuppCode2, i.Price2 , i.SuppCode3, i.Price3);
+                UpdateItem(i.ItemCode, i.ReorderLevel, i.ReorderQty, i.SuppCode1, i.Price1 , i.SuppCode2, i.Price2 , i.SuppCode3, i.Price3 );
 
             }
         }
