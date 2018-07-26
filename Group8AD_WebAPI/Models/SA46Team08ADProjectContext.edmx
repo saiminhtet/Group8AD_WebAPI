@@ -4,11 +4,18 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SA46Team08ADProjectModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SA46Team08ADProjectModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SA46Team08ADProject.dbo.Adjustment' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Adjustment">
           <Key>
             <PropertyRef Name="VoucherNo" />
+            
+            
             <PropertyRef Name="ItemCode" />
+            
+            
+            
           </Key>
           <Property Name="VoucherNo" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="EmpId" Type="int" Nullable="false" />
@@ -25,7 +32,9 @@
             <PropertyRef Name="ColPtId" />
           </Key>
           <Property Name="ColPtId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Location" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Location" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Time" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ClerkId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -84,9 +93,9 @@
           <Property Name="NotificationDateTime" Type="datetime" Nullable="false" />
           <Property Name="FromEmp" Type="int" Nullable="false" />
           <Property Name="ToEmp" Type="int" Nullable="false" />
-          <Property Name="RouteUri" Type="nvarchar" MaxLength="100" />
-          <Property Name="Type" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Content" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="RouteUri" Type="nvarchar(max)" />
+          <Property Name="Type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
           <Property Name="IsRead" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Request">
@@ -333,7 +342,6 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="SA46Team08ADProjectModelStoreContainer">
-          <EntitySet Name="Adjustment" EntityType="Self.Adjustment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CollectionPoint" EntityType="Self.CollectionPoint" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
@@ -343,6 +351,19 @@
           <EntitySet Name="RequestDetail" EntityType="Self.RequestDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Adjustment" EntityType="Self.Adjustment" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Adjustment].[VoucherNo] AS [VoucherNo], 
+    [Adjustment].[EmpId] AS [EmpId], 
+    [Adjustment].[DateTimeIssued] AS [DateTimeIssued], 
+    [Adjustment].[ItemCode] AS [ItemCode], 
+    [Adjustment].[Reason] AS [Reason], 
+    [Adjustment].[QtyChange] AS [QtyChange], 
+    [Adjustment].[Status] AS [Status], 
+    [Adjustment].[ApproverId] AS [ApproverId], 
+    [Adjustment].[ApproverComment] AS [ApproverComment]
+    FROM [dbo].[Adjustment] AS [Adjustment]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK__Adjustmen__Appro__59063A47" Association="Self.FK__Adjustmen__Appro__59063A47">
             <End Role="Employee" EntitySet="Employee" />
             <End Role="Adjustment" EntitySet="Adjustment" />
@@ -408,8 +429,7 @@
             <End Role="RequestDetail" EntitySet="RequestDetail" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SA46Team08ADProjectModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -436,7 +456,9 @@
             <PropertyRef Name="ColPtId" />
           </Key>
           <Property Name="ColPtId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Location" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Time" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClerkId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
@@ -514,9 +536,9 @@
           <Property Name="NotificationDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="FromEmp" Type="Int32" Nullable="false" />
           <Property Name="ToEmp" Type="Int32" Nullable="false" />
-          <Property Name="RouteUri" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Type" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Content" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RouteUri" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsRead" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Employee" Relationship="Self.FK__Notificat__FromE__534D60F1" FromRole="Notification" ToRole="Employee" />
           <NavigationProperty Name="Employee1" Relationship="Self.FK__Notificat__ToEmp__5441852A" FromRole="Notification" ToRole="Employee" />
@@ -872,6 +894,8 @@
           <EntitySetMapping Name="CollectionPoints">
             <EntityTypeMapping TypeName="SA46Team08ADProjectModel.CollectionPoint">
               <MappingFragment StoreEntitySet="CollectionPoint">
+                <ScalarProperty Name="ClerkId" ColumnName="ClerkId" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
                 <ScalarProperty Name="ColPtId" ColumnName="ColPtId" />
                 <ScalarProperty Name="Location" ColumnName="Location" />
               </MappingFragment>

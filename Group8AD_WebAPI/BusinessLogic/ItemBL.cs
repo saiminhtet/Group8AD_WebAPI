@@ -809,10 +809,11 @@ namespace Group8AD_WebAPI.BusinessLogic
         //FulfillRequest
         public static List<ItemVM> FulfillRequest(List<ItemVM> items)
         {
+            List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
+            List<DepartmentVM> deptList = DepartmentBL.GetAllDept();
+            for (int i = 0; i < deptList.Count; i++) deptList[i].FulfilledQty = 0;
             for (int i = 0; i < items.Count; i++)
             {
-                //items[i].TempQtyAcpt = 0;
-                //items[i].TempOrderQty = 0;
                 int count = 0;
                 if (items[i].TempQtyDisb > items[i].Balance) count = items[i].Balance;
                 else count = (int)items[i].TempQtyDisb;
@@ -821,8 +822,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     if (count > 0)
                     {
-                        //items[i].TempOrderQty++;
-                        //string deptCode = EmployeeBL.GetEmp(rvmList[j].EmpId).DeptCode;
+                        string deptCode = EmployeeBL.GetEmp(rvmList[j].EmpId).DeptCode;
                         List<RequestDetailVM> rdvmList = RequestDetailBL.GetReqDetList(rvmList[j].ReqId);
                         for (int k = 0; k < rdvmList.Count; k++)
                         {
@@ -841,85 +841,69 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + count;
                                     count = 0;
                                 }
-                                //items[i].TempQtyCheck = count;
-                                //items[i].TempQtyAcpt++;
+                                fulfilledList.Add(rdvmList[k]);
                                 UpdateBal(items[i].ItemCode, items[i].Balance);
                                 UpdateAwait(rdvmList[k].ReqId, rdvmList[k].ItemCode, rdvmList[k].AwaitQty);
+                                deptList.Find(x => x.DeptCode == deptCode).FulfilledQty += shortQty;
                             }
                         }
                     }
                 }
-             }
+            }
 
-            return items;
-            //List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
-            //foreach (ItemVM i in items)
-            //{
-            //    int count = (i.TempQtyDisb > i.Balance) ? i.Balance : i.TempQtyDisb ?? default(int);
-            //    foreach (RequestVM r in RequestBL.GetReq("Approved"))
-            //    {
-            //        if (count > 0)
-            //        {
-            //            string deptCode = EmployeeBL.GetEmp(r.EmpId).DeptCode;
-            //            foreach (RequestDetailVM rd in RequestDetailBL.GetReqDetList(r.ReqId))
-            //            {
-            //                if (count > 0)
-            //                {
-            //                    if (i.ItemCode.Equals(rd.ItemCode))
-            //                    {
-            //                        int shortQty = (rd.ReqQty - rd.FulfilledQty);
-            //                        if (shortQty <= count)
-            //                        {
-            //                            count -= shortQty;
-            //                            i.Balance -= shortQty;
-            //                            rd.AwaitQty += shortQty;
-            //                            try
-            //                            {
-            //                                UpdateBal(rd.ItemCode, i.Balance);
-            //                                //update to Request Details table
-            //                                fulfilledList.Add(rd);
-            //                            }
-            //                            catch (Exception)
-            //                            {
-            //                                break;
-            //                            }
-            //                        }
-            //                        else
-            //                        {
-            //                            i.Balance -= count;
-            //                            rd.AwaitQty += count;
-            //                            try
-            //                            {
-            //                                UpdateBal(rd.ItemCode, i.Balance);
-            //                                //update to Request Details table
-            //                                fulfilledList.Add(rd);
-            //                            }
-            //                            catch (Exception)
-            //                            {
-            //                                break;
-            //                            }
-            //                        }
-            //                    }
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                for (int i = 0; i < deptList.Count; i++)
+                {
+                    int fromEmpId = entities.Employees.Where(x => x.Role == "Store Clerk").First().EmpId;
+                    int toEmpId = (int)deptList[i].DeptRepId;
+                    string type = "Weekly Disbursement";
+                    string content;
+                    if (!deptList[i].DeptCode.Equals("STOR"))
+                    {
+                        if (deptList[i].FulfilledQty == 0)
+                        {
+                            content = "Disbursement Notification: There is no stationery disbursed for your department this week. Have a nice day.";
+                        }
+                        else
+                        {
+                            int cId = (int)deptList[i].ColPtId;
+                            CollectionPoint cp = entities.CollectionPoints.Where(x => x.ColPtId == cId).FirstOrDefault();
+                            DateTime today = DateTime.Now;
+                            DateTime colDay = DateTime.Now;
+                            if (today.DayOfWeek.Equals(DayOfWeek.Monday)) colDay = today.AddDays(7);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Tuesday)) colDay = today.AddDays(6);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Wednesday)) colDay = today.AddDays(5);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Thursday)) colDay = today.AddDays(4);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Friday)) colDay = today.AddDays(3);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Saturday)) colDay = today.AddDays(2);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Sunday)) colDay = today.AddDays(1);
+                            string format = "dd-MMM-yyyy";
+                            string date = colDay.ToString(format);
+                            content = "Please collect stationery for your department at " + cp.Location + " on " + date + ", " + cp.Time;
+                        }
+                        NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
+                    }                
+                }
 
-            //                }
-            //                else
-            //                {
-            //                    break;
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
+                List<Employee> clerkList = entities.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+                for (int i = 0; i < clerkList.Count; i++)
+                {
+                    int fromEmpId = entities.Employees.Where(x => x.Role == "Store Clerk").First().EmpId;
+                    int toEmpId = clerkList[i].EmpId;
+                    string type = "Weekly Disbursement";
+                    string empName = entities.Employees.Where(x => x.Role == "Store Clerk").First().EmpName;
+                    string content = "Disbursement Notification: Disbursement has recently been conducted by " + empName;
+                    NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
+                }
+            }
 
             ////Making PDF Reports
             ////Group By Department then By Item
             //List<RequestDetailVM> ListByDept = new List<RequestDetailVM>();
-
             //foreach (string d in DepartmentBL.GetDeptCodes())
             //{
             //    List<RequestDetailVM> rdList = new List<RequestDetailVM>();
-
             //    foreach (RequestDetailVM rd in fulfilledList)
             //    {
             //        if (GetDeptCode(rd.ReqId).Equals(d))
@@ -932,13 +916,12 @@ namespace Group8AD_WebAPI.BusinessLogic
             //            {
             //                rdList.Add(rd);
             //            }
-
             //            ListByDept.AddRange(rdList);
             //        }
             //    }
             //}
 
-
+            return items;
         }
 
 
