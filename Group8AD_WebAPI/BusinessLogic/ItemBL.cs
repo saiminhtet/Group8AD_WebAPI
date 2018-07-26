@@ -303,6 +303,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
 
                                             TransactionBL.AddTran(t);
+                                          
 
                                             count = 0;
                                         }
@@ -327,6 +328,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 //rvm.FulfilledDateTime = r.FulfilledDateTime ?? default(DateTime);
                                 RequestBL.UpdateReq(rvm); //save changes for this request object
                             }
+                              
                             }
 
                         }
@@ -827,6 +829,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             //    int count = (i.TempQtyDisb > i.Balance) ? i.Balance : i.TempQtyDisb ?? default(int);
 
 
+
                 //List<RequestDetailVM> reqDetails = entities.RequestDetails.Where(rd => rd.ItemCode.Equals(i.ItemCode))
                 //                                   .Join(entities.Requests.Where(r => r.Status.Equals("Approved")), rd => rd.ReqId, r => r.ReqId, (rd, r) => new { rd, r })
                 //                                   .Select(rd => new RequestDetailVM
@@ -901,6 +904,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                             {
                                 if (items[i].ItemCode.Equals(rdvmList[k].ItemCode))
                                 {
+
                                     int shortQty = rdvmList[k].ReqQty - rdvmList[k].AwaitQty - rdvmList[k].FulfilledQty;
                                     if (shortQty <= count)
                                     {
@@ -921,6 +925,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     //items[i].TempQtyAcpt++;
                                     UpdateBal(items[i].ItemCode, items[i].Balance);
                                     UpdateAwait(rdvmList[k].ReqId, rdvmList[k].ItemCode, rdvmList[k].AwaitQty);
+
                                 }
                             }
                         }
@@ -928,6 +933,8 @@ namespace Group8AD_WebAPI.BusinessLogic
 
 
                 }
+
+
 
                 return items;
                 //List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
@@ -1017,6 +1024,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //}
 
             
+
 
         }
 
@@ -1149,7 +1157,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 Item item = entities.Items.Where(x => x.ItemCode.Equals(i.ItemCode) && x.Balance < x.ReorderLevel).FirstOrDefault<Item>();
-                            
+
                 if (item == null)
                 {
                     return false;
