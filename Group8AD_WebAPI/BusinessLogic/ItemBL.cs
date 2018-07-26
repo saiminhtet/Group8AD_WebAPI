@@ -194,7 +194,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
 
 
-                        a.QtyChange = i.TempQtyAcpt - i.TempQtyReq;
+                        a.QtyChange = i.TempQtyAcpt - i.TempQtyReq ?? default(int);
 
                         a.Reason = i.TempReason;
                      //   a.QtyChange = i.TempQtyAcpt - i.TempQtyReq ?? default(int);
@@ -268,7 +268,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                         t.TranDateTime = DateTime.Now;
                                         t.ItemCode = rd.ItemCode;
                                         t.QtyChange = count - QtyCount;     //rd.AwaitQty;
-                                        t.UnitPrice = i.Price1 ?? default(double);
+                                        t.UnitPrice = i.Price1;
                                         t.Desc = "Disbursement";
                                         t.DeptCode = deptcode;
 
@@ -290,7 +290,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                         t.TranDateTime = DateTime.Now;
                                         t.ItemCode = rd.ItemCode;
                                         t.QtyChange = rd.AwaitQty * -1;
-                                        t.UnitPrice = i.Price1 ?? default(double);
+                                        t.UnitPrice = i.Price1 ;
                                         t.Desc = "Disbursement";
                                         t.DeptCode = deptcode;
 
@@ -1065,7 +1065,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             foreach (ItemVM i in iList)
             {
 
-                UpdateItem(i.ItemCode, i.ReorderLevel, i.ReorderQty, i.SuppCode1, i.Price1 ?? default(double), i.SuppCode2, i.Price2 ?? default(double), i.SuppCode3, i.Price3 ?? default(double));
+                UpdateItem(i.ItemCode, i.ReorderLevel, i.ReorderQty, i.SuppCode1, i.Price1, i.SuppCode2, i.Price2 , i.SuppCode3, i.Price3);
 
             }
         }
