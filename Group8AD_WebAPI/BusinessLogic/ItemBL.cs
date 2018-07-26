@@ -176,7 +176,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         //AcceptDisbursement
         public static void AcceptDisbursement(int empId, List<ItemVM> iList)
         {
-            //List<Item> itemsList = Utility.ItemUtility.Convert_ItemVM_To_Item(iList);
+          
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 string vNum = AdjustmentBL.GenerateVoucherNo();
@@ -192,10 +192,15 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                         int index = iList.FindIndex(x => x.ItemCode.Equals(i.ItemCode));
 
-                        a.Reason = i.TempReason;
-                        a.QtyChange = i.TempQtyAcpt - i.TempQtyReq ?? default(int);
-                        a.Status = "Submitted";
 
+
+                        a.QtyChange = i.TempQtyAcpt - i.TempQtyReq;
+
+                        a.Reason = i.TempReason;
+                     //   a.QtyChange = i.TempQtyAcpt - i.TempQtyReq ?? default(int);
+
+                        a.Status = "Submitted";
+                        a.Reason = i.TempReason;
                         entities.Adjustments.Add(a);
                         entities.SaveChanges();
 
@@ -210,121 +215,126 @@ namespace Group8AD_WebAPI.BusinessLogic
                             //Notify Manager
                         }
 
-
-
-                        string deptcode = EmployeeBL.GetDeptCode(empId);
-
-                        var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).ToList();
-
-
-                        List<Request> rList = new List<Request>();
-                        List<RequestDetail> rdList = new List<RequestDetail>();
-
-                        foreach (var e in EmpIds)
-                        {
-                            List<Request> reqList = entities.Requests.Where(x => x.EmpId == e.EmpId && x.Status.Equals("Approved")).ToList();
-                            rList.AddRange(reqList);
-                        }
-
-                        foreach (Request r in rList)
-                        {
-                            List<RequestDetail> reqdList = entities.RequestDetails.Where(x => x.ReqId == r.ReqId).ToList();
-                            rdList.AddRange(reqdList);
-                        }
-
-
-                        int count = i.TempQtyAcpt;
-
-                        foreach (Request r in rList)
-                        {
-                            int cntFulfilled = 0;
-                            if (count > 0)
-                            {
-                                foreach (RequestDetail rd in rdList.Where(rd => rd.ReqId == r.ReqId))
-                                {
-                                    if (count > 0)
-                                    {
-                                        if (rd.AwaitQty > 0 && rd.AwaitQty <= count)
-                                        {
-                                            rd.FulfilledQty += rd.AwaitQty;
-                                            count -= rd.AwaitQty;
-                                            rd.AwaitQty = 0;
-
-                                            //Save Changes for rd.AwaitQty, Rd.FulfilledQty
-                                            UpdateAwait(r.ReqId, rd.ItemCode, rd.AwaitQty);
-                                            UpdateFulfilled(r.ReqId, rd.ItemCode, rd.FulfilledQty);
-
-                                            TransactionVM t = new TransactionVM();
-                                            t.TranDateTime = DateTime.Now;
-                                            t.ItemCode = i.ItemCode;
-                                            t.QtyChange = rd.AwaitQty;
-                                            t.UnitPrice = i.Price1;
-                                            t.Desc = "Disbursement";
-                                            t.DeptCode = deptcode;
-
-                                            TransactionBL.AddTran(t);
-                                        }
-
-                                        else if (rd.AwaitQty > 0 && rd.AwaitQty > count)
-                                        {
-                                            rd.FulfilledQty += count;
-                                            rd.AwaitQty -= count;
-
-
-                                            //Save Changes for rd.AwaitQty, Rd.FulfilledQty
-                                            UpdateAwait(r.ReqId, rd.ItemCode, rd.AwaitQty);
-                                            UpdateFulfilled(r.ReqId, rd.ItemCode, rd.FulfilledQty);
-
-                                            TransactionVM t = new TransactionVM();
-                                            t.TranDateTime = DateTime.Now;
-                                            t.ItemCode = i.ItemCode;
-                                            t.QtyChange = count;
-                                            t.UnitPrice = i.Price1;
-                                            t.Desc = "Disbursement";
-                                            t.DeptCode = deptcode;
-
-                                            TransactionBL.AddTran(t);
-
-                                            count = 0;
-                                        }
-
-                                    }
-                                    cntFulfilled += (rd.ReqQty - rd.FulfilledQty);
-                                }
-
-                                //Check if Request Fulfilled
-                                if (cntFulfilled == 0) r.Status = "Fulfilled";
-                                //int openCount = 0;
-                                //foreach (RequestDetail rd in rdList.Where(rd => rd.ReqId == r.ReqId))
-                                //{
-                                //    int shortQty = (rd.ReqQty - rd.FulfilledQty);
-                                //    openCount += shortQty;
-                                //}
-
-                                //if (openCount == 0)
-                                //{
-                                //    r.Status = "Fulfilled";
-
-                                //    RequestVM request = RequestBL.GetReq(r.ReqId);
-
-                                //    request.Status = r.Status;
-                                //    RequestBL.UpdateReq(request); //save changes for this request object
-                                //}
-                            }
-
-                            //Check Low Stock item
-                            bool status = CheckLowStk(i);
-
-                            if (status)
-                            {
-                                Item item = Utility.ItemUtility.Convert_ItemVMObj_To_ItemObj(i);
-                                NotificationBL.AddLowStkNotification(empId, item);
-                            }
-
-                            //send email acknowledgement to rep, specific head and all clerks
-                            NotificationBL.AddAcptNotification(r.ReqId);
-                        }
                     }
+
+                    string deptcode = EmployeeBL.GetDeptCode(empId);
+
+                    var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).Select(e => e.EmpId).ToList();
+
+
+                    List<int> rList = new List<int>();
+                    List<RequestDetail> rdList = new List<RequestDetail>();
+
+
+
+                    foreach (var empid in EmpIds)
+                    {
+                        var reqList = entities.Requests.Where(x => x.EmpId == empid && x.Status.Equals("Approved")).Select(x => x.ReqId).ToList<int>();
+                        rList.AddRange(reqList);
+                    }
+
+                    foreach (int reqId in rList)
+                    {
+                        List<RequestDetail> reqdList = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
+                        rdList.AddRange(reqdList);
+                    }
+
+
+                    int count = i.TempQtyAcpt;
+
+                    foreach (int r in rList)
+                    {
+                        int cntFulfilled = 0;
+                        if (count > 0)
+                        {
+                            foreach (RequestDetail rd in rdList.Where(x => x.ItemCode.Equals(i.ItemCode) && x.ReqId == r)) //rdList.Where(rd => rd.ReqId == r.ReqId)
+                            {
+                                if (count > 0)
+                                {
+                                    if (rd.AwaitQty > 0 && rd.AwaitQty <= count)
+                                    {
+
+                                        int QtyCount = count;
+                                        rd.FulfilledQty += rd.AwaitQty;
+                                        count -= rd.AwaitQty;
+                                        rd.AwaitQty = 0;
+
+                                        //Save Changes for rd.AwaitQty, Rd.FulfilledQty
+                                        UpdateAwait(rd.ReqId, rd.ItemCode, rd.AwaitQty);
+                                        UpdateFulfilled(rd.ReqId, rd.ItemCode, rd.FulfilledQty);
+
+                                        TransactionVM t = new TransactionVM();
+                                        //t.VoucherNo = vNum;
+                                        t.TranDateTime = DateTime.Now;
+                                        t.ItemCode = rd.ItemCode;
+                                        t.QtyChange = count - QtyCount;     //rd.AwaitQty;
+                                        t.UnitPrice = i.Price1 ?? default(double);
+                                        t.Desc = "Disbursement";
+                                        t.DeptCode = deptcode;
+
+                                        TransactionBL.AddTran(t);
+                                    }
+
+                                    else if (rd.AwaitQty > 0 && rd.AwaitQty > count)
+                                    {
+                                        rd.FulfilledQty += count;
+                                        rd.AwaitQty -= count;
+
+
+                                        //Save Changes for rd.AwaitQty, Rd.FulfilledQty
+                                        UpdateAwait(rd.ReqId, rd.ItemCode, rd.AwaitQty);
+                                        UpdateFulfilled(rd.ReqId, rd.ItemCode, rd.FulfilledQty);
+
+
+                                        TransactionVM t = new TransactionVM();
+                                        t.TranDateTime = DateTime.Now;
+                                        t.ItemCode = rd.ItemCode;
+                                        t.QtyChange = rd.AwaitQty * -1;
+                                        t.UnitPrice = i.Price1 ?? default(double);
+                                        t.Desc = "Disbursement";
+                                        t.DeptCode = deptcode;
+
+
+                                        TransactionBL.AddTran(t);
+
+                                        count = 0;
+                                    }
+
+                                }
+                                cntFulfilled += (rd.ReqQty - rd.FulfilledQty);
+                            }
+
+                            //Check if Request Fulfilled
+                            if (cntFulfilled == 0)
+                            {
+                                // r.Status = "Fulfilled";
+                                RequestVM rvm = RequestBL.GetReq(r);
+                                rvm.Status = "Fulfilled";
+                                //rvm.EmpId = r.EmpId;
+                                //rvm.ApproverId = r.ApproverId;
+                                //rvm.ApproverComment = r.ApproverComment;
+                                //rvm.ReqDateTime = r.ReqDateTime ?? default(DateTime);
+                                //rvm.CancelledDateTime = r.CancelledDateTime ?? default(DateTime);
+                                //rvm.Status = r.Status;
+                                //rvm.FulfilledDateTime = r.FulfilledDateTime ?? default(DateTime);
+                                RequestBL.UpdateReq(rvm); //save changes for this request object
+                            }
+                    
+                        }
+
+                        //Check Low Stock item
+                        bool status = CheckLowStk(i);
+
+                        if (status)
+                        {
+                            Item item = Utility.ItemUtility.Convert_ItemVMObj_To_ItemObj(i);
+                            NotificationBL.AddLowStkNotification(empId, item);
+                        }
+
+                        //send email acknowledgement to rep, specific head and all clerks
+                        // NotificationBL.AddAcptNotification(r.ReqId); Noti throw exception need to fix
+                    }
+                    // }
 
 
                 }
@@ -1054,7 +1064,9 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             foreach (ItemVM i in iList)
             {
-                UpdateItem(i.ItemCode, i.ReccReorderLvl, i.ReccReorderQty, i.SuppCode1, i.Price1, i.SuppCode2, i.Price2, i.SuppCode3, i.Price3);
+
+                UpdateItem(i.ItemCode, i.ReorderLevel, i.ReorderQty, i.SuppCode1, i.Price1 ?? default(double), i.SuppCode2, i.Price2 ?? default(double), i.SuppCode3, i.Price3 ?? default(double));
+
             }
         }
 
