@@ -165,8 +165,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     noti.ToEmp = 104;
                     noti.NotificationDateTime = System.DateTime.Now;
                     noti.RouteUri = "";
-                    noti.Type = "Request Submitted";
-                    noti.Content = "Request Submitted";
+                    noti.Type = "Low Stock";
+                    noti.Content = "In a recent stationery request disbursement, there are some items with balance below reorder level. ";
                     noti.IsRead = true;
                     entities.Notifications.Add(noti);
                     entities.SaveChanges();
