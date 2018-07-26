@@ -494,6 +494,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 {
                                     // r.Status = "Fulfilled";
                                     RequestVM rvm = RequestBL.GetReq(r);
+                                    rvm.FulfilledDateTime = DateTime.Now;
                                     rvm.Status = "Fulfilled";
                                     //rvm.EmpId = r.EmpId;
                                     //rvm.ApproverId = r.ApproverId;
