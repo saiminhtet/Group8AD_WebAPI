@@ -226,8 +226,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     noti.ToEmp = repId;
                     noti.NotificationDateTime = System.DateTime.Now;
                     noti.RouteUri = "";
-                    noti.Type = "Request Submitted";
-                    noti.Content = "Request Submitted";
+                    noti.Type = "Stationery Request";
+                    noti.Content = "A new stationery request has been submitted";
                     noti.IsRead = true;
                     entities.Notifications.Add(noti);
                     entities.SaveChanges();
@@ -235,15 +235,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 catch (Exception ex)
                 {
                     throw ex;
-                }
-
-                //Notification acptNoti = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
-                //if (acptNoti != null)
-                //{
-                //    acptNoti.Employee.Department.DeptRepId = repId;
-                //    entities.Notifications.Add(acptNoti);
-                //    entities.SaveChanges();
-                //}
+                }              
             }
         }
 
