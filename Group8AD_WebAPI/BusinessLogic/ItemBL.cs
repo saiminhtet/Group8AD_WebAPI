@@ -670,35 +670,52 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<RequestDetailVM> reqdList = entities.Requests.Where(r => r.Status.Equals("Approved"))
-                    .Join(entities.RequestDetails, r => r.ReqId, rd => rd.ReqId, (r, rd) => new { r, rd })
-                    .Select(rd => new RequestDetailVM
-                    {
-                        ReqId = rd.rd.ReqId,
-                        ReqLineNo = rd.rd.ReqLineNo,
-                        ItemCode = rd.rd.ItemCode,
-                        ReqQty = rd.rd.ReqQty,
-                        AwaitQty = rd.rd.AwaitQty,
-                        FulfilledQty = rd.rd.FulfilledQty
-                    }).ToList();
-
                 List<ItemVM> iList = GetAllItems();
-                List<ItemVM> ritemlist = new List<ItemVM>();
-                foreach (ItemVM item in iList)
+                for (int i = 0; i < iList.Count; i++)
                 {
-                    item.TempQtyReq = 0;
-                    foreach (RequestDetailVM rd in reqdList)
+                    iList[i].TempQtyReq = 0;
+                }
+                List<RequestVM> rList = RequestBL.GetReq("Approved");
+                for (int j = 0; j < rList.Count; j++)
+                {
+                    List<RequestDetailVM> rdList = RequestDetailBL.GetReqDetList(rList[j].ReqId);
+                    for (int k = 0; k < rdList.Count; k++)
                     {
-                        if (rd.ReqQty - rd.FulfilledQty - rd.AwaitQty> 0 && item.ItemCode.Equals(rd.ItemCode))
-                        {
-                            //   item.TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
-                            iList.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
-
-                        }
+                        int shortQty = rdList[k].ReqQty - rdList[k].AwaitQty - rdList[k].FulfilledQty;
+                        if (shortQty > 0)
+                            iList.Find(x => x.ItemCode.Equals(rdList[k].ItemCode)).TempQtyReq += shortQty;
                     }
                 }
+                return iList;
+                //List<RequestDetailVM> reqdList = entities.Requests.Where(r => r.Status.Equals("Approved"))
+                //    .Join(entities.RequestDetails, r => r.ReqId, rd => rd.ReqId, (r, rd) => new { r, rd })
+                //    .Select(rd => new RequestDetailVM
+                //    {
+                //        ReqId = rd.rd.ReqId,
+                //        ReqLineNo = rd.rd.ReqLineNo,
+                //        ItemCode = rd.rd.ItemCode,
+                //        ReqQty = rd.rd.ReqQty,
+                //        AwaitQty = rd.rd.AwaitQty,
+                //        FulfilledQty = rd.rd.FulfilledQty
+                //    }).ToList();
 
-                ritemlist = iList.Where(x => x.TempQtyReq > 0).ToList();
+                //List<ItemVM> iList = GetAllItems();
+                //List<ItemVM> ritemlist = new List<ItemVM>();
+                //foreach (ItemVM item in iList)
+                //{
+                //    item.TempQtyReq = 0;
+                //    foreach (RequestDetailVM rd in reqdList)
+                //    {
+                //        if (rd.ReqQty - rd.FulfilledQty - rd.AwaitQty> 0 && item.ItemCode.Equals(rd.ItemCode))
+                //        {
+                //            //   item.TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
+                //            iList.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
+
+                //        }
+                //    }
+                //}
+
+                //ritemlist = iList.Where(x => x.TempQtyReq > 0).ToList();
 
                 //  List<RequestVM> rlist = BusinessLogic.RequestBL.GetReq("Approved");
                 //foreach (RequestVM r in rlist)
@@ -716,7 +733,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //        }
                 //    }
                 //}
-                return ritemlist;
+                //return ritemlist;
             }
         }
 
