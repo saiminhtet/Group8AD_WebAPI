@@ -512,7 +512,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     item.TempQtyReq = 0;
                     foreach (RequestDetailVM rd in reqdList)
                     {
-                        if (rd.ReqQty - rd.FulfilledQty > 0 && item.ItemCode.Equals(rd.ItemCode))
+                        if (rd.ReqQty - rd.FulfilledQty - rd.AwaitQty> 0 && item.ItemCode.Equals(rd.ItemCode))
                         {
                             //   item.TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
                             iList.ToList().Find(x => x.ItemCode.Equals(rd.ItemCode)).TempQtyReq += rd.ReqQty - rd.AwaitQty - rd.FulfilledQty;
@@ -613,10 +613,12 @@ namespace Group8AD_WebAPI.BusinessLogic
 
 
         //FulfillRequest
-        public static void FulfillRequest(List<ItemVM> items)
+        public static List<ItemVM> FulfillRequest(List<ItemVM> items)
         {
             for (int i = 0; i < items.Count; i++)
             {
+                //items[i].TempQtyAcpt = 0;
+                //items[i].TempOrderQty = 0;
                 int count = 0;
                 if (items[i].TempQtyDisb > items[i].Balance) count = items[i].Balance;
                 else count = (int)items[i].TempQtyDisb;
@@ -625,8 +627,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     if (count > 0)
                     {
-                        //string deptCode = EmployeeBL.GetEmp(rvmList[i].EmpId).DeptCode;
-                        List<RequestDetailVM> rdvmList = RequestDetailBL.GetReqDetList(rvmList[i].ReqId);
+                        //items[i].TempOrderQty++;
+                        //string deptCode = EmployeeBL.GetEmp(rvmList[j].EmpId).DeptCode;
+                        List<RequestDetailVM> rdvmList = RequestDetailBL.GetReqDetList(rvmList[j].ReqId);
                         for (int k = 0; k < rdvmList.Count; k++)
                         {
                             if (items[i].ItemCode.Equals(rdvmList[k].ItemCode))
@@ -636,7 +639,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 {
                                     count = count - shortQty;
                                     items[i].Balance = items[i].Balance - shortQty;
-                                    //items[i].TempQtyDisb = items[i].TempQtyDisb - shortQty;
                                     rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + shortQty;
                                 }
                                 else
@@ -645,6 +647,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + count;
                                     count = 0;
                                 }
+                                //items[i].TempQtyCheck = count;
+                                //items[i].TempQtyAcpt++;
                                 UpdateBal(items[i].ItemCode, items[i].Balance);
                                 UpdateAwait(rdvmList[k].ReqId, rdvmList[k].ItemCode, rdvmList[k].AwaitQty);
                             }
@@ -652,6 +656,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     }
                 }
              }
+
+            return items;
             //List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
             //foreach (ItemVM i in items)
             //{

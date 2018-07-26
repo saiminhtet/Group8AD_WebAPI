@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Group8AD_WebAPI.BusinessLogic;
 using Group8AD_WebAPI.Models;
 using Group8AD_WebAPI.Models.ViewModels;
 
@@ -252,15 +253,12 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/FulfillRequest")]
         public HttpResponseMessage FulfillRequest(List<ItemVM> item)
         {
-            try
+            List<ItemVM> list = ItemBL.FulfillRequest(item);
+            if (list == null)
             {
-                BusinessLogic.ItemBL.FulfillRequest(item);
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
-            }
+            return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         //UpdateBal
