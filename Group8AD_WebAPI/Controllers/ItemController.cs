@@ -174,7 +174,7 @@ namespace Group8AD_WebAPI.Controllers
         {
             try
             {
-                BusinessLogic.ItemBL.AcceptDisbursement(empId, iList);
+                BusinessLogic.ItemBL.AcceptDisbursement(empId, rcvEmpId, iList);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
