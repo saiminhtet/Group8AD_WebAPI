@@ -69,8 +69,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     noti.ToEmp = 104;
                     noti.NotificationDateTime = System.DateTime.Now;
                     noti.RouteUri = "";
-                    noti.Type = "Request Submitted";
-                    noti.Content = "Request Submitted";
+                    noti.Type = "Low Stock";
+                    noti.Content = "In a recent stationery request disbursement, there are some items with balance below reorder level.";
                     noti.IsRead = true;
                     entities.Notifications.Add(noti);
                     entities.SaveChanges();
@@ -79,15 +79,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     throw ex;
                 }
-
-                //var lowStkNoti = entities.Notifications.Where(n => n.Employee.EmpId == empId).FirstOrDefault();
-                //if (lowStkNoti != null)
-                //{
-                //    lowStkNoti.Employee.EmpId = empId;
-                //    Item item = i;
-                //    entities.Notifications.Add(lowStkNoti);
-                //    entities.SaveChanges();
-                //}
+              
             }
         }
 
@@ -98,10 +90,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 var emploeeses=entities.Employees.Where(n => n.EmpId == empId).FirstOrDefault();
                 if (emploeeses != null)
-                {
-                    //var request = entities.Notifications.Where(n => n.Employee.Department.DeptRepId == repId).FirstOrDefault();
-                    //if (request != null)
-                    //{
+                {                  
                         Notification noti = new Notification();
                         noti.FromEmp = empId;
                         noti.ToEmp = repId;
