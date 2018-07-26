@@ -311,7 +311,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // remove request by empId and status
         // done
-        public static void RemoveReq(int empId, string status)
+        public static bool RemoveReq(int empId, string status)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -320,28 +320,44 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     for (int i = 0; i < reqlist.Count; i++)
                     {
-                        reqlist[i].Status = "Cancelled";
-                        entities.SaveChanges();
+                        if (reqlist[i].Status.Equals("Unsubmitted") || reqlist[i].Status.Equals("BookMarked"))
+                        {
+                            RequestDetailBL.removeAllReqDet(reqlist[i].ReqId);
+                        }
+                        else
+                        {
+                            reqlist[i].Status = "Cancelled";
+                            reqlist[i].CancelledDateTime = DateTime.Now;
+                            entities.SaveChanges();
+                        }
                     }
                 }
+                return true;
             }
-            return;
         }
 
         // remove request by reqId
         // done
-        public static void RemoveReq(int reqId)
+        public static bool RemoveReq(int reqId)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 Request request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
                 if (request != null)
                 {
-                    request.Status = "Cancelled";
-                    entities.SaveChanges();
+                    if (request.Status.Equals("Unsubmitted") || request.Status.Equals("Unsubmitted"))
+                    {
+                        RequestDetailBL.removeAllReqDet(reqId);
+                    }
+                    else
+                    {
+                        request.Status = "Cancelled";
+                        request.CancelledDateTime = DateTime.Now;
+                        entities.SaveChanges();
+                    }
                 }
+                return true;
             }
-            return;
         }
 
         //// submit request
