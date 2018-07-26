@@ -140,8 +140,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                             ItemVM i = new ItemVM();
                             i.ItemCode = rd.ItemCode;
                             ItemVM io = GetItem(i.ItemCode);
+                            i.Location = io.Location;
                             i.Balance = io.Balance;
-                            i.ReccReorderLvl = io.ReccReorderLvl;
+                            i.ReccReorderLvl = io.ReorderLevel;
                             i.ReorderQty = io.ReorderQty;
                             i.Cat = io.Cat;
                             i.Desc = io.Desc;
