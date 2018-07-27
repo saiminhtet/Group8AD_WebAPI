@@ -123,13 +123,10 @@ namespace Group8AD_WebAPI.BusinessLogic
         // raise adjustment
         // done, except email
         public static bool RaiseAdjustments(int empId, List<ItemVM> iList)
-
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                bool isRaised = false;
                 string vNum = GenerateVoucherNo();
-                double chgBck = 0;
                 for (int i = 0; i < iList.Count; i++)
                 {
                     if ((iList[i].TempQtyCheck - iList[i].Balance) != 0)
@@ -148,36 +145,22 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                         if (a.QtyChange < 0)
                         {
-                            chgBck = chgBck + a.QtyChange * -1 * iList[i].Price1;
+                            double chgBck = a.QtyChange * -1 * iList[i].Price1;
+                            Employee emp = new Employee();
+                            if (chgBck >= 250)
+                            {
+                                emp = entities.Employees.Where(x => x.Role.Equals("Store Manager")).FirstOrDefault();
+                            }
+                            else
+                            {
+                                emp = entities.Employees.Where(x => x.Role.Equals("Store Supervisor")).FirstOrDefault();
+                            }
+                            int fromEmpIdA = empId;
+                            int toEmpIdA = emp.EmpId;
+                            string typeA = "Adjustment Request";
+                            string contentA = vNum + " has been raised";
+                            NotificationBL.AddNewNotification(fromEmpIdA, toEmpIdA, typeA, contentA);
                         }
-                    }
-                }
-                Employee emp = new Employee();
-                if (chgBck >= 250)
-                {
-                    emp = entities.Employees.Where(x => x.Role.Equals("Store Manager")).FirstOrDefault();
-                }
-                else
-                {
-                    emp = entities.Employees.Where(x => x.Role.Equals("Store Supervisor")).FirstOrDefault();
-                }
-                if (chgBck > 0)
-                {
-                    isRaised = true;
-                    int fromEmpIdA = empId;
-                    int toEmpIdA = emp.EmpId;
-                    string typeA = "Adjustment Request";
-                    string contentA = vNum + " has been raised";
-                    NotificationBL.AddNewNotification(fromEmpIdA, toEmpIdA, typeA, contentA);
-
-                    List<Employee> clerk = entities.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
-                    int fromEmpIdL = empId;
-                    string typeL = "Low Stock";
-                    string contentL = "In a recent stationery stock check, there are some items with balance below reorder level.";
-                    for (int i = 0; i < clerk.Count; i++)
-                    {
-                        int toEmpIdL = clerk[i].EmpId;
-                        NotificationBL.AddNewNotification(fromEmpIdL, toEmpIdL, typeL, contentL);
                     }
                 }
                     
@@ -188,7 +171,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 // EmailBL.SendAdjReqEmail(104, adjlist);
                 //// send email to supervisor
                 // EmailBL.SendAdjReqEmail(105, adjlist);
-                return isRaised;
+                return true;
             }
 
             // dummy codes
