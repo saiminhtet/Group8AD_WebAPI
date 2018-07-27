@@ -36,7 +36,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     ReportItemVM ri = new ReportItemVM();
                     ri.Period = monthList[i];
                     ri.Label = label;
-                    ri.Val1 = chargeBack;
+                    ri.Val1 = chargeBack * -1;
                     ri.Val2 = 0;
                     riList.Add(ri);
                 }
@@ -72,7 +72,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     ReportItemVM ri = new ReportItemVM();
                     ri.Period = weekList[i];
                     ri.Label = label;
-                    ri.Val1 = chargeBack;
+                    ri.Val1 = chargeBack * -1;
                     ri.Val2 = 0;
                     riList.Add(ri);
                 }
@@ -142,7 +142,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     chargeBack = Math.Round(chargeBack, 2);
                     ri.Period = startDate;
                     ri.Label = deptlist[i].DeptName;
-                    ri.Val1 = chargeBack;
+                    ri.Val1 = chargeBack * -1;
                     ri.Val2 = 0;
                     rilist.Add(ri);
                 }
@@ -176,7 +176,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     chargeBack = Math.Round(chargeBack, 2);
                     ri.Period = fromDate;
                     ri.Label = deptlist[i].DeptName;
-                    ri.Val1 = chargeBack;
+                    ri.Val1 = chargeBack * -1;
                     ri.Val2 = 0;
                     rilist.Add(ri);
                 }
@@ -321,8 +321,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 ReportItemVM ri = new ReportItemVM();
                                 ri.Period = dtList[i];
                                 ri.Label = label;
-                                ri.Val1 = chargeBack1;
-                                ri.Val2 = chargeBack2;
+                                ri.Val1 = chargeBack1 * -1;
+                                ri.Val2 = chargeBack2 * -1;
                                 riList.Add(ri);
                             }
                         }
@@ -357,8 +357,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 ReportItemVM ri = new ReportItemVM();
                                 ri.Period = dtList[i];
                                 ri.Label = label;
-                                ri.Val1 = chargeBack1;
-                                ri.Val2 = chargeBack2;
+                                ri.Val1 = chargeBack1 * -1;
+                                ri.Val2 = chargeBack2 * -1;
                                 riList.Add(ri);
                             }
                         }
@@ -405,8 +405,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     ReportItemVM ri = new ReportItemVM();
                                     ri.Period = weekList[i];
                                     ri.Label = label;
-                                    ri.Val1 = chargeBack1;
-                                    ri.Val2 = chargeBack2;
+                                    ri.Val1 = chargeBack1 * -1;
+                                    ri.Val2 = chargeBack2 * -1;
                                     riList.Add(ri);
                                 }
                             }
@@ -441,8 +441,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     ReportItemVM ri = new ReportItemVM();
                                     ri.Period = weekList[i];
                                     ri.Label = label;
-                                    ri.Val1 = chargeBack1;
-                                    ri.Val2 = chargeBack2;
+                                    ri.Val1 = chargeBack1 * -1;
+                                    ri.Val2 = chargeBack2 * -1;
                                     riList.Add(ri);
                                 }
                             }
@@ -655,8 +655,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 ReportItemVM ri = new ReportItemVM();
                                 ri.Period = dtList[i];
                                 ri.Label = label;
-                                ri.Val1 = volume1;
-                                ri.Val2 = volume2;
+                                ri.Val1 = volume1 * -1;
+                                ri.Val2 = volume2 * -1;
                                 riList.Add(ri);
                             }
                         }
@@ -689,8 +689,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 ReportItemVM ri = new ReportItemVM();
                                 ri.Period = dtList[i];
                                 ri.Label = label;
-                                ri.Val1 = volume1;
-                                ri.Val2 = volume2;
+                                ri.Val1 = volume1 * -1;
+                                ri.Val2 = volume2 * -1;
                                 riList.Add(ri);
                             }
                         }
@@ -735,8 +735,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     ReportItemVM ri = new ReportItemVM();
                                     ri.Period = weekList[i];
                                     ri.Label = label;
-                                    ri.Val1 = volume1;
-                                    ri.Val2 = volume2;
+                                    ri.Val1 = volume1 * -1;
+                                    ri.Val2 = volume2 * -1;
                                     riList.Add(ri);
                                 }
                             }
@@ -769,8 +769,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     ReportItemVM ri = new ReportItemVM();
                                     ri.Period = weekList[i];
                                     ri.Label = label;
-                                    ri.Val1 = volume1;
-                                    ri.Val2 = volume2;
+                                    ri.Val1 = volume1 * -1;
+                                    ri.Val2 = volume2 * -1;
                                     riList.Add(ri);
                                 }
                             }
