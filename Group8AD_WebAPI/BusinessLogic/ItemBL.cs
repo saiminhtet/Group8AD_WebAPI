@@ -700,6 +700,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
                 return iList;
 
+                #region
                 //List<RequestDetailVM> reqdList = entities.Requests.Where(r => r.Status.Equals("Approved"))
                 //    .Join(entities.RequestDetails, r => r.ReqId, rd => rd.ReqId, (r, rd) => new { r, rd })
                 //    .Select(rd => new RequestDetailVM
@@ -747,6 +748,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //    }
                 //}
                 //return ritemlist;
+                #endregion
             }
         }
 
@@ -864,6 +866,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
             }
 
+            #region
             //SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
             //List<RequestDetail> fulfilledList = new List<RequestDetail>();
             //List<RequestDetail> rdList = RequestDetailBL.GetReqDetList("Approved");
@@ -906,6 +909,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             //    }
             //}
+            #endregion
 
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -956,49 +960,50 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             ////Making PDF Reports
             ////Group By Department then By Item
-
             SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
-            List<RequestDetailVM> ListByDept = new List<RequestDetailVM>();
             List<RequestDetailVM> rdList = new List<RequestDetailVM>();
+
             List<DisbursementDetailVM> dListDept = new List<DisbursementDetailVM>();
-            List<DisbursementDetailVM> dListFull = new List<DisbursementDetailVM>();
+            List<DisbursementDetailVM> dListEmployee = new List<DisbursementDetailVM>();
+
             for (int i = 0; i < deptList.Count; i++)
             {
                 if (!deptList[i].DeptCode.Equals("STOR"))
                 {
                     for (int j = 0; j < fulfilledList.Count; j++)
                     {
-                        if (GetDeptCode(fulfilledList[j].ReqId).Equals(deptList[i].DeptCode))
+                        if (GetDeptCode(fulfilledList[j].ReqId).Equals(deptList[i].DeptCode) && !rdList.Contains(fulfilledList[j]))
                         {
+                            rdList.Add(fulfilledList[j]);
+
                             DisbursementDetailVM disDet = new DisbursementDetailVM();
-                            if (rdList.Contains(fulfilledList[j]))
-                            {
-                                rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).ReqQty += fulfilledList[j].ReqQty;
-                                rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).AwaitQty += fulfilledList[j].AwaitQty;
-                                rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).FulfilledQty += fulfilledList[j].FulfilledQty;
-                                disDet.ReqQty += fulfilledList[i].ReqQty;
-                                disDet.ReqQty += fulfilledList[i].AwaitQty;
-                                disDet.ReqQty += fulfilledList[i].FulfilledQty;
-                            }
-                            else
-                            {
-                                rdList.Add(fulfilledList[j]);
-                                disDet.DeptCode = deptList[i].DeptCode;
-                                string itemCode = fulfilledList[j].ItemCode;
-                                disDet.ItemCode = itemCode;
-                                Item item = ctx.Items.Where(x => x.ItemCode.Equals(itemCode)).FirstOrDefault();
-                                disDet.Category = item.Cat;
-                                disDet.Description = item.Desc;
-                                disDet.ReqQty = fulfilledList[i].ReqQty;
-                                disDet.AwaitQty = fulfilledList[i].AwaitQty;
-                                disDet.FulfilledQty = fulfilledList[i].FulfilledQty;
-                                dListDept.Add(disDet);
-                            }
-                            ListByDept.AddRange(rdList);
+                            disDet.DeptCode = deptList[i].DeptCode;
+                            string itemCode = fulfilledList[j].ItemCode;
+                            disDet.ItemCode = itemCode;
+                            Item item = ctx.Items.Where(x => x.ItemCode.Equals(itemCode)).FirstOrDefault();
+                            disDet.Category = item.Cat;
+                            disDet.Description = item.Desc;
+                            disDet.ReqQty = fulfilledList[i].ReqQty;
+                            disDet.AwaitQty = fulfilledList[i].AwaitQty;
+                            disDet.FulfilledQty = fulfilledList[i].FulfilledQty;
+                            disDet.EmpId = 0;
+                            disDet.ReqId = 0;
+                            dListDept.Add(disDet);
+                        }
+                        else if (GetDeptCode(fulfilledList[j].ReqId).Equals(deptList[i].DeptCode) && rdList.Contains(fulfilledList[j]))
+                        {
+                            rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).ReqQty += fulfilledList[j].ReqQty;
+                            rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).AwaitQty += fulfilledList[j].AwaitQty;
+                            rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).FulfilledQty += fulfilledList[j].FulfilledQty;
+                            dListDept.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).ReqQty += fulfilledList[j].ReqQty;
+                            dListDept.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).AwaitQty += fulfilledList[j].AwaitQty;
+                            dListDept.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).FulfilledQty += fulfilledList[j].FulfilledQty;
                         }
                     }
                 }                  
             }
+
+            ////Group By Department then By Item
 
             return items;
         }
