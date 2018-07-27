@@ -5,17 +5,10 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="SA46Team08ADProjectModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'SA46Team08ADProject.dbo.Adjustment' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Adjustment">
           <Key>
             <PropertyRef Name="VoucherNo" />
-            
-            
             <PropertyRef Name="ItemCode" />
-            
-            
-            
           </Key>
           <Property Name="VoucherNo" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="EmpId" Type="int" Nullable="false" />
@@ -342,6 +335,7 @@ warning 6002: The table/view 'SA46Team08ADProject.dbo.Adjustment' does not have 
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="SA46Team08ADProjectModelStoreContainer">
+          <EntitySet Name="Adjustment" EntityType="Self.Adjustment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CollectionPoint" EntityType="Self.CollectionPoint" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
@@ -351,19 +345,6 @@ warning 6002: The table/view 'SA46Team08ADProject.dbo.Adjustment' does not have 
           <EntitySet Name="RequestDetail" EntityType="Self.RequestDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Adjustment" EntityType="Self.Adjustment" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Adjustment].[VoucherNo] AS [VoucherNo], 
-    [Adjustment].[EmpId] AS [EmpId], 
-    [Adjustment].[DateTimeIssued] AS [DateTimeIssued], 
-    [Adjustment].[ItemCode] AS [ItemCode], 
-    [Adjustment].[Reason] AS [Reason], 
-    [Adjustment].[QtyChange] AS [QtyChange], 
-    [Adjustment].[Status] AS [Status], 
-    [Adjustment].[ApproverId] AS [ApproverId], 
-    [Adjustment].[ApproverComment] AS [ApproverComment]
-    FROM [dbo].[Adjustment] AS [Adjustment]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK__Adjustmen__Appro__59063A47" Association="Self.FK__Adjustmen__Appro__59063A47">
             <End Role="Employee" EntitySet="Employee" />
             <End Role="Adjustment" EntitySet="Adjustment" />
