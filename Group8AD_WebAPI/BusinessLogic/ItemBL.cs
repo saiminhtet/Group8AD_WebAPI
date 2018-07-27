@@ -1003,6 +1003,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }                  
             }
             List<DisbursementDetailVM> disbursementListDept = dListDept.OrderBy(x => x.ItemCode).OrderBy(x => x.DeptCode).ToList();
+            // disbursementListDept, list of disbursement sorted by deptCode and then itemCode, to be used for pdf export
+
 
             ////Group By Department then By Item
             for (int i = 0; i < fulfilledList.Count; i++)
@@ -1023,6 +1025,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 dListEmployee.Add(disDet);
             }
             List<DisbursementDetailVM> disbursementListEmployee = dListEmployee.OrderBy(x => x.ItemCode).OrderBy(x => x.ReqId).OrderBy(x => x.EmpId).OrderBy(x => x.DeptCode).ToList();
+            // disbursementListEmployee, list of disbursement sorted by deptCode, empId, reqId, and then itemCode, to be used for pdf export
 
             return items;
         }
