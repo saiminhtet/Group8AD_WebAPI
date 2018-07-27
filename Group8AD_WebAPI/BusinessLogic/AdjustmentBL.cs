@@ -146,13 +146,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                         entities.Adjustments.Add(a);
                         entities.SaveChanges();
 
-                        if ((iList[i].TempQtyCheck - iList[i].Balance) < 0)
+                        if (a.QtyChange < 0)
                         {
                             chgBck = chgBck + a.QtyChange * -1 * iList[i].Price1;
                         }
                     }
                 }
-
                 Employee emp = new Employee();
                 if (chgBck >= 250)
                 {
@@ -162,23 +161,26 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     emp = entities.Employees.Where(x => x.Role.Equals("Store Supervisor")).FirstOrDefault();
                 }
-                if (chgBck > 0) isRaised = true;
-                int fromEmpIdA = empId;
-                int toEmpIdA = emp.EmpId;
-                string typeA = "Adjustment Request";
-                string contentA = vNum + " has been raised";
-                NotificationBL.AddNewNotification(fromEmpIdA, toEmpIdA, typeA, contentA);
-
-                List<Employee> clerk = entities.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
-                int fromEmpIdL = empId;
-                string typeL = "Low Stock";
-                string contentL = "In a recent stationery stock check, there are some items with balance below reorder level.";
-                for (int i = 0; i < clerk.Count; i++)
+                if (chgBck > 0)
                 {
-                    int toEmpIdL = clerk[i].EmpId;
-                    NotificationBL.AddNewNotification(fromEmpIdL, toEmpIdL, typeL, contentL);
-                }
+                    isRaised = true;
+                    int fromEmpIdA = empId;
+                    int toEmpIdA = emp.EmpId;
+                    string typeA = "Adjustment Request";
+                    string contentA = vNum + " has been raised";
+                    NotificationBL.AddNewNotification(fromEmpIdA, toEmpIdA, typeA, contentA);
 
+                    List<Employee> clerk = entities.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+                    int fromEmpIdL = empId;
+                    string typeL = "Low Stock";
+                    string contentL = "In a recent stationery stock check, there are some items with balance below reorder level.";
+                    for (int i = 0; i < clerk.Count; i++)
+                    {
+                        int toEmpIdL = clerk[i].EmpId;
+                        NotificationBL.AddNewNotification(fromEmpIdL, toEmpIdL, typeL, contentL);
+                    }
+                }
+                    
                 // will implement when Email service method is done
                 // send email to clerk
                 // EmailBL.SendAdjReqEmail(empId, adjlist);
