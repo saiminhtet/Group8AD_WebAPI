@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Group8AD_WebAPI.Models.ViewModels
 {
-    public class RequestDetailVM
+    public class RequestDetailVM : IEquatable<RequestDetailVM>
     {
         public int ReqId { get; set; }
         public int ReqLineNo { get; set; }
@@ -14,5 +14,18 @@ namespace Group8AD_WebAPI.Models.ViewModels
         public int AwaitQty { get; set; }
         public int FulfilledQty { get; set; }
         public string Desc { get; set; }
+
+        public bool Equals(RequestDetailVM other)
+        {
+            if (this.ItemCode.Equals(other.ItemCode))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }

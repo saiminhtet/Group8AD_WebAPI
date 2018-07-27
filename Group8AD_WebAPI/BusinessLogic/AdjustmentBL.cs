@@ -139,28 +139,29 @@ namespace Group8AD_WebAPI.BusinessLogic
                         a.Reason = iList[i].TempReason;
                         a.QtyChange = (int)iList[i].TempQtyCheck - iList[i].Balance;
                         a.Status = "Submitted";
+
+                        Employee emp = new Employee();
+                        emp = entities.Employees.Where(x => x.Role.Equals("Store Supervisor")).FirstOrDefault();
+                        double chgBck = a.QtyChange * iList[i].Price1;
+                        if (a.QtyChange < 0)
+                        {
+                            chgBck = chgBck * -1;
+                        }
+                        if (chgBck >= 250)
+                        {
+                            emp = entities.Employees.Where(x => x.Role.Equals("Store Manager")).FirstOrDefault();
+                        }
+                        a.ApproverId = emp.EmpId;
+
                         a.ApproverComment = "";
                         entities.Adjustments.Add(a);
                         entities.SaveChanges();
 
-                        if (a.QtyChange < 0)
-                        {
-                            double chgBck = a.QtyChange * -1 * iList[i].Price1;
-                            Employee emp = new Employee();
-                            if (chgBck >= 250)
-                            {
-                                emp = entities.Employees.Where(x => x.Role.Equals("Store Manager")).FirstOrDefault();
-                            }
-                            else
-                            {
-                                emp = entities.Employees.Where(x => x.Role.Equals("Store Supervisor")).FirstOrDefault();
-                            }
-                            int fromEmpIdA = empId;
-                            int toEmpIdA = emp.EmpId;
-                            string typeA = "Adjustment Request";
-                            string contentA = vNum + " has been raised";
-                            NotificationBL.AddNewNotification(fromEmpIdA, toEmpIdA, typeA, contentA);
-                        }
+                        int fromEmpIdA = empId;
+                        int toEmpIdA = emp.EmpId;
+                        string typeA = "Adjustment Request";
+                        string contentA = vNum + " has been raised";
+                        NotificationBL.AddNewNotification(fromEmpIdA, toEmpIdA, typeA, contentA);
                     }
                 }
                     
@@ -173,33 +174,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 // EmailBL.SendAdjReqEmail(105, adjlist);
                 return true;
             }
-
-            // dummy codes
-            //List<Adjustment> adjList = new List<Adjustment>();
-            //foreach (Item i in iList)
-            //  if (TempQtyChk - i.Balance > 0) {
-            //      Adjustment a = new Adjustment();
-            //      a.EmpId = empId;
-            //      a.DateTimeIssued = DateTime.Now();
-            //      a.ItemCode = i.ItemCode;
-            //      int index = iList.FindIndex(x => x.ItemCode.Equals(i.ItemCode));
-            //      a.Reason = reasonList[index]; // Assumes reasonList is populated from page and is as long as iList 
-            //      a.QtyChange = TempQtyChk - i.Balance;
-            //      a.Status = “Submitted”
-            //      adjList.Add(a)
-            //      ctx.Adjustment.Add(a);
-            //      ctx.SaveChanges();
-            //      double chgVal = a.QtyChange * i.Price1
-            //      if (chgVal >= 250)
-            //          Notify Manager
-            //      else
-            //          Notify Supervisor
-            //  }
-            //  Call AddLowStockNotification(empId, i);
-            //loop through each i in iList
-            //Send email notification to all clerks, supervisor and manager with SendAdjReqEmail(empId, adjList)
-            //Item controller displays toast message on StockTake page
-
         }
 
         // reject adjustment request
