@@ -18,6 +18,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 notif.NotificationDateTime = DateTime.Now;
                 notif.FromEmp = fromEmpId;
                 notif.ToEmp = toEmpId;
+                notif.RouteUri = "";
                 notif.Type = type;
                 notif.Content = content;
                 notif.IsRead = false;
