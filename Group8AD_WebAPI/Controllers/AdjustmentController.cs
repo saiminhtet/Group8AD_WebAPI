@@ -33,7 +33,35 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Adjustment/get")]
         public HttpResponseMessage GetAdjustment(string voucherNo)
         {
-            List<AdjustmentVM> adjustment = AdjustmentBL.GetAdj(voucherNo);
+            List<AdjustmentVM> adjustment = AdjustmentBL.GetAdjListByVoucherNo(voucherNo);
+            if (adjustment == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, adjustment);
+        }
+
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Adjustment/get")]
+        public HttpResponseMessage GetAdjustment(string voucherNo, int approverId)
+        {
+            List<AdjustmentVM> adjustment = AdjustmentBL.GetAdjList(voucherNo, approverId);
+            if (adjustment == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, adjustment);
+        }
+
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Adjustment/get")]
+        public HttpResponseMessage GetAdjustment(string voucherNo, string status)
+        {
+            List<AdjustmentVM> adjustment = AdjustmentBL.GetAdjList(voucherNo, status);
             if (adjustment == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
@@ -47,7 +75,21 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Adjustment/get")]
         public HttpResponseMessage GetAdjustmentList(string status)
         {
-            List<AdjustmentVM> adjlist = AdjustmentBL.GetAdjList(status);
+            List<AdjustmentVM> adjlist = AdjustmentBL.GetAdjListByStatus(status);
+            if (adjlist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, adjlist);
+        }
+
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Adjustment/get")]
+        public HttpResponseMessage GetAdjustmentList(int approverId)
+        {
+            List<AdjustmentVM> adjlist = AdjustmentBL.GetAdjListByApproverId(approverId);
             if (adjlist == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
