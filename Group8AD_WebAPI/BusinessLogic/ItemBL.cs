@@ -1002,8 +1002,27 @@ namespace Group8AD_WebAPI.BusinessLogic
                     }
                 }                  
             }
+            List<DisbursementDetailVM> disbursementListDept = dListDept.OrderBy(x => x.ItemCode).OrderBy(x => x.DeptCode).ToList();
 
             ////Group By Department then By Item
+            for (int i = 0; i < fulfilledList.Count; i++)
+            {
+                DisbursementDetailVM disDet = new DisbursementDetailVM();
+                Request req = ctx.Requests.Where(x => x.ReqId == fulfilledList[i].ReqId).FirstOrDefault();
+                Employee emp = ctx.Employees.Where(x => x.EmpId == req.EmpId).FirstOrDefault();
+                Item item = ctx.Items.Where(x => x.ItemCode.Equals(fulfilledList[i].ItemCode)).FirstOrDefault();
+                disDet.DeptCode = emp.DeptCode;
+                disDet.ItemCode = fulfilledList[i].ItemCode;
+                disDet.Category = item.Cat;
+                disDet.Description = item.Desc;
+                disDet.ReqQty = fulfilledList[i].ReqQty;
+                disDet.AwaitQty = fulfilledList[i].AwaitQty;
+                disDet.FulfilledQty = fulfilledList[i].FulfilledQty;
+                disDet.EmpId = emp.EmpId;
+                disDet.ReqId = req.ReqId;
+                dListEmployee.Add(disDet);
+            }
+            List<DisbursementDetailVM> disbursementListEmployee = dListEmployee.OrderBy(x => x.ItemCode).OrderBy(x => x.ReqId).OrderBy(x => x.EmpId).OrderBy(x => x.DeptCode).ToList();
 
             return items;
         }
