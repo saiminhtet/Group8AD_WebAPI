@@ -240,6 +240,26 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         }
 
+        // get ReqDetList by status
+        public static List<RequestDetail> GetReqDetList(string status)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<Request> rList = entities.Requests.Where(x => x.Status.Equals("Approved")).ToList();
+                List<RequestDetail> rdList = new List<RequestDetail>();
+                for (int i = 0; i < rList.Count; i++)
+                {
+                    int reqId = rList[i].ReqId;
+                    List<RequestDetail> temp = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
+                    for (int j = 0; j < temp.Count; j++)
+                    {
+                        rdList.Add(temp[j]);
+                    }                  
+                }
+                return rdList;
+            }
+        }
+
         //update Await
         public static void UpdateAwait(int reqId, int awaitQty)
         {
