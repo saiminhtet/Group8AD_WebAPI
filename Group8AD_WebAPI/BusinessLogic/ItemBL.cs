@@ -1032,101 +1032,315 @@ namespace Group8AD_WebAPI.BusinessLogic
 
 
         //FulfillRequestUrgent
-        public static void FulfillRequestUrgent(int empId, List<ItemVM> items, DateTime D1, int Collpt)
+        public static List<ItemVM> FulfillRequestUrgent(int empId, List<ItemVM> items, DateTime D1, int Collpt)
         {
             List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
-
-            foreach (ItemVM i in items)
+            List<DepartmentVM> deptList = DepartmentBL.GetAllDept();
+            for (int i = 0; i < deptList.Count; i++) deptList[i].FulfilledQty = 0;
+            for (int i = 0; i < items.Count; i++)
             {
-                int count = (i.TempQtyDisb > i.Balance) ? i.Balance : i.TempQtyDisb ?? default(int);
-
-                foreach (RequestVM r in RequestBL.GetReq(empId, "Approved"))
+                int count = 0;
+                if (items[i].TempQtyDisb > items[i].Balance) count = items[i].Balance;
+                else count = (int)items[i].TempQtyDisb;
+                List<RequestVM> rvmList = RequestBL.GetReq("Approved");
+                for (int j = 0; j < rvmList.Count; j++)
                 {
                     if (count > 0)
                     {
-                        string deptCode = EmployeeBL.GetEmp(r.EmpId).DeptCode;
-
-                        foreach (RequestDetailVM rd in RequestDetailBL.GetReqDetList(r.ReqId))
+                        string deptCode = EmployeeBL.GetEmp(rvmList[j].EmpId).DeptCode;
+                        List<RequestDetailVM> rdvmList = RequestDetailBL.GetReqDetList(rvmList[j].ReqId);
+                        for (int k = 0; k < rdvmList.Count; k++)
                         {
-                            if (count > 0)
+                            if (items[i].ItemCode.Equals(rdvmList[k].ItemCode))
                             {
-                                if (i.ItemCode.Equals(rd.ItemCode))
+                                int shortQty = rdvmList[k].ReqQty - rdvmList[k].AwaitQty - rdvmList[k].FulfilledQty;
+                                if (shortQty <= count)
                                 {
-                                    int shortQty = (rd.ReqQty - rd.FulfilledQty);
-
-                                    if (shortQty <= count)
-                                    {
-                                        shortQty = 0;
-                                        count -= shortQty;
-                                        i.Balance -= shortQty;
-                                        rd.AwaitQty += shortQty;
-                                        try
-                                        {
-                                            UpdateBal(rd.ItemCode, i.Balance);
-                                            fulfilledList.Add(rd);
-                                        }
-                                        catch (Exception)
-                                        {
-                                            break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        shortQty -= count;
-                                        count = 0;
-                                        i.Balance -= count;
-                                        rd.AwaitQty += count;
-                                        try
-                                        {
-                                            UpdateBal(rd.ItemCode, i.Balance);
-                                            fulfilledList.Add(rd);
-                                        }
-                                        catch (Exception)
-                                        {
-                                            break;
-                                        }
-                                    }
+                                    count = count - shortQty;
+                                    items[i].Balance = items[i].Balance - shortQty;
+                                    rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + shortQty;
                                 }
-
-                            }
-                            else
-                            {
-                                break;
+                                else
+                                {
+                                    items[i].Balance = items[i].Balance - count;
+                                    rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + count;
+                                    count = 0;
+                                }
+                                fulfilledList.Add(rdvmList[k]);
+                                UpdateBal(items[i].ItemCode, items[i].Balance);
+                                UpdateAwait(rdvmList[k].ReqId, rdvmList[k].ItemCode, rdvmList[k].AwaitQty);
+                                deptList.Find(x => x.DeptCode == deptCode).FulfilledQty += shortQty;
                             }
                         }
                     }
                 }
             }
 
+            #region
+            //SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
+            //List<RequestDetail> fulfilledList = new List<RequestDetail>();
+            //List<RequestDetail> rdList = RequestDetailBL.GetReqDetList("Approved");
+            //List<DepartmentVM> deptList = DepartmentBL.GetAllDept();
+            //for (int i = 0; i < deptList.Count; i++) deptList[i].FulfilledQty = 0;
+            //for (int i = 0; i < items.Count; i++)
+            //{
+            //    int count = 0;
+            //    if (items[i].TempQtyDisb > items[i].Balance) count = items[i].Balance;
+            //    else count = (int)items[i].TempQtyDisb;
+            //    for (int j = 0; j < rdList.Count; j++)
+            //    {
+            //        int reqId = rdList[j].ReqId;
+            //        Request req = ctx.Requests.Where(x => x.ReqId == reqId).First();
+            //        Employee emp = ctx.Employees.Where(x => x.EmpId == req.EmpId).First();
+            //        Department dept = ctx.Departments.Where(x => x.DeptCode.Equals(emp.DeptCode)).First();
+            //        if (count > 0)
+            //        {                     
+            //            if (items[i].ItemCode.Equals(rdList[j].ItemCode))
+            //            {
+            //                int shortQty = rdList[j].ReqQty - rdList[j].AwaitQty - rdList[j].FulfilledQty;
+            //                if (shortQty <= count)
+            //                {
+            //                    count = count - shortQty;
+            //                    items[i].Balance = items[i].Balance - shortQty;
+            //                    rdList[j].AwaitQty = rdList[j].AwaitQty + shortQty;
+            //                }
+            //                else
+            //                {
+            //                    items[i].Balance = items[i].Balance - count;
+            //                    rdList[j].AwaitQty = rdList[j].AwaitQty + count;
+            //                    count = 0;
+            //                }
+            //                fulfilledList.Add(rdList[j]);
+            //                UpdateBal(items[i].ItemCode, items[i].Balance);
+            //                UpdateAwait(rdList[j].ReqId, rdList[j].ItemCode, rdList[j].AwaitQty);
+            //                deptList.Find(x => x.DeptCode == dept.DeptCode).FulfilledQty += shortQty;
+            //            }
+            //        }
 
-            //Making PDF Reports
-            //Group By Department then By Item
-            List<RequestDetailVM> ListByDept = new List<RequestDetailVM>();
+            //    }
+            //}
+            #endregion
 
-            foreach (string d in DepartmentBL.GetDeptCodes())
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<RequestDetailVM> rdList = new List<RequestDetailVM>();
-
-                foreach (RequestDetailVM rd in fulfilledList)
+                for (int i = 0; i < deptList.Count; i++)
                 {
-                    if (GetDeptCode(rd.ReqId).Equals(d))
+                    int fromEmpId = entities.Employees.Where(x => x.Role == "Store Clerk").First().EmpId;
+                    int toEmpId = (int)deptList[i].DeptRepId;
+                    string type = "Weekly Disbursement";
+                    string content;
+                    if (!deptList[i].DeptCode.Equals("STOR"))
                     {
-                        if (rdList.Contains(rd))
+                        if (deptList[i].FulfilledQty == 0)
                         {
-                            rdList.Find(x => x.ItemCode.Equals(rd.ItemCode)).AwaitQty += rd.AwaitQty;
+                            content = "Disbursement Notification: There is no stationery disbursed for your department this week. Have a nice day.";
                         }
                         else
                         {
-                            rdList.Add(rd);
+                            int cId = (int)deptList[i].ColPtId;
+                            CollectionPoint cp = entities.CollectionPoints.Where(x => x.ColPtId == cId).FirstOrDefault();
+                            DateTime today = DateTime.Now;
+                            DateTime colDay = DateTime.Now;
+                            if (today.DayOfWeek.Equals(DayOfWeek.Monday)) colDay = today.AddDays(7);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Tuesday)) colDay = today.AddDays(6);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Wednesday)) colDay = today.AddDays(5);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Thursday)) colDay = today.AddDays(4);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Friday)) colDay = today.AddDays(3);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Saturday)) colDay = today.AddDays(2);
+                            else if (today.DayOfWeek.Equals(DayOfWeek.Sunday)) colDay = today.AddDays(1);
+                            string format = "dd-MMM-yyyy";
+                            string date = colDay.ToString(format);
+                            content = "Please collect stationery for your department at " + cp.Location + " on " + date + ", " + cp.Time;
                         }
-
-                        ListByDept.AddRange(rdList);
+                        NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
                     }
+                }
+
+                List<Employee> clerkList = entities.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+                for (int i = 0; i < clerkList.Count; i++)
+                {
+                    int fromEmpId = entities.Employees.Where(x => x.Role == "Store Clerk").First().EmpId;
+                    int toEmpId = clerkList[i].EmpId;
+                    string type = "Weekly Disbursement";
+                    string empName = entities.Employees.Where(x => x.Role == "Store Clerk").First().EmpName;
+                    string content = "Disbursement Notification: Disbursement has recently been conducted by " + empName;
+                    NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
                 }
             }
 
+            ////Making PDF Reports
+            ////Group By Department then By Item
+            SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
+            List<RequestDetailVM> rdList = new List<RequestDetailVM>();
 
+            List<DisbursementDetailVM> dListDept = new List<DisbursementDetailVM>();
+            List<DisbursementDetailVM> dListEmployee = new List<DisbursementDetailVM>();
+
+            for (int i = 0; i < deptList.Count; i++)
+            {
+                if (!deptList[i].DeptCode.Equals("STOR"))
+                {
+                    for (int j = 0; j < fulfilledList.Count; j++)
+                    {
+                        if (GetDeptCode(fulfilledList[j].ReqId).Equals(deptList[i].DeptCode) && !rdList.Contains(fulfilledList[j]))
+                        {
+                            rdList.Add(fulfilledList[j]);
+
+                            DisbursementDetailVM disDet = new DisbursementDetailVM();
+                            disDet.DeptCode = deptList[i].DeptCode;
+                            string itemCode = fulfilledList[j].ItemCode;
+                            disDet.ItemCode = itemCode;
+                            Item item = ctx.Items.Where(x => x.ItemCode.Equals(itemCode)).FirstOrDefault();
+                            disDet.Category = item.Cat;
+                            disDet.Description = item.Desc;
+                            disDet.ReqQty = fulfilledList[i].ReqQty;
+                            disDet.AwaitQty = fulfilledList[i].AwaitQty;
+                            disDet.FulfilledQty = fulfilledList[i].FulfilledQty;
+                            disDet.EmpId = 0;
+                            disDet.ReqId = 0;
+                            dListDept.Add(disDet);
+                        }
+                        else if (GetDeptCode(fulfilledList[j].ReqId).Equals(deptList[i].DeptCode) && rdList.Contains(fulfilledList[j]))
+                        {
+                            rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).ReqQty += fulfilledList[j].ReqQty;
+                            rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).AwaitQty += fulfilledList[j].AwaitQty;
+                            rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).FulfilledQty += fulfilledList[j].FulfilledQty;
+                            dListDept.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).ReqQty += fulfilledList[j].ReqQty;
+                            dListDept.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).AwaitQty += fulfilledList[j].AwaitQty;
+                            dListDept.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).FulfilledQty += fulfilledList[j].FulfilledQty;
+                        }
+                    }
+                }
+            }
+            List<DisbursementDetailVM> disbursementListDept = dListDept.OrderBy(x => x.ItemCode).OrderBy(x => x.DeptCode).ToList();
+            // disbursementListDept, list of disbursement sorted by deptCode and then itemCode, to be used for pdf export
+
+
+            ////Group By Department then By Item
+            for (int i = 0; i < fulfilledList.Count; i++)
+            {
+                DisbursementDetailVM disDet = new DisbursementDetailVM();
+                Request req = ctx.Requests.Where(x => x.ReqId == fulfilledList[i].ReqId).FirstOrDefault();
+                Employee emp = ctx.Employees.Where(x => x.EmpId == req.EmpId).FirstOrDefault();
+                Item item = ctx.Items.Where(x => x.ItemCode.Equals(fulfilledList[i].ItemCode)).FirstOrDefault();
+                disDet.DeptCode = emp.DeptCode;
+                disDet.ItemCode = fulfilledList[i].ItemCode;
+                disDet.Category = item.Cat;
+                disDet.Description = item.Desc;
+                disDet.ReqQty = fulfilledList[i].ReqQty;
+                disDet.AwaitQty = fulfilledList[i].AwaitQty;
+                disDet.FulfilledQty = fulfilledList[i].FulfilledQty;
+                disDet.EmpId = emp.EmpId;
+                disDet.ReqId = req.ReqId;
+                dListEmployee.Add(disDet);
+            }
+            List<DisbursementDetailVM> disbursementListEmployee = dListEmployee.OrderBy(x => x.ItemCode).OrderBy(x => x.ReqId).OrderBy(x => x.EmpId).OrderBy(x => x.DeptCode).ToList();
+            // disbursementListEmployee, list of disbursement sorted by deptCode, empId, reqId, and then itemCode, to be used for pdf export
+
+            return items;
         }
+
+
+        #region
+        //FulfillRequestUrgent
+        //public static void FulfillRequestUrgent(int empId, List<ItemVM> items, DateTime D1, int Collpt)
+        //{
+        //    List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
+
+        //    foreach (ItemVM i in items)
+        //    {
+        //        int count = (i.TempQtyDisb > i.Balance) ? i.Balance : i.TempQtyDisb ?? default(int);
+
+        //        foreach (RequestVM r in RequestBL.GetReq(empId, "Approved"))
+        //        {
+        //            if (count > 0)
+        //            {
+        //                string deptCode = EmployeeBL.GetEmp(r.EmpId).DeptCode;
+
+        //                foreach (RequestDetailVM rd in RequestDetailBL.GetReqDetList(r.ReqId))
+        //                {
+        //                    if (count > 0)
+        //                    {
+        //                        if (i.ItemCode.Equals(rd.ItemCode))
+        //                        {
+        //                            int shortQty = (rd.ReqQty - rd.FulfilledQty);
+
+        //                            if (shortQty <= count)
+        //                            {
+        //                                shortQty = 0;
+        //                                count -= shortQty;
+        //                                i.Balance -= shortQty;
+        //                                rd.AwaitQty += shortQty;
+        //                                try
+        //                                {
+        //                                    UpdateBal(rd.ItemCode, i.Balance);
+        //                                    fulfilledList.Add(rd);
+        //                                }
+        //                                catch (Exception)
+        //                                {
+        //                                    break;
+        //                                }
+        //                            }
+        //                            else
+        //                            {
+        //                                shortQty -= count;
+        //                                count = 0;
+        //                                i.Balance -= count;
+        //                                rd.AwaitQty += count;
+        //                                try
+        //                                {
+        //                                    UpdateBal(rd.ItemCode, i.Balance);
+        //                                    fulfilledList.Add(rd);
+        //                                }
+        //                                catch (Exception)
+        //                                {
+        //                                    break;
+        //                                }
+        //                            }
+        //                        }
+
+        //                    }
+        //                    else
+        //                    {
+        //                        break;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+
+
+        //    //Making PDF Reports
+        //    //Group By Department then By Item
+        //    List<RequestDetailVM> ListByDept = new List<RequestDetailVM>();
+
+        //    foreach (string d in DepartmentBL.GetDeptCodes())
+        //    {
+        //        List<RequestDetailVM> rdList = new List<RequestDetailVM>();
+
+        //        foreach (RequestDetailVM rd in fulfilledList)
+        //        {
+        //            if (GetDeptCode(rd.ReqId).Equals(d))
+        //            {
+        //                if (rdList.Contains(rd))
+        //                {
+        //                    rdList.Find(x => x.ItemCode.Equals(rd.ItemCode)).AwaitQty += rd.AwaitQty;
+        //                }
+        //                else
+        //                {
+        //                    rdList.Add(rd);
+        //                }
+
+        //                ListByDept.AddRange(rdList);
+        //            }
+        //        }
+        //    }
+
+
+        //}
+
+        #endregion
+
         //Get DeptCode by request id
         public static string GetDeptCode(int reqId)
         {
@@ -1139,7 +1353,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
 
         }
-
+       
         //Update Balnce
         public static void UpdateBal(string iCode, int bal)
         {
@@ -1390,7 +1604,28 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
+        //GetItems by  Threshold
+        public static List<ItemVM> GetAllItemsbyThreshold()
+        {
+            List<ItemVM> itemlist = new List<ItemVM>();
 
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<Item> iList = entities.Items.ToList();
+                itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(iList));
+                foreach (ItemVM item in itemlist)
+                {
+                    item.ReccReorderQty = Math.Max(item.ReorderQty, Get3monthReqandOutstandingReqs(item.ItemCode));
+                    item.ReccReorderLvl = item.ReccReorderQty * 2;
+                    item.lvlDiff = (item.ReccReorderLvl - item.ReccReorderQty) / item.ReccReorderQty;
+                    item.qtyDiff = (item.ReccReorderQty - item.ReorderQty) / item.ReorderQty;
+                }
+                double threshold = 0.3;
+                itemlist = itemlist.Where(i => i.lvlDiff >= threshold || i.qtyDiff >= threshold).ToList();
+                return itemlist;
+            }
+
+        }
         //GetItems by Cat, Desc and Threshold
         public static List<ItemVM> GetItems(string cat, string desc, double threshold)
         {
