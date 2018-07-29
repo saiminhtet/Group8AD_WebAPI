@@ -1,0 +1,20 @@
+<tr>
+	<td style="border:solid 1px black;" align="center">
+		[orderNo]
+	</td>	
+	<td style="border:solid 1px black;" align="center">
+		[itemcode]
+	</td>	
+	<td style="border:solid 1px black;" align="center">
+		[item_desc]
+	</td>
+	<td style="border:solid 1px black;" align="center">
+		[request_qty]
+	</td>
+	<td style="border:solid 1px black;" align="center">
+		[await_qty]
+	</td>
+	<td style="border:solid 1px black;" align="center">
+		[fulfilled_qty]
+	</td>	
+</tr>
