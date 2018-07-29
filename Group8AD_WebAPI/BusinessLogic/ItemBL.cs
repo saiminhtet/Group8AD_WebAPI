@@ -1029,6 +1029,9 @@ namespace Group8AD_WebAPI.BusinessLogic
             List<DisbursementDetailVM> disbursementListEmployee = dListEmployee.OrderBy(x => x.ItemCode).OrderBy(x => x.ReqId).OrderBy(x => x.EmpId).OrderBy(x => x.DeptCode).ToList();
             // disbursementListEmployee, list of disbursement sorted by deptCode, empId, reqId, and then itemCode, to be used for pdf export
 
+            // call make PDF method
+            // call email method
+
             return items;
         }
 
