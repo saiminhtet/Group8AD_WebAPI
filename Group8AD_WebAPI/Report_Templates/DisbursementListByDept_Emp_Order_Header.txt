@@ -1,0 +1,29 @@
+<table>
+<tr>
+    <td style="font-size:14px;font-weight: bold;">
+    Disbursement List at [disb-date] for [DeptName]
+    </td>
+</tr>
+<tr>
+    <td style="font-size:12px;font-weight: bold;">
+    Collection Point: [coll-point]
+    </td>
+	<td></td>
+	<td></td>
+	<td style="font-size:12px;font-weight: bold;" >
+    Collection Time: [coll-time]
+    </td>
+</tr>
+<tr>
+    <td style="font-size:12px;font-weight: bold;"  >
+    Representative Name: [rep-name] 
+    </td>
+</tr>
+<tr>
+    <td style="font-size:12px;font-weight: bold;"  >
+   
+    </td>
+</tr>
+</table>
+
+

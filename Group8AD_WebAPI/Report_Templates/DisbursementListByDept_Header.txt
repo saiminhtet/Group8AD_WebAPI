@@ -1,0 +1,45 @@
+<table>
+<tr>
+    <td style="font-size:14px;font-weight: bold;">
+    Disbursement List at [disb-date] for [DeptName]
+    </td>
+</tr>
+<tr>
+    <td style="font-size:12px;font-weight: bold;">
+    Collection Point: [coll-point]
+    </td>
+	<td></td>
+	<td></td>
+	<td style="font-size:12px;font-weight: bold;" >
+    Collection Time: [coll-time]
+    </td>
+</tr>
+<tr>
+    <td style="font-size:12px;font-weight: bold;"  >
+    Representative Name: [rep-name] 
+    </td>
+</tr>
+</table>
+<br/>
+<table border='1' width='100%' style='width:100%' >
+<thead>
+<tr>
+    	<th bgcolor="#ECECEC" align="center">
+       <strong> Item Code</strong>
+        </th>            
+        <td bgcolor="#ECECEC" align="center">
+       <strong> Item Description</strong>
+        </th>        
+        <th bgcolor="#ECECEC" align="center">
+       <strong> Request Quantity</strong>
+        </th>        
+         <th bgcolor="#ECECEC" align="center">
+       <strong> Await Quantity</strong>
+        </th>    
+		 <th bgcolor="#ECECEC" align="center">
+      <strong>  Fulfilled Quantity</strong>
+        </th>   
+</tr>
+</thead>
+<tbody>
+

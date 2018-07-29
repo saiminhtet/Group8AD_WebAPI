@@ -46,6 +46,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -233,6 +236,7 @@
     <Compile Include="BusinessLogic\EmployeeBL.cs" />
     <Compile Include="BusinessLogic\ItemBL.cs" />
     <Compile Include="BusinessLogic\NotificationBL.cs" />
+    <Compile Include="BusinessLogic\PdfBL.cs" />
     <Compile Include="BusinessLogic\ReportItemBL.cs" />
     <Compile Include="BusinessLogic\RequestBL.cs" />
     <Compile Include="BusinessLogic\RequestDetailBL.cs" />
@@ -342,6 +346,19 @@
       <DependentUpon>SA46Team08ADProjectContext.edmx</DependentUpon>
       <LastGenOutput>SA46Team08ADProjectContext.cs</LastGenOutput>
     </Content>
+    <Content Include="Report_Templates\POList_Body.txt" />
+    <Content Include="Report_Templates\LowStockItemList_Body.txt" />
+    <Content Include="Report_Templates\DisbursementListByDept_Emp_Order_Body.txt" />
+    <Content Include="Report_Templates\DisbursementListByDept_Body.txt" />
+    <Content Include="Report_Templates\DisbursementListByDept_Emp_Order_Footer.txt" />
+    <Content Include="Report_Templates\DisbursementListByDept_Emp_Order_Sub_Header.txt" />
+    <Content Include="Report_Templates\POList_Footer.txt" />
+    <Content Include="Report_Templates\LowStockItemList_Footer.txt" />
+    <Content Include="Report_Templates\DisbursementListByDept_Footer.txt" />
+    <Content Include="Report_Templates\DisbursementListByDept_Emp_Order_Header.txt" />
+    <Content Include="Report_Templates\POList_Header.txt" />
+    <Content Include="Report_Templates\LowStockItemList_Header.txt" />
+    <Content Include="Report_Templates\DisbursementListByDept_Header.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -402,6 +419,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="PDF\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
