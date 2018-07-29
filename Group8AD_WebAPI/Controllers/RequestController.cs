@@ -158,15 +158,12 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Request/accept")]
         public HttpResponseMessage AcceptRequest(int reqId, int empId, string cmt)
         {
-            try
-            {
-                RequestBL.AcceptRequest(reqId, empId, cmt);
-                return Request.CreateResponse(HttpStatusCode.OK);
-            }
-            catch
+            bool isAppoved = RequestBL.RejectRequest(reqId, empId, cmt);
+            if (isAppoved == false)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         // tested
@@ -175,32 +172,12 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Request/reject")]
         public HttpResponseMessage RejectRequest(int reqId, int empId, string cmt)
         {
-            try
-            {
-                RequestBL.RejectRequest(reqId, empId, cmt);
-                return Request.CreateResponse(HttpStatusCode.OK);
-            }
-            catch
+            bool isRejected = RequestBL.RejectRequest(reqId, empId, cmt);
+            if (isRejected == false)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
-        }
-
-        // tested, dummy
-        [AcceptVerbs("POST")]
-        [HttpPost]
-        [Route("api/Request/updatefulfilled")]
-        public HttpResponseMessage UpdateFulfilledStatus()
-        {
-            try
-            {
-                RequestBL.UpdateFulfilledRequestStatus();
-                return Request.CreateResponse(HttpStatusCode.OK);
-            }
-            catch
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
-            }
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

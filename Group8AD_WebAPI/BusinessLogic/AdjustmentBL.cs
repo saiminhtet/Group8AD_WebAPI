@@ -304,22 +304,15 @@ namespace Group8AD_WebAPI.BusinessLogic
                 // EmailBL.SendAdjReqEmail(104, adjlist);
                 //// send email to supervisor
                 // EmailBL.SendAdjReqEmail(105, adjlist);
+
                 return true;
             }
         }
 
         // reject adjustment request
         // done, except email
-        public static void RejectRequest(string voucherNo, int empId, string cmt)
+        public static bool RejectRequest(string voucherNo, int empId, string cmt)
         {
-            // Call GetAdj(voucherNo)
-            // Update ApproverId as empId
-            // Add ApproverComment as cmt
-            // Update Status as “Rejected”
-            // SaveChanges()
-            // Send Notification to Clerk
-            // Send Email to Clerk
-
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 Adjustment adjustment = entities.Adjustments.Where(a => a.VoucherNo == voucherNo).FirstOrDefault();
@@ -330,49 +323,22 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 int fromEmpId = empId;
                 int toEmpId = adjustment.EmpId;
-                Notification notif = new Notification();
-                notif.NotificationDateTime = DateTime.Now;
-                notif.FromEmp = fromEmpId;
-                notif.ToEmp = toEmpId;
-                notif.RouteUri = "";
-                notif.Type = "Adjustment Request";
-                notif.Content = "Rejected: " + cmt;
-                notif.IsRead = false;
-                entities.Notifications.Add(notif);
+                string type = "Adjustment Request";
+                string content = adjustment.VoucherNo + " has been rejected: Please review quantities";
 
-                List<Notification> lst = entities.Notifications.ToList();
-                Notification n = lst[lst.Count - 1];
+                NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
 
-                NotificationVM notification = new NotificationVM();
-                notification.NotificationId = n.NotificationId;
-                notification.NotificationDateTime = n.NotificationDateTime;
-                notification.FromEmp = n.FromEmp;
-                notification.ToEmp = n.ToEmp;
-                notification.RouteUri = n.RouteUri;
-                notification.Type = n.Type;
-                notification.Content = n.Content;
-                notification.IsRead = n.IsRead;
-
-                NotificationBL.AdjApprNotification(fromEmpId, toEmpId, notification);
                 //// will uncomment when email service method is done
                 // EmailBL.SendAdjApprEmail(empId, adjustment);
+
+                return true;
             }
-            return;
         }
 
         // accept adjustment request
         // done, except email
-        public static void AcceptRequest(string voucherNo, int empId, string cmt)
+        public static bool AcceptRequest(string voucherNo, int empId, string cmt)
         {
-            // Call GetAdj(empId)
-            // Update ApproverId as empId
-            // Add ApproverComment as cmt
-            // Update Status as “Approved”
-            // SaveChanges()
-            // Add Transaction for each Adjustment
-            // Send Notification to Clerk
-            // Send Email to Clerk
-
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 Adjustment adjustment = entities.Adjustments.Where(a => a.VoucherNo == voucherNo).FirstOrDefault();
@@ -383,34 +349,16 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 int fromEmpId = empId;
                 int toEmpId = adjustment.EmpId;
-                Notification notif = new Notification();
-                notif.NotificationDateTime = DateTime.Now;
-                notif.FromEmp = fromEmpId;
-                notif.ToEmp = toEmpId;
-                notif.RouteUri = "";
-                notif.Type = "Adjustment Request";
-                notif.Content = "Approved: " + cmt;
-                notif.IsRead = false;
-                entities.Notifications.Add(notif);
+                string type = "Adjustment Request";
+                string content = adjustment.VoucherNo + " has been approved: No comment";
 
-                List<Notification> lst = entities.Notifications.ToList();
-                Notification n = lst[lst.Count - 1];
+                NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
 
-                NotificationVM notification = new NotificationVM();
-                notification.NotificationId = n.NotificationId;
-                notification.NotificationDateTime = n.NotificationDateTime;
-                notification.FromEmp = n.FromEmp;
-                notification.ToEmp = n.ToEmp;
-                notification.RouteUri = n.RouteUri;
-                notification.Type = n.Type;
-                notification.Content = n.Content;
-                notification.IsRead = n.IsRead;
-
-                NotificationBL.AdjApprNotification(fromEmpId, toEmpId, notification);
-                //// will uncomment when email and notification service method is done
+                //// will uncomment when email method is done
                 // EmailBL.SendAdjApprEmail(empId, adjustment);
+
+                return true;
             }
-            return;
         }
 
         public static string GenerateVoucherNo()
