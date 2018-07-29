@@ -1011,9 +1011,11 @@ namespace Group8AD_WebAPI.BusinessLogic
             for (int i = 0; i < fulfilledList.Count; i++)
             {
                 DisbursementDetailVM disDet = new DisbursementDetailVM();
-                Request req = ctx.Requests.Where(x => x.ReqId == fulfilledList[i].ReqId).FirstOrDefault();
+                int reqId = fulfilledList[i].ReqId;
+                Request req = ctx.Requests.Where(x => x.ReqId == reqId).FirstOrDefault();
                 Employee emp = ctx.Employees.Where(x => x.EmpId == req.EmpId).FirstOrDefault();
-                Item item = ctx.Items.Where(x => x.ItemCode.Equals(fulfilledList[i].ItemCode)).FirstOrDefault();
+                string itemCode = fulfilledList[i].ItemCode;
+                Item item = ctx.Items.Where(x => x.ItemCode.Equals(itemCode)).FirstOrDefault();
                 disDet.DeptCode = emp.DeptCode;
                 disDet.ItemCode = fulfilledList[i].ItemCode;
                 disDet.Category = item.Cat;
@@ -1027,6 +1029,9 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             List<DisbursementDetailVM> disbursementListEmployee = dListEmployee.OrderBy(x => x.ItemCode).OrderBy(x => x.ReqId).OrderBy(x => x.EmpId).OrderBy(x => x.DeptCode).ToList();
             // disbursementListEmployee, list of disbursement sorted by deptCode, empId, reqId, and then itemCode, to be used for pdf export
+
+            // call make PDF method
+            // call email method
 
             return items;
         }
