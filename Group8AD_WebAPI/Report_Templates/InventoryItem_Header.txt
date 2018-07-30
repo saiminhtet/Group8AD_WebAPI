@@ -6,9 +6,12 @@
 </tr>
 </table>
 <br/>
-<table border='1' width='100%' style='width:100%' >
+<table border='1' width='100%'>
 <thead>
 <tr>
+		<th bgcolor="#ECECEC" align="center"  width="3%">
+        <strong>#</strong>
+        </th>  
     	<th bgcolor="#ECECEC" align="center">
         <strong>Item Code</strong>
         </th>         
@@ -22,7 +25,7 @@
 		<strong>Unit of measurement</strong>
         </th> 
          <th bgcolor="#ECECEC" align="center">
-		<strong>Quantity on hand</strong>
+		<strong>Current Balance</strong>
         </th>    
 		 <th bgcolor="#ECECEC" align="center">
        <strong> Reorder Level</strong>

@@ -1,5 +1,8 @@
 <tr>
 	<td style="border:solid 1px black;" align="center">
+		[#]
+	</td>	
+	<td style="border:solid 1px black;" align="center">
 		[itemcode]
 	</td>	
 	<td style="border:solid 1px black;" align="center">

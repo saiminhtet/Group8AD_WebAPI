@@ -195,105 +195,183 @@ namespace Group8AD_WebAPI.BusinessLogic
             List<ItemVM> LowStockItemList = ItemBL.GetLowStockItems();
 
             string filePath = HttpContext.Current.Server.MapPath("~/Report_Templates/");
-            string HTML = string.Empty;      
+            string HTML = string.Empty;
 
             HTML = string.Concat(HTML, File.ReadAllText(filePath + "LowStockItemList_Header.txt", System.Text.Encoding.UTF8));
             HTML = HTML.Replace("[date]", DateTime.Now.ToString("dd MMMM yyyy"));
 
-          
+            int sr_no = 1;
             foreach (ItemVM item in LowStockItemList)
-            {       
+            {
                 HTML = string.Concat(HTML, File.ReadAllText(filePath + "LowStockItemList_Body.txt", System.Text.Encoding.UTF8));
+                HTML = HTML.Replace("[#]", sr_no.ToString());
                 HTML = HTML.Replace("[itemcode]", item.ItemCode);
-                HTML = HTML.Replace("[item_cat]", item.Cat);
                 HTML = HTML.Replace("[item_desc]", item.Desc);
                 HTML = HTML.Replace("[uom]", item.UOM);
                 HTML = HTML.Replace("[item_balance]", item.Balance.ToString());
                 HTML = HTML.Replace("[item_restock_lvl]", item.ReorderLevel.ToString());
                 HTML = HTML.Replace("[item_restock_qty]", item.ReccReorderQty.ToString());
                 HTML = HTML.Replace("[item_supp1]", item.SuppCode1);
-                HTML = HTML.Replace("[item_p1]", item.Price1.ToString());
+                HTML = HTML.Replace("[item_p1]", item.Price1.ToString("C"));  //string.Format("{0:C}", Math.Round(item.Price1,3))
                 HTML = HTML.Replace("[item_supp2]", item.SuppCode2);
-                HTML = HTML.Replace("[item_p2]", item.Price2.ToString());
+                HTML = HTML.Replace("[item_p2]", item.Price2.ToString("C"));
                 HTML = HTML.Replace("[item_supp3]", item.SuppCode3);
-                HTML = HTML.Replace("[item_p3]", item.Price3.ToString());
+                HTML = HTML.Replace("[item_p3]", item.Price3.ToString("C"));
+
+                sr_no += 1;
             }
             HTML = string.Concat(HTML, File.ReadAllText(filePath + "LowStockItemList_Footer.txt", System.Text.Encoding.UTF8));
 
             PDFGenerator_A4Landscape(filename, HTML);
+            EmailBL.SendLowStockEmail(empId, filename);
         }
 
-        public static void GeneratePurchaseOrderList(List<ItemVM> ListPO,string filename)
+        public static void GeneratePurchaseOrderList(int empId, DateTime expected_Date, List<ItemVM> ListPO)
         {
-           
+            SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();
 
+            List<ItemVM> iList = ItemBL.GetAllItems().Take(10).ToList();
+
+            List<ItemVM> items = new List<ItemVM>();
+
+            List<Supplier> suppliers = new List<Supplier>();
+
+            string orderby_name = EmployeeBL.GetEmp(empId).EmpName;
+            string approvedby_name_rep = EmployeeBL.GetEmp(105).EmpName;
+            string approvedby_name_mgr = EmployeeBL.GetEmp(104).EmpName;
+
+            string filename = "PurchaseOrder_" + DateTime.Now.ToString("ddMMMMyyyy_HH_mm_ss") + ".pdf";
             string filePath = HttpContext.Current.Server.MapPath("~/Report_Templates/");
+
             string HTML = string.Empty;
-
             HTML = string.Concat(HTML, File.ReadAllText(filePath + "POList_Header.txt", System.Text.Encoding.UTF8));
-            HTML = HTML.Replace("[date]", DateTime.Now.ToString("dd MMMM yyyy"));
-
-
-            foreach (ItemVM item in ListPO)
+          
+            List<string> suppcodes1 = iList.Select(x => x.SuppCode1).Distinct().ToList();
+            List<string> suppcodes2 = iList.Select(x => x.SuppCode2).Distinct().ToList();
+            List<string> suppcodes3 = iList.Select(x => x.SuppCode3).Distinct().ToList();
+            foreach (string supp in suppcodes1)
             {
-                HTML = string.Concat(HTML, File.ReadAllText(filePath + "POList_Body.txt", System.Text.Encoding.UTF8));
-                HTML = HTML.Replace("[itemcode]", item.ItemCode);
-                HTML = HTML.Replace("[item_cat]", item.Cat);
-                HTML = HTML.Replace("[item_desc]", item.Desc);
-                HTML = HTML.Replace("[item_balance]", item.Balance.ToString());
-                HTML = HTML.Replace("[item_restock_lvl]", item.ReorderLevel.ToString());
-                HTML = HTML.Replace("[item_restock_qty]", item.ReccReorderQty.ToString());
-                HTML = HTML.Replace("[item_order_qty]", item.ReorderQty.ToString());
-                HTML = HTML.Replace("[item_supp1]", item.SuppCode1);
-                HTML = HTML.Replace("[item_p1]", item.Price1.ToString());
-                HTML = HTML.Replace("[item_supp2]", item.SuppCode2);
-                HTML = HTML.Replace("[item_p2]", item.Price2.ToString());
-                HTML = HTML.Replace("[item_supp3]", item.SuppCode3);
-                HTML = HTML.Replace("[item_p3]", item.Price3.ToString());
+                List<Supplier> suppl = entities.Suppliers.Where(s => s.SuppCode.Equals(supp)).ToList();
+                suppliers.AddRange(suppl);
             }
-            HTML = string.Concat(HTML, File.ReadAllText(filePath + "POList_Footer.txt", System.Text.Encoding.UTF8));
+            foreach (string supp in suppcodes2)
+            {
+                List<Supplier> suppl = entities.Suppliers.Where(s => s.SuppCode.Equals(supp)).ToList();
 
-            PDFGenerator_A4Landscape(filename, HTML);
+                if (suppliers.ToList().Find(x=>x.SuppCode.Equals(supp)).SuppCode.Count()==0)
+                {
+                    suppliers.AddRange(suppl);
+                }
+               
+            }
+            foreach (string supp in suppcodes3)
+            {
+                List<Supplier> suppl = entities.Suppliers.Where(s => s.SuppCode.Equals(supp)).ToList();                
+                if (suppliers.ToList().Find(x => x.SuppCode.Equals(supp)).SuppCode.Count() == 0)
+                {
+                    suppliers.AddRange(suppl);
+                }
+            }
+
+            foreach (Supplier sup in suppliers.Distinct())
+            {
+
+
+                HTML = string.Concat(HTML, File.ReadAllText(filePath + "POList_Sub_Header.txt", System.Text.Encoding.UTF8));
+                HTML = HTML.Replace("[supp_name]", sup.SuppName);
+                HTML = HTML.Replace("[supp_ctx_name]", sup.SuppCtcName);
+                HTML = HTML.Replace("[supp_addr_1]", sup.SuppAddr);
+                HTML = HTML.Replace("[expected_date]", expected_Date.ToString("dd MMMM yyyy"));
+
+                int total_qyantity = 0; double total_price = 0, total_amount=0;
+
+                foreach (ItemVM item in iList.Where(i => i.SuppCode1.Equals(sup.SuppCode) || i.SuppCode2.Equals(sup.SuppCode) || i.SuppCode3.Equals(sup.SuppCode)))
+                {
+                    if (item != null)
+                    {
+                        double price = 0;
+                        double amount = 0;
+                        if (sup.SuppCode.Equals(item.SuppCode1))
+                        {
+                            price = item.Price1;
+                        }
+                        if (sup.SuppCode.Equals(item.SuppCode2))
+                        {
+                            price = item.Price2;
+                        }
+                        if (sup.SuppCode.Equals(item.SuppCode3))
+                        {
+                            price = item.Price3;
+                        }
+                        HTML = string.Concat(HTML, File.ReadAllText(filePath + "POList_Body.txt", System.Text.Encoding.UTF8));
+                        HTML = HTML.Replace("[itemcode]", item.ItemCode);                       
+                        HTML = HTML.Replace("[item_desc]", item.Desc);                       
+                        HTML = HTML.Replace("[item_order_qty]", item.ReorderQty.ToString());                      
+                        HTML = HTML.Replace("[item_price]", price.ToString("C"));
+                        HTML = HTML.Replace("[item_amount]", (item.ReorderQty*price).ToString("C"));
+
+                        total_qyantity += item.ReorderQty;
+                        total_price += price;
+                        total_amount += item.ReorderQty * price;
+                    }
+                    else {break; }
+
+
+
+                }
+                HTML = string.Concat(HTML, File.ReadAllText(filePath + "POList_Footer.txt", System.Text.Encoding.UTF8));
+                HTML = HTML.Replace("[total_qty]", total_qyantity.ToString());
+                HTML = HTML.Replace("[total_price]", total_price.ToString("C"));   
+                HTML = HTML.Replace("[total_amount]", total_amount.ToString("C"));
+                HTML = HTML.Replace("[order_by]", orderby_name);
+                HTML = HTML.Replace("[approved_by]", total_qyantity >= 250 ? approvedby_name_mgr : approvedby_name_rep );
+                HTML = HTML.Replace("[order_by_date]", System.DateTime.Now.ToString("dd MMMM yyyy"));
+                HTML = HTML.Replace("[approved_by_date]", System.DateTime.Now.ToString("dd MMMM yyyy"));
+            }
+            PDFGenerator(filename, HTML);
+            //   EmailBL.SendPOEmail(empId,expected_Date,filename);
         }
 
         public static void GenerateInventoryItemList(int empId)
         {
             string filename = "InventoryStatusReport_" + DateTime.Now.ToString("ddMMMMyyyy_HH_mm_ss") + ".pdf";
-         
+
             SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();
 
             List<ItemVM> InventoryItemList = ItemBL.GetLowStockItems();
 
             string filePath = HttpContext.Current.Server.MapPath("~/Report_Templates/");
 
-           
+
 
             string HTML = string.Empty;
 
             HTML = string.Concat(HTML, File.ReadAllText(filePath + "InventoryItem_Header.txt", System.Text.Encoding.UTF8));
             HTML = HTML.Replace("[date]", DateTime.Now.ToString("dd MMMM yyyy"));
 
-
+            int sr_no = 1;
             foreach (ItemVM item in InventoryItemList)
             {
                 HTML = string.Concat(HTML, File.ReadAllText(filePath + "InventoryItem_Body.txt", System.Text.Encoding.UTF8));
-                HTML = HTML.Replace("[itemcode]", item.ItemCode);           
+                HTML = HTML.Replace("[#]", sr_no.ToString());
+                HTML = HTML.Replace("[itemcode]", item.ItemCode);
                 HTML = HTML.Replace("[item_desc]", item.Desc);
-                HTML = HTML.Replace("[location]", item.Location);                
+                HTML = HTML.Replace("[location]", item.Location);
                 HTML = HTML.Replace("[uom]", item.UOM);
                 HTML = HTML.Replace("[item_balance]", item.Balance.ToString());
                 HTML = HTML.Replace("[item_restock_lvl]", item.ReorderLevel.ToString());
                 HTML = HTML.Replace("[item_restock_qty]", item.ReorderQty.ToString());
-                HTML = HTML.Replace("[item_supp1]", item.SuppCode1);             
+                HTML = HTML.Replace("[item_supp1]", item.SuppCode1);
                 HTML = HTML.Replace("[item_supp2]", item.SuppCode2);
                 HTML = HTML.Replace("[item_supp3]", item.SuppCode3);
-            
+
+                sr_no += 1;
             }
             HTML = string.Concat(HTML, File.ReadAllText(filePath + "InventoryItem_Footer.txt", System.Text.Encoding.UTF8));
 
             PDFGenerator_A4Landscape(filename, HTML);
 
-            EmailBL.SendInvListEmail(empId,filename);
+            EmailBL.SendInvListEmail(empId, filename);
         }
         public static void PDFGenerator(string filename, string HTML_DATA)
         {
@@ -307,7 +385,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             p.RenderControl(hw);
 
             StringReader sr = new StringReader(sw.ToString());
-            Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+            Document pdfDoc = new Document(PageSize.A3, 10f, 10f, 10f, 0f);
 
             pdfDoc.SetMargins(50, 50, 50, 50);
             HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
@@ -361,9 +439,12 @@ namespace Group8AD_WebAPI.BusinessLogic
             PdfWriter.GetInstance(pdfDoc, new FileStream(filepath + filename, FileMode.Create));
 
             pdfDoc.Open();
+            htmlparser.StartDocument();
             htmlparser.Parse(sr);
-            pdfDoc.Close();
 
+            htmlparser.EndDocument();
+            htmlparser.Close();
+            pdfDoc.Close();
             //adding page number
             byte[] bytes = File.ReadAllBytes(filepath + filename);
             Font blackFont = FontFactory.GetFont("Arial", 9, Font.NORMAL, BaseColor.BLACK);

@@ -3,39 +3,14 @@
 		[itemcode]
 	</td>	
 	<td style="border:solid 1px black;" align="center">
-		[item_cat]
-	</td>
-	<td style="border:solid 1px black;" align="center">
 		[item_desc]
 	</td>
 	<td style="border:solid 1px black;" align="center">
-		[item_balance]
-	</td>
-	<td style="border:solid 1px black;" align="center">
-		[item_restock_lvl]
-	</td>
-	<td style="border:solid 1px black;" align="center">
-		[item_restock_qty]
-	</td>
-		<td style="border:solid 1px black;" align="center">
 		[item_order_qty]
 	</td>
 	<td style="border:solid 1px black;" align="center">
-		[item_supp1]
-	</td>
+		[item_price]	
 	<td style="border:solid 1px black;" align="center">
-		[item_p1]
-	</td>
-	<td style="border:solid 1px black;" align="center">
-		[item_supp2]
-	</td>
-	<td style="border:solid 1px black;" align="center">
-		[item_p2]
-	</td>
-	<td style="border:solid 1px black;" align="center">
-		[item_supp3]
-	</td>
-	<td style="border:solid 1px black;" align="center">
-		[item_p3]
-	</td>
+		[item_amount]
+	</td>	
 </tr>

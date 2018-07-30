@@ -361,6 +361,7 @@
     <Content Include="Report_Templates\LowStockItemList_Footer.txt" />
     <Content Include="Report_Templates\DisbursementListByDept_Footer.txt" />
     <Content Include="Report_Templates\DisbursementListByDept_Emp_Order_Header.txt" />
+    <Content Include="Report_Templates\POList_Sub_Header.txt" />
     <Content Include="Report_Templates\POList_Header.txt" />
     <Content Include="Report_Templates\LowStockItemList_Header.txt" />
     <Content Include="Report_Templates\DisbursementListByDept_Header.txt" />

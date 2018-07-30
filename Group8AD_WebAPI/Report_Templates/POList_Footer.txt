@@ -1,3 +1,57 @@
+<tr>
+	<td style="border:solid 1px black;" align="center">
+		
+	</td>	
+	<td style="font-size:15px;font-weight: bold;" align="center">
+		<strong>Total<strong>
+	</td>
+	<td style="border:solid 1px black;" align="center">
+		[total_qty]
+	</td>
+	<td style="border:solid 1px black;" align="center">
+		[total_price]	
+	<td style="border:solid 1px black;" align="center">
+		[total_amount]
+	</td>	
+</tr>
 </tbody>
 </table>
+<br/>
+<table>
+  <tr>
+                <td colspan="2" style="font-size:15px;font-weight: bold; text-align: right;">
+                Ordered by:
+                </td>
+                <td colspan="2" style="font-size:15px;font-weight: bold;">
+                [order_by]
+                </td>
+                <td colspan="3" style="font-size:15px;font-weight: bold;">
+                        &nbsp;
+                </td>
+                <td colspan="1" style="font-size:15px;font-weight: bold; text-align: right;">
+                Date: 
+                </td>
+                <td colspan="2" style="font-size:15px;font-weight: bold;">
+                   [order_by_date]
+                </td>
+            </tr>
+			  <tr>
+                <td colspan="2" style="font-size:15px;font-weight: bold; text-align: right;">
+                Approved by:
+                </td>
+                <td colspan="2" style="font-size:15px;font-weight: bold;">
+                [approved_by]
+                </td>
+                <td colspan="3" style="font-size:15px;font-weight: bold;">
+                        &nbsp;
+                </td>
+                <td colspan="1" style="font-size:15px;font-weight: bold; text-align: right;">
+                Date: 
+                </td>
+                <td colspan="2" style="font-size:15px;font-weight: bold;">
+                   [approved_by_date]
+                </td>
+            </tr>
+</table>
+<br/>
 <br/>

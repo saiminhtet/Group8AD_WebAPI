@@ -1,54 +1,22 @@
-<table>
+<table style="margin:auto;">
 <tr>
     <td style="font-size:16px;font-weight: bold;">
-    Purchase Order List at [date] 
+    </td>
+	<td style="font-size:18px;font-weight: bold;">
+   <strong>LOGIC University</strong>
+    </td>
+	<td style="font-size:16px;font-weight: bold;">
+    </td>
+</tr>
+<tr>
+ <td style="font-size:16px;font-weight: bold;">
+    </td>
+<td style="font-size:16px;font-weight: bold;">
+	Stationery Purchase Order
+</td>
+ <td style="font-size:16px;font-weight: bold;">
     </td>
 </tr>
 </table>
 <br/>
-<table border='1' width='100%' style='width:100%' >
-<thead>
-<tr>
-    	<th bgcolor="#ECECEC" align="center">
-        <strong>Item Code</strong>
-        </th>            
-        <td bgcolor="#ECECEC" align="center">
-       <strong> Item Category</strong>
-        </th>        
-        <th bgcolor="#ECECEC" align="center">
-       <strong> Item Description</strong>
-        </th>        
-         <th bgcolor="#ECECEC" align="center">
-		<strong>Current Stock Quantity</strong>
-        </th>    
-		 <th bgcolor="#ECECEC" align="center">
-       <strong> Restock Level</strong>
-        </th>   	  
-		 <th bgcolor="#ECECEC" align="center">
-       <strong> Recommended Restock Quantity</strong>
-        </th>
-		 <th bgcolor="#ECECEC" align="center">
-       <strong> Order Quantity</strong>
-        </th>		  
-		 <th bgcolor="#ECECEC" align="center">
-       <strong> Supplier 1</strong>
-        </th>	 
-		 <th bgcolor="#ECECEC" align="center">
-      <strong>  Price 1</strong>
-        </th>		  
-		 <th bgcolor="#ECECEC" align="center">
-		<strong> Supplier 2</strong>
-        </th>		  
-		 <th bgcolor="#ECECEC" align="center">
-		<strong> Price 2</strong>
-        </th>		   
-		 <th bgcolor="#ECECEC" align="center">
-       <strong> Supplier 3</strong>
-        </th>   
-		 <th bgcolor="#ECECEC" align="center">
-      <strong>  Price 3</strong>
-        </th>
-</tr>
-</thead>
-<tbody>
 
