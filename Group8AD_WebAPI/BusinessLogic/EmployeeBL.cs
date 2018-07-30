@@ -172,6 +172,25 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             }
             return empvmList;
-        }     
+        }   
+        
+        public static List<EmployeeVM> GetEmpReq()
+        {
+            List<EmployeeVM> empvmList = new List<EmployeeVM>();
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<int> eIdList = entities.Requests.Where(x => x.Status.Equals("Approved")).Select(x => x.EmpId).Distinct().ToList();
+                return entities.Employees.Where(x => eIdList.Contains(x.EmpId) == true).Select(e => new EmployeeVM()
+                {
+                    EmpId = e.EmpId,
+                    DeptCode = e.DeptCode,
+                    EmpName = e.EmpName,
+                    EmpAddr = e.EmpAddr,
+                    EmpEmail = e.EmpEmail,
+                    EmpCtcNo = e.EmpCtcNo,
+                    Role = e.Role
+                }).ToList();
+            }
+        }
     }
 }
