@@ -17,27 +17,10 @@ namespace Group8AD_WebAPI.BusinessLogic
     {
 
 
-        public static string GenerateDisbursementListbyDept(List<DisbursementDetailVM> List, string filename)
+        public static string GenerateDisbursementListbyDept(List<DisbursementDetailVM> disbList, string filename)
         {
             SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();
-
-
-            List<DisbursementDetailVM> disbList = entities.RequestDetails.Where(rd => rd.ReqQty > 0)
-                                                   .Join(entities.Requests, rd => rd.ReqId, r => r.ReqId, (rd, r) => new { rd, r })
-                                                   .Join(entities.Items, rd => rd.rd.ItemCode, i => i.ItemCode, (rd, i) => new { rd, i })
-                                                   .Join(entities.Employees, r => r.rd.r.EmpId, e => e.EmpId, (r, e) => new { r, e })
-                                                   .Select(result => new DisbursementDetailVM
-                                                   {
-                                                       DeptCode = result.e.DeptCode,
-                                                       ItemCode = result.r.rd.rd.ItemCode,
-                                                       Category = result.r.i.Cat,
-                                                       Description = result.r.i.Desc,
-                                                       ReqQty = result.r.rd.rd.ReqQty,
-                                                       AwaitQty = result.r.rd.rd.AwaitQty,
-                                                       FulfilledQty = result.r.rd.rd.FulfilledQty,
-                                                       EmpId = result.e.EmpId,
-                                                       ReqId = result.r.rd.r.ReqId
-                                                   }).ToList();
+            
 
 
             List<string> deptCodes = disbList.Select(d => d.DeptCode).Distinct().ToList();
@@ -98,27 +81,9 @@ namespace Group8AD_WebAPI.BusinessLogic
             return filename;
         }
 
-        public static string GenerateDisbursementListby_Dept_Employee_OrderNo(List<DisbursementDetailVM> List, string filename)
+        public static string GenerateDisbursementListby_Dept_Employee_OrderNo(List<DisbursementDetailVM> disbList, string filename)
         {
-            SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();
-
-
-            List<DisbursementDetailVM> disbList = entities.RequestDetails.Where(rd => rd.ReqQty > 0)
-                                                   .Join(entities.Requests, rd => rd.ReqId, r => r.ReqId, (rd, r) => new { rd, r })
-                                                   .Join(entities.Items, rd => rd.rd.ItemCode, i => i.ItemCode, (rd, i) => new { rd, i })
-                                                   .Join(entities.Employees, r => r.rd.r.EmpId, e => e.EmpId, (r, e) => new { r, e })
-                                                   .Select(result => new DisbursementDetailVM
-                                                   {
-                                                       DeptCode = result.e.DeptCode,
-                                                       ItemCode = result.r.rd.rd.ItemCode,
-                                                       Category = result.r.i.Cat,
-                                                       Description = result.r.i.Desc,
-                                                       ReqQty = result.r.rd.rd.ReqQty,
-                                                       AwaitQty = result.r.rd.rd.AwaitQty,
-                                                       FulfilledQty = result.r.rd.rd.FulfilledQty,
-                                                       EmpId = result.e.EmpId,
-                                                       ReqId = result.r.rd.r.ReqId
-                                                   }).ToList();
+            SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();           
 
 
             List<string> deptCodes = disbList.Select(d => d.DeptCode).Distinct().ToList();
