@@ -9,7 +9,8 @@ using System.Net.Http;
 using System.Web.Http;
 
 namespace Group8AD_WebAPI.Controllers
-{ 
+{
+    [Authorize]
     public class RequestDetailController : ApiController
     {
         //AddReqDet(int empId, RequestDetail reqDet , string status) 

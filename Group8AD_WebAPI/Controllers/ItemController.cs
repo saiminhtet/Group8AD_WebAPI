@@ -10,10 +10,9 @@ using Group8AD_WebAPI.Models.ViewModels;
 
 namespace Group8AD_WebAPI.Controllers
 {
+    [Authorize]
     public class ItemController : ApiController
     {
-
-
         //get All Item list
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]

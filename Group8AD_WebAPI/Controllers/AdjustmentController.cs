@@ -10,9 +10,11 @@ using System.Web.Http;
 
 namespace Group8AD_WebAPI.Controllers
 {
+    [Authorize]
     //Controllers
     public class AdjustmentController : ApiController
     {
+
         // tested
         [AcceptVerbs("POST")]
         [HttpPost]
