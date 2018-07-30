@@ -332,6 +332,10 @@
     <Compile Include="Utility\ItemUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\aspnet-Group8AD_WebAPI-20180714033429.mdf" />
+    <Content Include="App_Data\aspnet-Group8AD_WebAPI-20180714033429_log.ldf">
+      <DependentUpon>aspnet-Group8AD_WebAPI-20180714033429.mdf</DependentUpon>
+    </Content>
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -423,7 +427,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="PDF\" />
   </ItemGroup>
   <ItemGroup>

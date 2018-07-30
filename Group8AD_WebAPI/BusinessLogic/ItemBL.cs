@@ -21,7 +21,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 if (desc != null && cat == null)
                 {
-                    List<Item> ilist1 = entities.Items.Where(i => i.Desc == desc).ToList();
+                    List<Item> ilist1 = entities.Items.Where(i => i.Desc.ToUpper().Contains(desc.ToUpper()) == true).ToList();
                     itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist1));
                     return itemlist;
                 }
@@ -33,7 +33,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
                 else if (cat != null && desc != null)
                 {
-                    List<Item> ilist = entities.Items.Where(i => i.Cat == cat && i.Desc.Contains(desc)).ToList();
+                    List<Item> ilist = entities.Items.Where(i => i.Cat == cat && i.Desc.ToUpper().Contains(desc.ToUpper())).ToList();
                     itemlist.AddRange(Utility.ItemUtility.Convert_Item_To_ItemVM(ilist));
                     return itemlist;
                 }

@@ -103,5 +103,18 @@ namespace Group8AD_WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, emplist);
         }
 
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.HttpGet]
+        [Route("api/Employee/GetEmpReq")]
+        public HttpResponseMessage GetEmpReq()
+        {
+            List<EmployeeVM> emplist = BusinessLogic.EmployeeBL.GetEmpReq();
+
+            if (emplist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, emplist);
+        }
     }
 }
