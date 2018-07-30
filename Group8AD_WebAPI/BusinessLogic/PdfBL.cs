@@ -255,8 +255,10 @@ namespace Group8AD_WebAPI.BusinessLogic
             PDFGenerator_A4Landscape(filename, HTML);
         }
 
-        public static void GenerateInventoryItemList(string filename)
+        public static void GenerateInventoryItemList(int empId)
         {
+            string filename = "InventoryStatusReport" + DateTime.Now.ToString("dd MMMM yyyy HH:mm:ss") + ".pdf";
+
             SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();
 
             List<ItemVM> InventoryItemList = ItemBL.GetLowStockItems();
@@ -286,6 +288,8 @@ namespace Group8AD_WebAPI.BusinessLogic
             HTML = string.Concat(HTML, File.ReadAllText(filePath + "InventoryItem_Footer.txt", System.Text.Encoding.UTF8));
 
             PDFGenerator_A4Landscape(filename, HTML);
+
+           // EmailBL.SendInvListEmail(empId,filePath+filename);
         }
         public static void PDFGenerator(string filename, string HTML_DATA)
         {
