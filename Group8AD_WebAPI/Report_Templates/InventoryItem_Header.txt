@@ -1,0 +1,45 @@
+<table>
+<tr>
+    <td style="font-size:16px;font-weight: bold;">
+    Inventory Status Report as at [date] 
+    </td>
+</tr>
+</table>
+<br/>
+<table border='1' width='100%' style='width:100%' >
+<thead>
+<tr>
+    	<th bgcolor="#ECECEC" align="center">
+        <strong>Item Code</strong>
+        </th>         
+        <th bgcolor="#ECECEC" align="center">
+       <strong> Item Description</strong>
+        </th>  
+		 <th bgcolor="#ECECEC" align="center">
+		<strong>Location</strong>
+        </th> 
+		 <th bgcolor="#ECECEC" align="center">
+		<strong>Unit of measurement</strong>
+        </th> 
+         <th bgcolor="#ECECEC" align="center">
+		<strong>Quantity on hand</strong>
+        </th>    
+		 <th bgcolor="#ECECEC" align="center">
+       <strong> Reorder Level</strong>
+        </th> 	
+		 <th bgcolor="#ECECEC" align="center">
+      <strong>  Reorder Quantity </strong>
+        </th>
+		 <th bgcolor="#ECECEC" align="center">
+       <strong> Supplier 1</strong>
+        </th>		   
+		 <th bgcolor="#ECECEC" align="center">
+		<strong> Supplier 2</strong>
+        </th>		 
+		 <th bgcolor="#ECECEC" align="center">
+       <strong> Supplier 3</strong>
+        </th>	
+</tr>
+</thead>
+<tbody>
+

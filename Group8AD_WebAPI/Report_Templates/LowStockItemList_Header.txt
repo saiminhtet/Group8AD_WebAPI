@@ -12,7 +12,7 @@
     	<th bgcolor="#ECECEC" align="center">
         <strong>Item Code</strong>
         </th>            
-        <td bgcolor="#ECECEC" align="center">
+        <th bgcolor="#ECECEC" align="center">
        <strong> Item Category</strong>
         </th>        
         <th bgcolor="#ECECEC" align="center">
@@ -23,31 +23,24 @@
         </th>    
 		 <th bgcolor="#ECECEC" align="center">
        <strong> Restock Level</strong>
-        </th>   
+        </th>  
+		 <th bgcolor="#ECECEC" align="center">
+       <strong> Recommended Restock Quantity</strong>      
 		</th>    
 		 <th bgcolor="#ECECEC" align="center">
-       <strong> Recommended Restock Quantity</strong>
-        </th>
+       <strong> Supplier 1</strong>       
 		</th>    
 		 <th bgcolor="#ECECEC" align="center">
-       <strong> Supplier 1</strong>
-        </th>
+      <strong>  Price 1</strong>     
 		</th>    
 		 <th bgcolor="#ECECEC" align="center">
-      <strong>  Price 1</strong>
-        </th>
+		<strong> Supplier 2</strong>    
 		</th>    
 		 <th bgcolor="#ECECEC" align="center">
-		<strong> Supplier 2</strong>
-        </th>
+		<strong> Price 2</strong>      
 		</th>    
 		 <th bgcolor="#ECECEC" align="center">
-		<strong> Price 2</strong>
-        </th>
-		</th>    
-		 <th bgcolor="#ECECEC" align="center">
-       <strong> Supplier 3</strong>
-        </th>
+       <strong> Supplier 3</strong> 
 		</th>    
 		 <th bgcolor="#ECECEC" align="center">
       <strong>  Price 3</strong>

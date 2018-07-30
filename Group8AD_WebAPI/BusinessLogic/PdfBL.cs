@@ -206,6 +206,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 HTML = HTML.Replace("[itemcode]", item.ItemCode);
                 HTML = HTML.Replace("[item_cat]", item.Cat);
                 HTML = HTML.Replace("[item_desc]", item.Desc);
+                HTML = HTML.Replace("[uom]", item.UOM);
                 HTML = HTML.Replace("[item_balance]", item.Balance.ToString());
                 HTML = HTML.Replace("[item_restock_lvl]", item.ReorderLevel.ToString());
                 HTML = HTML.Replace("[item_restock_qty]", item.ReccReorderQty.ToString());
@@ -253,6 +254,39 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             PDFGenerator_A4Landscape(filename, HTML);
         }
+
+        public static void GenerateInventoryItemList(string filename)
+        {
+            SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();
+
+            List<ItemVM> InventoryItemList = ItemBL.GetLowStockItems();
+
+            string filePath = HttpContext.Current.Server.MapPath("~/Report_Templates/");
+            string HTML = string.Empty;
+
+            HTML = string.Concat(HTML, File.ReadAllText(filePath + "InventoryItem_Header.txt", System.Text.Encoding.UTF8));
+            HTML = HTML.Replace("[date]", DateTime.Now.ToString("dd MMMM yyyy"));
+
+
+            foreach (ItemVM item in InventoryItemList)
+            {
+                HTML = string.Concat(HTML, File.ReadAllText(filePath + "InventoryItem_Body.txt", System.Text.Encoding.UTF8));
+                HTML = HTML.Replace("[itemcode]", item.ItemCode);           
+                HTML = HTML.Replace("[item_desc]", item.Desc);
+                HTML = HTML.Replace("[location]", item.Location);                
+                HTML = HTML.Replace("[uom]", item.UOM);
+                HTML = HTML.Replace("[item_balance]", item.Balance.ToString());
+                HTML = HTML.Replace("[item_restock_lvl]", item.ReorderLevel.ToString());
+                HTML = HTML.Replace("[item_restock_qty]", item.ReorderQty.ToString());
+                HTML = HTML.Replace("[item_supp1]", item.SuppCode1);             
+                HTML = HTML.Replace("[item_supp2]", item.SuppCode2);
+                HTML = HTML.Replace("[item_supp3]", item.SuppCode3);
+            
+            }
+            HTML = string.Concat(HTML, File.ReadAllText(filePath + "InventoryItem_Footer.txt", System.Text.Encoding.UTF8));
+
+            PDFGenerator_A4Landscape(filename, HTML);
+        }
         public static void PDFGenerator(string filename, string HTML_DATA)
         {
             string filepath = HttpContext.Current.Server.MapPath("~/PDF/");
@@ -272,7 +306,12 @@ namespace Group8AD_WebAPI.BusinessLogic
             PdfWriter.GetInstance(pdfDoc, new FileStream(filepath + filename, FileMode.Create));
 
             pdfDoc.Open();
+            htmlparser.StartDocument();
+
             htmlparser.Parse(sr);
+
+            htmlparser.EndDocument();
+            htmlparser.Close();
             pdfDoc.Close();
 
             //adding page number

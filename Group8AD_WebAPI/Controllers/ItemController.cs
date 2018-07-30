@@ -447,10 +447,11 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/Test")]
         public HttpResponseMessage Test()
         {
-            //List<DisbursementDetailVM> disbursementListDept = new List<DisbursementDetailVM>();
+            List<DisbursementDetailVM> disbursementListDept = new List<DisbursementDetailVM>();
             List<ItemVM> itemlist = BusinessLogic.ItemBL.GetAllItems();
-            string filename = "POList" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
-            PdfBL.GeneratePurchaseOrderList(itemlist,filename);
+            string filename = "disbursementListDept" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+            // PdfBL.GeneratePurchaseOrderList(itemlist,filename);
+            PdfBL.GenerateDisbursementListbyDept(disbursementListDept, filename);
             return Request.CreateResponse(HttpStatusCode.OK);
             //try
             //{

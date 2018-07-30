@@ -346,6 +346,9 @@
       <DependentUpon>SA46Team08ADProjectContext.edmx</DependentUpon>
       <LastGenOutput>SA46Team08ADProjectContext.cs</LastGenOutput>
     </Content>
+    <Content Include="Report_Templates\InventoryItem_Body.txt" />
+    <Content Include="Report_Templates\InventoryItem_Footer.txt" />
+    <Content Include="Report_Templates\InventoryItem_Header.txt" />
     <Content Include="Report_Templates\POList_Body.txt" />
     <Content Include="Report_Templates\LowStockItemList_Body.txt" />
     <Content Include="Report_Templates\DisbursementListByDept_Emp_Order_Body.txt" />
