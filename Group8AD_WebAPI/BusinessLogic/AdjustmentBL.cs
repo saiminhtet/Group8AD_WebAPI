@@ -311,23 +311,24 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // reject adjustment request
         // done, except email
-        public static bool RejectRequest(string voucherNo, string cmt)
+        public static bool RejectRequest(string voucherNo, int empId, string cmt)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                int fromId = 0;
                 int toId = 0;
                 List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo.Equals(voucherNo)).ToList();
                 for (int i = 0; i < adjList.Count; i++)
                 {
-                    adjList[i].ApproverComment = cmt;
-                    adjList[i].Status = "Rejected";
-                    fromId = (int)adjList[i].ApproverId;
-                    toId = adjList[i].EmpId;
+                    if (adjList[i].ApproverId == empId)
+                    {
+                        adjList[i].ApproverComment = cmt;
+                        adjList[i].Status = "Rejected";
+                        toId = adjList[i].EmpId;
+                    }
                 }
                 entities.SaveChanges();
 
-                int fromEmpId = fromId;
+                int fromEmpId = empId;
                 int toEmpId = toId;
                 string type = "Adjustment Request";
                 string content = voucherNo + " has been rejected: Please review quantities";
@@ -343,23 +344,24 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // accept adjustment request
         // done, except email
-        public static bool AcceptRequest(string voucherNo, string cmt)
+        public static bool AcceptRequest(string voucherNo, int empId, string cmt)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                int fromId = 0;
                 int toId = 0;
                 List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo.Equals(voucherNo)).ToList();
                 for (int i = 0; i < adjList.Count; i++)
                 {
-                    adjList[i].ApproverComment = cmt;
-                    adjList[i].Status = "Approved";
-                    fromId = (int)adjList[i].ApproverId;
-                    toId = adjList[i].EmpId;
+                    if (adjList[i].ApproverId == empId)
+                    {
+                        adjList[i].ApproverComment = cmt;
+                        adjList[i].Status = "Approved";
+                        toId = adjList[i].EmpId;
+                    }
                 }
                 entities.SaveChanges();
 
-                int fromEmpId = fromId;
+                int fromEmpId = empId;
                 int toEmpId = toId;
                 string type = "Adjustment Request";
                 string content = voucherNo + " has been approved: No comment";
