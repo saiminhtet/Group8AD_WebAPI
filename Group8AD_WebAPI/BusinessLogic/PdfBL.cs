@@ -257,13 +257,16 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         public static void GenerateInventoryItemList(int empId)
         {
-            string filename = "InventoryStatusReport" + DateTime.Now.ToString("dd MMMM yyyy HH:mm:ss") + ".pdf";
-
+            string filename = "InventoryStatusReport" + DateTime.Now.ToString("ddMMMMyyyy_HH_mm_ss") + ".pdf";
+            string pdfpath = HttpContext.Current.Server.MapPath("~/PDF/");
             SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();
 
             List<ItemVM> InventoryItemList = ItemBL.GetLowStockItems();
 
             string filePath = HttpContext.Current.Server.MapPath("~/Report_Templates/");
+
+           
+
             string HTML = string.Empty;
 
             HTML = string.Concat(HTML, File.ReadAllText(filePath + "InventoryItem_Header.txt", System.Text.Encoding.UTF8));
@@ -289,7 +292,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             PDFGenerator_A4Landscape(filename, HTML);
 
-           // EmailBL.SendInvListEmail(empId,filePath+filename);
+            EmailBL.SendInvListEmail(empId,pdfpath+filename);
         }
         public static void PDFGenerator(string filename, string HTML_DATA)
         {

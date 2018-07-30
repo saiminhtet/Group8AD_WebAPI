@@ -12,9 +12,10 @@ namespace Group8AD_WebAPI.Controllers
         //Inventory Status Report
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
-        [Route("api/Report/GenerateInventoryItemList")]
+        [Route("api/Report/InventoryList/{empId}")]
         public HttpResponseMessage GenerateInventoryItemList(int empId)
         {
+            //int emp_id = Convert.ToInt16(empId);
             try
             {
                 BusinessLogic.PdfBL.GenerateInventoryItemList(empId);

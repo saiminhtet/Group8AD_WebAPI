@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using Group8AD_WebAPI.Models;
 using Group8AD_WebAPI.Models.ViewModels;
@@ -468,7 +469,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
                                 content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine + Environment.NewLine + "Thank you.";
-                    Attachment at = new Attachment(Server.MapPath(attachfile));
+                    Attachment at = new Attachment(HttpContext.Current.Server.MapPath(attachfile));
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
