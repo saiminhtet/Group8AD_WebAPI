@@ -3,10 +3,10 @@
 		[itemcode]
 	</td>	
 	<td style="border:solid 1px black;" align="center">
-		[item_cat]
+		[item_desc]
 	</td>
 	<td style="border:solid 1px black;" align="center">
-		[item_desc]
+		[location]
 	</td>
 	<td style="border:solid 1px black;" align="center">
 		[uom]
@@ -24,18 +24,9 @@
 		[item_supp1]
 	</td>
 	<td style="border:solid 1px black;" align="center">
-		[item_p1]
-	</td>
-	<td style="border:solid 1px black;" align="center">
 		[item_supp2]
-	</td>
-	<td style="border:solid 1px black;" align="center">
-		[item_p2]
-	</td>
+	</td>	
 	<td style="border:solid 1px black;" align="center">
 		[item_supp3]
-	</td>
-	<td style="border:solid 1px black;" align="center">
-		[item_p3]
 	</td>
 </tr>

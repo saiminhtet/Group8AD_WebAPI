@@ -1,4 +1,5 @@
-<table>
+
+<table id="header">
 <tr>
     <td style="font-size:14px;font-weight: bold;">
     Disbursement List at [disb-date] for [DeptName]
@@ -21,7 +22,7 @@
 </tr>
 </table>
 <br/>
-<table border='1' width='100%' style='width:100%' >
+<table id="body" border='1' width='100%'style='height:900px;page-break-inside: avoid;'>
 <thead>
 <tr>
     	<th bgcolor="#ECECEC" align="center">
