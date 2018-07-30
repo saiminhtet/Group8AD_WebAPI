@@ -370,7 +370,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendAdjApprEmail(int empId, Adjustment adj)
-        public static bool SendAdjApprEmail(int empId, Adjustment adj)
+        public static bool SendAdjApprEmail(int empId, List<Adjustment> adjList)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -379,9 +379,13 @@ namespace Group8AD_WebAPI.BusinessLogic
                     var from_email = entities.Employees.Where(e => e.EmpId == 105).Select(e => e.EmpEmail).First();
                     var to_email = entities.Employees.Where(e => e.EmpId == 101).Select(e => e.EmpEmail).First();
                     var _to = entities.Employees.Where(e => e.EmpId == 105).Select(e => e.EmpName).First();
-                    var voucherNo = entities.Adjustments.Where(a => a.VoucherNo == adj.VoucherNo).Select(a => a.VoucherNo).First();
-                    var status = entities.Adjustments.Where(a => a.Status == adj.Status).Select(a => a.Status).First();
-                    var approverComment = entities.Adjustments.Where(a => a.ApproverComment == adj.ApproverComment).Select(a => a.ApproverComment).First();
+                    //var voucherNo = entities.Adjustments.Where(a => a.VoucherNo == adj.VoucherNo).Select(a => a.VoucherNo).First();
+                    //var status = entities.Adjustments.Where(a => a.Status == adj.Status).Select(a => a.Status).First();
+                    //var approverComment = entities.Adjustments.Where(a => a.ApproverComment == adj.ApproverComment).Select(a => a.ApproverComment).First();
+
+                    string voucherNo = adjList.Select(a => a.VoucherNo).First().ToString();
+                    string status = adjList.Select(a => a.Status).First().ToString();
+                    string approverComment = adjList.Select(a => a.ApproverComment).First().ToString();
 
                     string type = "Adjustment Request";
                     string content = "has been ";
