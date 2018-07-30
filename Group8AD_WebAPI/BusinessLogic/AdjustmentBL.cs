@@ -253,11 +253,14 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // raise adjustment
-        // done, except email
+        // done
         public static bool RaiseAdjustments(int empId, List<ItemVM> iList)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
+                // for email
+                List<Adjustment> adjList = new List<Adjustment>();
+
                 string vNum = GenerateVoucherNo();
                 for (int i = 0; i < iList.Count; i++)
                 {
@@ -289,6 +292,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                         entities.Adjustments.Add(a);
                         entities.SaveChanges();
 
+                        // for email
+                        adjList.Add(a);
+
                         int fromEmpIdA = empId;
                         int toEmpIdA = emp.EmpId;
                         string typeA = "Adjustment Request";
@@ -296,14 +302,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                         NotificationBL.AddNewNotification(fromEmpIdA, toEmpIdA, typeA, contentA);
                     }
                 }
-                    
-                // will implement when Email service method is done
-                // send email to clerk
-                // EmailBL.SendAdjReqEmail(empId, adjlist);
-                //// send email to manager
-                // EmailBL.SendAdjReqEmail(104, adjlist);
-                //// send email to supervisor
-                // EmailBL.SendAdjReqEmail(105, adjlist);
+
+                // for email
+                EmailBL.SendAdjReqEmail(empId, adjList);
 
                 return true;
             }
@@ -311,23 +312,24 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // reject adjustment request
         // done, except email
-        public static bool RejectRequest(string voucherNo, string cmt)
+        public static bool RejectRequest(string voucherNo, int empId, string cmt)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                int fromId = 0;
                 int toId = 0;
                 List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo.Equals(voucherNo)).ToList();
                 for (int i = 0; i < adjList.Count; i++)
                 {
-                    adjList[i].ApproverComment = cmt;
-                    adjList[i].Status = "Rejected";
-                    fromId = (int)adjList[i].ApproverId;
-                    toId = adjList[i].EmpId;
+                    if (adjList[i].ApproverId == empId)
+                    {
+                        adjList[i].ApproverComment = cmt;
+                        adjList[i].Status = "Rejected";
+                        toId = adjList[i].EmpId;
+                    }
                 }
                 entities.SaveChanges();
 
-                int fromEmpId = fromId;
+                int fromEmpId = empId;
                 int toEmpId = toId;
                 string type = "Adjustment Request";
                 string content = voucherNo + " has been rejected: Please review quantities";
@@ -343,23 +345,24 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // accept adjustment request
         // done, except email
-        public static bool AcceptRequest(string voucherNo, string cmt)
+        public static bool AcceptRequest(string voucherNo, int empId, string cmt)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                int fromId = 0;
                 int toId = 0;
                 List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo.Equals(voucherNo)).ToList();
                 for (int i = 0; i < adjList.Count; i++)
                 {
-                    adjList[i].ApproverComment = cmt;
-                    adjList[i].Status = "Approved";
-                    fromId = (int)adjList[i].ApproverId;
-                    toId = adjList[i].EmpId;
+                    if (adjList[i].ApproverId == empId)
+                    {
+                        adjList[i].ApproverComment = cmt;
+                        adjList[i].Status = "Approved";
+                        toId = adjList[i].EmpId;
+                    }
                 }
                 entities.SaveChanges();
 
-                int fromEmpId = fromId;
+                int fromEmpId = empId;
                 int toEmpId = toId;
                 string type = "Adjustment Request";
                 string content = voucherNo + " has been approved: No comment";
