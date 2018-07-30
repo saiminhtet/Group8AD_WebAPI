@@ -311,20 +311,26 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // reject adjustment request
         // done, except email
-        public static bool RejectRequest(string voucherNo, int empId, string cmt)
+        public static bool RejectRequest(string voucherNo, string cmt)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                Adjustment adjustment = entities.Adjustments.Where(a => a.VoucherNo == voucherNo).FirstOrDefault();
-                adjustment.ApproverId = empId;
-                adjustment.ApproverComment = cmt;
-                adjustment.Status = "Rejected";
+                int fromId = 0;
+                int toId = 0;
+                List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo.Equals(voucherNo)).ToList();
+                for (int i = 0; i < adjList.Count; i++)
+                {
+                    adjList[i].ApproverComment = cmt;
+                    adjList[i].Status = "Rejected";
+                    fromId = (int)adjList[i].ApproverId;
+                    toId = adjList[i].EmpId;
+                }
                 entities.SaveChanges();
 
-                int fromEmpId = empId;
-                int toEmpId = adjustment.EmpId;
+                int fromEmpId = fromId;
+                int toEmpId = toId;
                 string type = "Adjustment Request";
-                string content = adjustment.VoucherNo + " has been rejected: Please review quantities";
+                string content = voucherNo + " has been rejected: Please review quantities";
 
                 NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
 
@@ -337,20 +343,26 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         // accept adjustment request
         // done, except email
-        public static bool AcceptRequest(string voucherNo, int empId, string cmt)
+        public static bool AcceptRequest(string voucherNo, string cmt)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                Adjustment adjustment = entities.Adjustments.Where(a => a.VoucherNo == voucherNo).FirstOrDefault();
-                adjustment.ApproverId = empId;
-                adjustment.ApproverComment = cmt;
-                adjustment.Status = "Approved";
+                int fromId = 0;
+                int toId = 0;
+                List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo.Equals(voucherNo)).ToList();
+                for (int i = 0; i < adjList.Count; i++)
+                {
+                    adjList[i].ApproverComment = cmt;
+                    adjList[i].Status = "Approved";
+                    fromId = (int)adjList[i].ApproverId;
+                    toId = adjList[i].EmpId;
+                }
                 entities.SaveChanges();
 
-                int fromEmpId = empId;
-                int toEmpId = adjustment.EmpId;
+                int fromEmpId = fromId;
+                int toEmpId = toId;
                 string type = "Adjustment Request";
-                string content = adjustment.VoucherNo + " has been approved: No comment";
+                string content = voucherNo + " has been approved: No comment";
 
                 NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
 

@@ -114,9 +114,9 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/accept")]
-        public HttpResponseMessage AcceptRequest(string voucherNo, int empId, string cmt)
+        public HttpResponseMessage AcceptRequest(string voucherNo, string cmt)
         {
-            bool isAccepted = AdjustmentBL.RejectRequest(voucherNo, empId, cmt);
+            bool isAccepted = AdjustmentBL.RejectRequest(voucherNo, cmt);
             if (isAccepted == false)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
@@ -128,9 +128,9 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/reject")]
-        public HttpResponseMessage RejectRequest(string voucherNo, int empId, string cmt)
+        public HttpResponseMessage RejectRequest(string voucherNo, string cmt)
         {
-            bool isRejected = AdjustmentBL.RejectRequest(voucherNo, empId, cmt);
+            bool isRejected = AdjustmentBL.RejectRequest(voucherNo, cmt);
             if (isRejected == false)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
