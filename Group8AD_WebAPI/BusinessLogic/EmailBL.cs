@@ -209,6 +209,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendLowStockEmail
+        //with attach
         public static bool SendLowStockEmail(int empId, string attachfile)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -228,7 +229,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
                     Attachment at = new Attachment(filePath + attachfile);
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
@@ -293,6 +294,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendPOEmail
+        //with attach
         public static bool SendPOEmail(int empId, DateTime targetDate, string attachfile)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -316,7 +318,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + "( " + targetDate + " ) " + " " + content1 + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + " " + "( " + targetDate + " ) " + " " + content1 + Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
                     Attachment at = new Attachment(filePath + attachfile);
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
@@ -333,7 +335,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendAdjReqEmail(int empId, List<Adjustment> adjList)
-        public static bool SendAdjReqEmail(int empId, List<Adjustment> adjList)
+        public static bool SendAdjReqEmail(int empId, List<AdjustmentVM> adjList)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -370,7 +372,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendAdjApprEmail(int empId, Adjustment adj)
-        public static bool SendAdjApprEmail(int empId, List<Adjustment> adjList)
+        public static bool SendAdjApprEmail(int empId, List<AdjustmentVM> adjList)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -395,7 +397,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.To.Add(to_email);//101's email
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
-                    msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine + voucherNo +
+                    msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine + voucherNo + " " +
                                 content + " " + ":" + " " + status + " " + approverComment + Environment.NewLine + Environment.NewLine + "Thank you.";
 
                     msg.Priority = MailPriority.High;
@@ -475,7 +477,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine  + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine  + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
                     Attachment at = new Attachment(filePath+attachfile);
                     //Attachment at1 = new Attachment(filePath+attachfile);
                     msg.Attachments.Add(at);
