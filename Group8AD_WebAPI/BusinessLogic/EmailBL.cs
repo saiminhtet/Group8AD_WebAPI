@@ -461,7 +461,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     string type = "Inventory ";
                     string content = "You have recently requested for a list of inventory item for the Logic University on ";
                     // CollectionPoint.Location +  + CollectionPoint.Location;
-
+                    string filePath = HttpContext.Current.Server.MapPath("~/PDF/");
                     MailMessage msg = new MailMessage();
                     msg.From = new MailAddress(from_email);
                     msg.To.Add(to_email);
@@ -469,7 +469,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
                                 content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine + Environment.NewLine + "Thank you.";
-                    Attachment at = new Attachment(HttpContext.Current.Server.MapPath(attachfile));
+                    Attachment at = new Attachment(filePath+attachfile);
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
