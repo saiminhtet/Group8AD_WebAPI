@@ -222,6 +222,42 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
+        // get adjustment by status and approverId
+        // done
+        public static List<AdjustmentVM> GetAdjListByStatusApproverId(string status, int approverId)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<AdjustmentVM> avmList = new List<AdjustmentVM>();
+                if (status == null || status.Equals("")) avmList = GetAdjListByApproverId(approverId);
+                else if (approverId.Equals("") || approverId.Equals(null)) avmList = GetAdjListByStatus(status);
+                else
+                {
+                    List<Adjustment> adjList = entities.Adjustments.Where(a => a.Status.Equals(status) && a.ApproverId == approverId).ToList();
+                    avmList = new List<AdjustmentVM>();
+                    for (int i = 0; i < adjList.Count; i++)
+                    {
+                        AdjustmentVM adj = new AdjustmentVM();
+                        adj.VoucherNo = adjList[i].VoucherNo;
+                        adj.EmpId = adjList[i].EmpId;
+                        adj.DateTimeIssued = adjList[i].DateTimeIssued;
+                        adj.ItemCode = adjList[i].ItemCode;
+                        adj.Reason = adjList[i].Reason;
+                        adj.QtyChange = adjList[i].QtyChange;
+                        adj.Status = adjList[i].Status;
+                        Employee emp = entities.Employees.Where(x => x.Role.Equals("Store Supervisor")).FirstOrDefault();
+                        if (adjList[i].ApproverId != null)
+                            adj.ApproverId = (int)adjList[i].ApproverId;
+                        else
+                            adj.ApproverId = emp.EmpId;
+                        adj.ApproverComment = adjList[i].ApproverComment;
+                        avmList.Add(adj);
+                    }
+                }
+                return avmList;
+            }
+        }
+
         // get adjustment by approverId
         // done
         public static List<AdjustmentVM> GetAdjListByApproverId(int approverId)

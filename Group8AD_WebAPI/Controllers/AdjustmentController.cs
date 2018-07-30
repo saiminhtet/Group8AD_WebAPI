@@ -73,6 +73,20 @@ namespace Group8AD_WebAPI.Controllers
         [AcceptVerbs("POST")]
         [HttpPost]
         [Route("api/Adjustment/get")]
+        public HttpResponseMessage GetAdjustmentByStatusApproverId(string status, int approverId)
+        {
+            List<AdjustmentVM> adjustment = AdjustmentBL.GetAdjListByStatusApproverId(status, approverId);
+            if (adjustment == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, adjustment);
+        }
+
+        // tested
+        [AcceptVerbs("POST")]
+        [HttpPost]
+        [Route("api/Adjustment/get")]
         public HttpResponseMessage GetAdjustmentList(string status)
         {
             List<AdjustmentVM> adjlist = AdjustmentBL.GetAdjListByStatus(status);
