@@ -116,7 +116,7 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Adjustment/accept")]
         public HttpResponseMessage AcceptRequest(string voucherNo, int empId, string cmt)
         {
-            bool isAccepted = AdjustmentBL.RejectRequest(voucherNo, empId, cmt);
+            bool isAccepted = AdjustmentBL.AcceptRequest(voucherNo, empId, cmt);
             if (isAccepted == false)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
