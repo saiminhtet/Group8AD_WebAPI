@@ -508,6 +508,9 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static bool AcceptRequest(int reqId, int empId, string cmt)
         {
             List<RequestVM> reqlist = GetReq(empId, "Submitted");
+            // for email
+            RequestVM reqVM = new RequestVM();
+
             int toId = 0;
             for (int i = 0; i < reqlist.Count; i++)
             {
@@ -522,6 +525,16 @@ namespace Group8AD_WebAPI.BusinessLogic
                         req.ApprovedDateTime = DateTime.Now;
                         req.Status = "Approved";
                         entities.SaveChanges();
+                        // for email
+                        reqVM.ReqId = req.ReqId;
+                        reqVM.EmpId = req.EmpId;
+                        reqVM.ApproverId = req.ApproverId;
+                        reqVM.ApproverComment = req.ApproverComment;
+                        reqVM.ReqDateTime = (DateTime)req.ApprovedDateTime;
+                        reqVM.ApprovedDateTime = (DateTime)req.ApprovedDateTime;
+                        reqVM.CancelledDateTime = (DateTime)req.CancelledDateTime;
+                        reqVM.Status = req.Status;
+                        reqVM.FulfilledDateTime = (DateTime)req.FulfilledDateTime;
                     }
                 }
             }
@@ -530,6 +543,8 @@ namespace Group8AD_WebAPI.BusinessLogic
             string type = "Stationery Request";
             string content = "Your stationery request has been approved : No comment";
             NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
+            // for email
+            EmailBL.SendReqApprEmail(toId, reqVM);
 
             return true;
         }
@@ -539,6 +554,9 @@ namespace Group8AD_WebAPI.BusinessLogic
         public static bool RejectRequest(int reqId, int empId, string cmt)
         {
             List<RequestVM> reqlist = GetReq(empId, "Submitted");
+            // for email
+            RequestVM reqVM = new RequestVM();
+
             int toId = 0;
             for (int i = 0; i < reqlist.Count; i++)
             {
@@ -553,6 +571,16 @@ namespace Group8AD_WebAPI.BusinessLogic
                         req.ApprovedDateTime = DateTime.Now;
                         req.Status = "Rejected";
                         entities.SaveChanges();
+                        // for email
+                        reqVM.ReqId = req.ReqId;
+                        reqVM.EmpId = req.EmpId;
+                        reqVM.ApproverId = req.ApproverId;
+                        reqVM.ApproverComment = req.ApproverComment;
+                        reqVM.ReqDateTime = (DateTime)req.ApprovedDateTime;
+                        reqVM.ApprovedDateTime = (DateTime)req.ApprovedDateTime;
+                        reqVM.CancelledDateTime = (DateTime)req.CancelledDateTime;
+                        reqVM.Status = req.Status;
+                        reqVM.FulfilledDateTime = (DateTime)req.FulfilledDateTime;
                     }
                 }
             }
@@ -561,6 +589,8 @@ namespace Group8AD_WebAPI.BusinessLogic
             string type = "Stationery Request";
             string content = "Your stationery request has been rejected : Please review quantities";
             NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
+            // for email
+            EmailBL.SendReqApprEmail(toId, reqVM);
 
             return true;
         }

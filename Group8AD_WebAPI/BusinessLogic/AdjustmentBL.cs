@@ -253,11 +253,14 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         // raise adjustment
-        // done, except email
+        // done
         public static bool RaiseAdjustments(int empId, List<ItemVM> iList)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
+                // for email
+                List<Adjustment> adjList = new List<Adjustment>();
+
                 string vNum = GenerateVoucherNo();
                 for (int i = 0; i < iList.Count; i++)
                 {
@@ -289,6 +292,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                         entities.Adjustments.Add(a);
                         entities.SaveChanges();
 
+                        // for email
+                        adjList.Add(a);
+
                         int fromEmpIdA = empId;
                         int toEmpIdA = emp.EmpId;
                         string typeA = "Adjustment Request";
@@ -296,14 +302,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                         NotificationBL.AddNewNotification(fromEmpIdA, toEmpIdA, typeA, contentA);
                     }
                 }
-                    
-                // will implement when Email service method is done
-                // send email to clerk
-                // EmailBL.SendAdjReqEmail(empId, adjlist);
-                //// send email to manager
-                // EmailBL.SendAdjReqEmail(104, adjlist);
-                //// send email to supervisor
-                // EmailBL.SendAdjReqEmail(105, adjlist);
+
+                // for email
+                EmailBL.SendAdjReqEmail(empId, adjList);
 
                 return true;
             }
