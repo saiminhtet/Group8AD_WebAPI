@@ -346,7 +346,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                         }
                         else
                         {
-                            toId = entities.Employees.Where(x => x.EmpId == adjRaiseEmpId).FirstOrDefault().EmpId;
+                            toId = entities.Employees.Where(x => x.Role.Equals("Store Clerk")).FirstOrDefault().EmpId;
                         }
 
                         // for email
@@ -405,7 +405,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                         }
                         else
                         {
-                            toId = entities.Employees.Where(x => x.EmpId == adjRaiseEmpId).FirstOrDefault().EmpId;
+                            toId = entities.Employees.Where(x => x.Role.Equals("Store Clerk")).FirstOrDefault().EmpId;
                         }
 
                         // for email
