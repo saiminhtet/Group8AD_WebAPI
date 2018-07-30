@@ -259,7 +259,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 // for email
-                List<Adjustment> adjList = new List<Adjustment>();
+                List<AdjustmentVM> adjList = new List<AdjustmentVM>();
 
                 string vNum = GenerateVoucherNo();
                 for (int i = 0; i < iList.Count; i++)
@@ -293,7 +293,17 @@ namespace Group8AD_WebAPI.BusinessLogic
                         entities.SaveChanges();
 
                         // for email
-                        adjList.Add(a);
+                        AdjustmentVM adj = new AdjustmentVM();
+                        adj.VoucherNo = adjList[i].VoucherNo;
+                        adj.EmpId = adjList[i].EmpId;
+                        adj.DateTimeIssued = adjList[i].DateTimeIssued;
+                        adj.ItemCode = adjList[i].ItemCode;
+                        adj.Reason = adjList[i].Reason;
+                        adj.QtyChange = adjList[i].QtyChange;
+                        adj.Status = adjList[i].Status;
+                        adj.ApproverId = (int)adjList[i].ApproverId;
+                        adj.ApproverComment = adjList[i].ApproverComment;
+                        adjList.Add(adj);
 
                         int fromEmpIdA = empId;
                         int toEmpIdA = emp.EmpId;
@@ -317,7 +327,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 // for email
-                List<Adjustment> adjListEmail = new List<Adjustment>();
+                List<AdjustmentVM> adjListEmail = new List<AdjustmentVM>();
 
                 int toId = 0;
                 List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo.Equals(voucherNo)).ToList();
@@ -330,7 +340,17 @@ namespace Group8AD_WebAPI.BusinessLogic
                         toId = adjList[i].EmpId;
 
                         // for email
-                        adjListEmail.Add(adjList[i]);
+                        AdjustmentVM adj = new AdjustmentVM();
+                        adj.VoucherNo = adjList[i].VoucherNo;
+                        adj.EmpId = adjList[i].EmpId;
+                        adj.DateTimeIssued = adjList[i].DateTimeIssued;
+                        adj.ItemCode = adjList[i].ItemCode;
+                        adj.Reason = adjList[i].Reason;
+                        adj.QtyChange = adjList[i].QtyChange;
+                        adj.Status = adjList[i].Status;
+                        adj.ApproverId = (int)adjList[i].ApproverId;
+                        adj.ApproverComment = adjList[i].ApproverComment;
+                        adjListEmail.Add(adj);
                     }
                 }
                 entities.SaveChanges();
@@ -356,7 +376,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 // for email
-                List<Adjustment> adjListEmail = new List<Adjustment>();
+                List<AdjustmentVM> adjListEmail = new List<AdjustmentVM>();
 
                 int toId = 0;
                 List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo.Equals(voucherNo)).ToList();
@@ -369,7 +389,17 @@ namespace Group8AD_WebAPI.BusinessLogic
                         toId = adjList[i].EmpId;
 
                         // for email
-                        adjListEmail.Add(adjList[i]);
+                        AdjustmentVM adj = new AdjustmentVM();
+                        adj.VoucherNo = adjList[i].VoucherNo;
+                        adj.EmpId = adjList[i].EmpId;
+                        adj.DateTimeIssued = adjList[i].DateTimeIssued;
+                        adj.ItemCode = adjList[i].ItemCode;
+                        adj.Reason = adjList[i].Reason;
+                        adj.QtyChange = adjList[i].QtyChange;
+                        adj.Status = adjList[i].Status;
+                        adj.ApproverId = (int)adjList[i].ApproverId;
+                        adj.ApproverComment = adjList[i].ApproverComment;
+                        adjListEmail.Add(adj);
                     }
                 }
                 entities.SaveChanges();
