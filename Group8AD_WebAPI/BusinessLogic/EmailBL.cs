@@ -397,7 +397,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.To.Add(to_email);//101's email
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
-                    msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine + voucherNo +
+                    msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine + voucherNo + " " +
                                 content + " " + ":" + " " + status + " " + approverComment + Environment.NewLine + Environment.NewLine + "Thank you.";
 
                     msg.Priority = MailPriority.High;
