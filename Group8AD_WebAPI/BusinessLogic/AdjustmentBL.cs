@@ -337,7 +337,17 @@ namespace Group8AD_WebAPI.BusinessLogic
                     {
                         adjList[i].ApproverComment = cmt;
                         adjList[i].Status = "Rejected";
-                        toId = adjList[i].EmpId;
+
+                        int adjRaiseEmpId = adjList[i].EmpId;
+                        Employee adjRaiseEmp = entities.Employees.Where(x => x.EmpId == adjRaiseEmpId).FirstOrDefault();
+                        if (adjRaiseEmp.Role.Equals("Store Clerk"))
+                        {
+                            toId = adjRaiseEmpId;
+                        }
+                        else
+                        {
+                            toId = entities.Employees.Where(x => x.EmpId == adjRaiseEmpId).FirstOrDefault().EmpId;
+                        }
 
                         // for email
                         AdjustmentVM adj = new AdjustmentVM();
@@ -386,7 +396,17 @@ namespace Group8AD_WebAPI.BusinessLogic
                     {
                         adjList[i].ApproverComment = cmt;
                         adjList[i].Status = "Approved";
-                        toId = adjList[i].EmpId;
+
+                        int adjRaiseEmpId = adjList[i].EmpId;
+                        Employee adjRaiseEmp = entities.Employees.Where(x => x.EmpId == adjRaiseEmpId).FirstOrDefault();
+                        if (adjRaiseEmp.Role.Equals("Store Clerk"))
+                        {
+                            toId = adjRaiseEmpId;
+                        }
+                        else
+                        {
+                            toId = entities.Employees.Where(x => x.EmpId == adjRaiseEmpId).FirstOrDefault().EmpId;
+                        }
 
                         // for email
                         AdjustmentVM adj = new AdjustmentVM();
