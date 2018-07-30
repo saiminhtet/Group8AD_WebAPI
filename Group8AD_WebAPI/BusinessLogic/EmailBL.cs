@@ -443,14 +443,14 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendInvListEmail(int empId, List<Item> items)
-        public static bool SendInvListEmail(int empId, List<Item> items)
+        public static bool SendInvListEmail(int empId, string attachfile)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 try
                 {
                     var from_email = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpEmail).First();
-                    var to_email = entities.Employees.Where(e => e.EmpId == 101).Select(e => e.EmpEmail).First();
+                    var to_email = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpEmail).First();
                     var _to = entities.Employees.Where(e => e.EmpId == 101).Select(e => e.EmpName).First();
 
                     var deptCode = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.DeptCode).First();
@@ -469,7 +469,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
                                 content + " " + dept + " " + content2 + " " + "to " + Environment.NewLine + Environment.NewLine + "Thank you.";
-
+                    Attachment at = new Attachment(Server.MapPath(attachfile));
+                    msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
                     client.Send(msg);
