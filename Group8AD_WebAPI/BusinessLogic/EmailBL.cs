@@ -456,10 +456,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                     var deptCode = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.DeptCode).First();
                     var dept = entities.Departments.Where(d => d.DeptCode == deptCode).Select(d => d.DeptName).First();
                     //var collpt = entities.CollectionPoints.Where(d => d. == deptCode).Select(d => d.DeptName).First();
-
-                    string type = "Collection Point Change";
-                    string content = "The collection point for";
-                    string content2 = "has been changed from";
+                    
+                    string type = "Inventory ";
+                    string content = "You have recently requested for a list of inventory item for the Logic University on ";
                     // CollectionPoint.Location +  + CollectionPoint.Location;
 
                     MailMessage msg = new MailMessage();
@@ -468,7 +467,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + dept + " " + content2 + " " + "to " + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine + Environment.NewLine + "Thank you.";
                     Attachment at = new Attachment(Server.MapPath(attachfile));
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
