@@ -209,7 +209,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendLowStockEmail
-        public static bool SendLowStockEmail(int empId, List<Item> items)
+        public static bool SendLowStockEmail(int empId, string attachfile)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -221,14 +221,16 @@ namespace Group8AD_WebAPI.BusinessLogic
                     string type = "Low Stock";
                     string content = "In a recent stationery request disbursement, there are some items with balance below reorder level. Action required";
 
+                    string filePath = HttpContext.Current.Server.MapPath("~/PDF/");
                     MailMessage msg = new MailMessage();
                     msg.From = new MailAddress(from_email);
                     msg.To.Add(to_email);//101's email
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + Environment.NewLine + Environment.NewLine + "Thank you.";
-
+                                content + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+                    Attachment at = new Attachment(filePath + attachfile);
+                    msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
                     client.Send(msg);
@@ -291,7 +293,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendPOEmail
-        public static bool SendPOEmail(int empId, DateTime targetDate, List<Item> items)
+        public static bool SendPOEmail(int empId, DateTime targetDate, string attachfile)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -307,15 +309,16 @@ namespace Group8AD_WebAPI.BusinessLogic
                     string content = "You have been assigned as delegate";
                     string content1 = "for your department by your department head";
 
-
+                    string filePath = HttpContext.Current.Server.MapPath("~/PDF/");
                     MailMessage msg = new MailMessage();
                     msg.From = new MailAddress(dept_head_email);//DepartmentHead
                     msg.To.Add(to_email);
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + "( " + targetDate + " ) " + " " + content1 + Environment.NewLine + Environment.NewLine + "Thank you.";
-
+                                content + " " + "( " + targetDate + " ) " + " " + content1 + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+                    Attachment at = new Attachment(filePath + attachfile);
+                    msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
                     client.Send(msg);
@@ -468,9 +471,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine  + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
                     Attachment at = new Attachment(filePath+attachfile);
+                    //Attachment at1 = new Attachment(filePath+attachfile);
                     msg.Attachments.Add(at);
+                    //msg.Attachments.Add(at1);
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
                     client.Send(msg);
