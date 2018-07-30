@@ -1056,7 +1056,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
 
         //FulfillRequestUrgent
-        public static List<ItemVM> FulfillRequestUrgent(int empId, List<ItemVM> items, DateTime D1, int Collpt)
+        public static List<ItemVM> FulfillRequestUrgent(int empId, List<ItemVM> items)
         {
             List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
             List<DepartmentVM> deptList = DepartmentBL.GetAllDept();
@@ -1192,9 +1192,15 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
             }
 
+            SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
+            int urgentFromId = ctx.Employees.Where(x => x.Role == "Store Clerk").First().EmpId;
+            int urgentToId = empId;
+            string urgentType = "Urgent Request";
+            string urgentContent = "Your urgent request has been fulfilled, please wait for disbursement";
+            NotificationBL.AddNewNotification(urgentFromId, urgentToId, urgentType, urgentContent);
+
             ////Making PDF Reports
             ////Group By Department then By Item
-            SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
             List<RequestDetailVM> rdList = new List<RequestDetailVM>();
 
             List<DisbursementDetailVM> dListDept = new List<DisbursementDetailVM>();
@@ -1238,7 +1244,8 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             List<DisbursementDetailVM> disbursementListDept = dListDept.OrderBy(x => x.ItemCode).OrderBy(x => x.DeptCode).ToList();
             // disbursementListDept, list of disbursement sorted by deptCode and then itemCode, to be used for pdf export
-           
+            string filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+            PdfBL.GenerateDisbursementListbyDept(disbursementListDept, filename);
 
             ////Group By Department then By Item
             for (int i = 0; i < fulfilledList.Count; i++)
