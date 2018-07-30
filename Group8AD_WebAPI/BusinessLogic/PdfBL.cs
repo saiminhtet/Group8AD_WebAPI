@@ -389,11 +389,16 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             pdfDoc.SetMargins(50, 50, 50, 50);
             HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
-            PdfWriter.GetInstance(pdfDoc, new FileStream(filepath + filename, FileMode.Create));
+            //PdfWriter.GetInstance(pdfDoc, new FileStream(filepath + filename, FileMode.Create));
 
+            PdfWriter writer = PdfWriter.GetInstance(pdfDoc, new FileStream(filepath + filename, FileMode.Create));
             pdfDoc.Open();
+            //using header class started
+            writer.PageEvent = new Header();
+            Paragraph welcomeParagraph = new Paragraph();
+            pdfDoc.Add(welcomeParagraph);
+            //using header class ended
             htmlparser.StartDocument();
-
             htmlparser.Parse(sr);
 
             htmlparser.EndDocument();
@@ -436,9 +441,17 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             pdfDoc.SetMargins(50, 50, 50, 50);
             HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
-            PdfWriter.GetInstance(pdfDoc, new FileStream(filepath + filename, FileMode.Create));
+            //PdfWriter.GetInstance(pdfDoc, new FileStream(filepath + filename, FileMode.Create));
 
+            PdfWriter writer = PdfWriter.GetInstance(pdfDoc, new FileStream(filepath + filename, FileMode.Create));
             pdfDoc.Open();
+
+            //using header class started
+            writer.PageEvent = new Header_Landscape();
+            Paragraph welcomeParagraph = new Paragraph();
+            pdfDoc.Add(welcomeParagraph);
+            //using header class ended
+
             htmlparser.StartDocument();
             htmlparser.Parse(sr);
 
@@ -462,6 +475,60 @@ namespace Group8AD_WebAPI.BusinessLogic
                 bytes = stream.ToArray();
             }
             File.WriteAllBytes(filepath + filename, bytes);
+        }
+
+        //Header all pages(Portrait)
+        public partial class Header : PdfPageEventHelper
+        {
+            public override void OnEndPage(PdfWriter writer, Document doc)
+            {
+                string imageurl = HttpContext.Current.Server.MapPath("~/PDF/logo.png");
+                iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageurl);
+                logo.ScaleAbsolute(130, 22);
+
+                //Paragraph header = new Paragraph("LOGIC UNIVERSITY", FontFactory.GetFont(FontFactory.TIMES, 25, iTextSharp.text.Font.NORMAL));
+                //header.Alignment = Element.ALIGN_LEFT;
+                logo.Alignment = Element.ALIGN_CENTER;
+                PdfPTable headerTbl = new PdfPTable(1);
+                headerTbl.TotalWidth = 300;
+                headerTbl.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PdfPCell cell = new PdfPCell(logo);
+                cell.Border = 0;
+                cell.PaddingLeft = 10;
+
+                headerTbl.AddCell(cell);
+                headerTbl.WriteSelectedRows(0, -1, 230, 800, writer.DirectContent);
+            }
+        }
+
+        //Header all pages(Landscape)
+        public partial class Header_Landscape : PdfPageEventHelper
+        {
+            public override void OnEndPage(PdfWriter writer, Document doc)
+            {
+                string imageurl = HttpContext.Current.Server.MapPath("~/PDF/logo.png");
+                iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageurl);
+                logo.ScaleAbsolute(130, 22);
+
+                //Paragraph header = new Paragraph("LOGIC UNIVERSITY", FontFactory.GetFont(FontFactory.TIMES, 25, iTextSharp.text.Font.NORMAL));
+                //header.Alignment = Element.ALIGN_LEFT;
+                //logo.Alignment = iTextSharp.text.Image.ALIGN_CENTER;
+                logo.Alignment = Element.ALIGN_CENTER;
+                PdfPTable headerTbl = new PdfPTable(1);
+                headerTbl.TotalWidth = 300;
+                headerTbl.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PdfPCell cell = new PdfPCell(logo);
+                cell.Border = 0;
+                cell.PaddingLeft = 10;
+
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell.VerticalAlignment = Element.ALIGN_MIDDLE;
+
+                headerTbl.AddCell(cell);
+                headerTbl.WriteSelectedRows(0, -1, 430, 800, writer.DirectContent);
+            }
         }
     }
 }
