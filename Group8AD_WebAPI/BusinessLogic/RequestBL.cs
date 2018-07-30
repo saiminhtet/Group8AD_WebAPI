@@ -320,7 +320,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     for (int i = 0; i < reqlist.Count; i++)
                     {
-                        if (reqlist[i].Status.Equals("Unsubmitted") || reqlist[i].Status.Equals("BookMarked"))
+                        if (reqlist[i].Status.Equals("Unsubmitted") || reqlist[i].Status.Equals("Bookmarked"))
                         {
                             RequestDetailBL.removeAllReqDet(reqlist[i].ReqId);
                         }
@@ -345,7 +345,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 Request request = entities.Requests.Where(r => r.ReqId == reqId).FirstOrDefault();
                 if (request != null)
                 {
-                    if (request.Status.Equals("Unsubmitted") || request.Status.Equals("Unsubmitted"))
+                    if (request.Status.Equals("Unsubmitted") || request.Status.Equals("Bookmarked"))
                     {
                         RequestDetailBL.removeAllReqDet(reqId);
                     }
