@@ -125,7 +125,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendDisbEmailForClerk
-        //with attach
+        //with multi attach
         public static bool SendDisbEmailForClerk(int empId, List<RequestDetailVM> ListByDept, List<RequestDetailVM> ListByReq)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -168,7 +168,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendDisbEmailForRep
-        //with attach
+        //with multi attach
         public static bool SendDisbEmailForRep(int empId, string deptCode, List<RequestDetail> ListByDept, List<RequestDetail> ListByReq)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -209,6 +209,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendLowStockEmail
+        //with attach
         public static bool SendLowStockEmail(int empId, string attachfile)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -228,7 +229,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
                     Attachment at = new Attachment(filePath + attachfile);
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
@@ -293,6 +294,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendPOEmail
+        //with attach
         public static bool SendPOEmail(int empId, DateTime targetDate, string attachfile)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
@@ -316,7 +318,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + "( " + targetDate + " ) " + " " + content1 + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + " " + "( " + targetDate + " ) " + " " + content1 + Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
                     Attachment at = new Attachment(filePath + attachfile);
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
@@ -475,7 +477,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine  + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine  + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
                     Attachment at = new Attachment(filePath+attachfile);
                     //Attachment at1 = new Attachment(filePath+attachfile);
                     msg.Attachments.Add(at);
