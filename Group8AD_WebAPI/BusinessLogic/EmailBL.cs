@@ -335,7 +335,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendAdjReqEmail(int empId, List<Adjustment> adjList)
-        public static bool SendAdjReqEmail(int empId, List<Adjustment> adjList)
+        public static bool SendAdjReqEmail(int empId, List<AdjustmentVM> adjList)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -372,7 +372,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendAdjApprEmail(int empId, Adjustment adj)
-        public static bool SendAdjApprEmail(int empId, List<Adjustment> adjList)
+        public static bool SendAdjApprEmail(int empId, List<AdjustmentVM> adjList)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
