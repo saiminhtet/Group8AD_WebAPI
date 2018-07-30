@@ -316,6 +316,9 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
+                // for email
+                List<Adjustment> adjListEmail = new List<Adjustment>();
+
                 int toId = 0;
                 List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo.Equals(voucherNo)).ToList();
                 for (int i = 0; i < adjList.Count; i++)
@@ -325,6 +328,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                         adjList[i].ApproverComment = cmt;
                         adjList[i].Status = "Rejected";
                         toId = adjList[i].EmpId;
+
+                        // for email
+                        adjListEmail.Add(adjList[i]);
                     }
                 }
                 entities.SaveChanges();
@@ -336,8 +342,8 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
 
-                //// will uncomment when email service method is done
-                // EmailBL.SendAdjApprEmail(empId, adjustment);
+                // for email
+                EmailBL.SendAdjApprEmail(toId, adjListEmail);
 
                 return true;
             }
@@ -349,6 +355,9 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
+                // for email
+                List<Adjustment> adjListEmail = new List<Adjustment>();
+
                 int toId = 0;
                 List<Adjustment> adjList = entities.Adjustments.Where(a => a.VoucherNo.Equals(voucherNo)).ToList();
                 for (int i = 0; i < adjList.Count; i++)
@@ -358,6 +367,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                         adjList[i].ApproverComment = cmt;
                         adjList[i].Status = "Approved";
                         toId = adjList[i].EmpId;
+
+                        // for email
+                        adjListEmail.Add(adjList[i]);
                     }
                 }
                 entities.SaveChanges();
@@ -369,8 +381,8 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
 
-                //// will uncomment when email method is done
-                // EmailBL.SendAdjApprEmail(empId, adjustment);
+                // for email
+                EmailBL.SendAdjApprEmail(toId, adjListEmail);
 
                 return true;
             }

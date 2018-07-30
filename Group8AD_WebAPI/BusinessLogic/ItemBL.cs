@@ -1031,7 +1031,25 @@ namespace Group8AD_WebAPI.BusinessLogic
             // disbursementListEmployee, list of disbursement sorted by deptCode, empId, reqId, and then itemCode, to be used for pdf export
 
             // call make PDF method
-            // call email method
+
+            // for email
+            List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+            for (int i = 0; i < clerklist.Count; i++)
+            {
+                int empId = clerklist[i].EmpId;
+                EmailBL.SendDisbEmailForClerk(empId, dListDept, dListEmployee);
+            }
+
+            List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+            for (int i = 0; i < deptlist.Count; i++)
+            {
+                if (!deptlist[i].DeptCode.Equals("STOR"))
+                {
+                    int empId = (int)deptlist[i].DeptRepId;
+                    string deptCode = deptlist[i].DeptCode;
+                    EmailBL.SendDisbEmailForRep(empId, deptCode, dListDept, dListEmployee);
+                }
+            }
 
             return items;
         }

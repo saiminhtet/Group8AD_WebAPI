@@ -125,8 +125,8 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendDisbEmailForClerk
-        //with multi attach
-        public static bool SendDisbEmailForClerk(int empId, List<RequestDetailVM> ListByDept, List<RequestDetailVM> ListByReq)
+        //with attach
+        public static bool SendDisbEmailForClerk(int empId, List<DisbursementDetailVM> ListByDept, List<DisbursementDetailVM> ListByReq)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -168,8 +168,8 @@ namespace Group8AD_WebAPI.BusinessLogic
         }
 
         //SendDisbEmailForRep
-        //with multi attach
-        public static bool SendDisbEmailForRep(int empId, string deptCode, List<RequestDetail> ListByDept, List<RequestDetail> ListByReq)
+        //with attach
+        public static bool SendDisbEmailForRep(int empId, string deptCode, List<DisbursementDetailVM> ListByDept, List<DisbursementDetailVM> ListByReq)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
