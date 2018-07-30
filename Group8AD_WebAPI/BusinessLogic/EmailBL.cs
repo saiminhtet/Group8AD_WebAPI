@@ -468,7 +468,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine  + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
                     Attachment at = new Attachment(filePath+attachfile);
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
