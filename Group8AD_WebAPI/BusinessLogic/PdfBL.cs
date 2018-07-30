@@ -187,8 +187,9 @@ namespace Group8AD_WebAPI.BusinessLogic
             return filename;
         }
 
-        public static void GenerateLowStockItemList(string filename)
+        public static void GenerateLowStockItemList(int empId)
         {
+            string filename = "StationeryItemsWithLowStockQuantities_" + DateTime.Now.ToString("ddMMMMyyyy_HH_mm_ss") + ".pdf";
             SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();
 
             List<ItemVM> LowStockItemList = ItemBL.GetLowStockItems();
@@ -257,8 +258,8 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         public static void GenerateInventoryItemList(int empId)
         {
-            string filename = "InventoryStatusReport" + DateTime.Now.ToString("ddMMMMyyyy_HH_mm_ss") + ".pdf";
-            string pdfpath = HttpContext.Current.Server.MapPath("~/PDF/");
+            string filename = "InventoryStatusReport_" + DateTime.Now.ToString("ddMMMMyyyy_HH_mm_ss") + ".pdf";
+         
             SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();
 
             List<ItemVM> InventoryItemList = ItemBL.GetLowStockItems();
@@ -292,7 +293,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             PDFGenerator_A4Landscape(filename, HTML);
 
-            EmailBL.SendInvListEmail(empId,pdfpath+filename);
+            EmailBL.SendInvListEmail(empId,filename);
         }
         public static void PDFGenerator(string filename, string HTML_DATA)
         {

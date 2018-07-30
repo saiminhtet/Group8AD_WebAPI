@@ -26,5 +26,24 @@ namespace Group8AD_WebAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
             }
         }
+
+
+        //Inventory Status Report
+        [System.Web.Http.AcceptVerbs("POST")]
+        [System.Web.Http.HttpPost]
+        [Route("api/Report/LowStockItemList/{empId}")]
+        public HttpResponseMessage GenerateLowStockItemList(int empId)
+        {
+            //int emp_id = Convert.ToInt16(empId);
+            try
+            {
+                BusinessLogic.PdfBL.GenerateLowStockItemList(empId);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
+        }
     }
 }
