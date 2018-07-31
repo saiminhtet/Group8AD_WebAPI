@@ -1,4 +1,4 @@
-
+<br/>
 <table id="header">
 <tr>
     <td style="font-size:14px;font-weight: bold;">
@@ -22,22 +22,22 @@
 </tr>
 </table>
 <br/>
-<table id="body" border='1' width='100%'style='height:900px;page-break-inside: avoid;'>
+<table id="body" border='1' width='100%'style="">
 <thead>
 <tr>
-    	<th bgcolor="#ECECEC" align="center">
+    	<th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;">
        <strong> Item Code</strong>
         </th>            
-        <td bgcolor="#ECECEC" align="center">
+        <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;">
        <strong> Item Description</strong>
         </th>        
-        <th bgcolor="#ECECEC" align="center">
+        <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;">
        <strong> Request Quantity</strong>
         </th>        
-         <th bgcolor="#ECECEC" align="center">
+         <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;">
        <strong> Await Quantity</strong>
         </th>    
-		 <th bgcolor="#ECECEC" align="center">
+		 <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;">
       <strong>  Fulfilled Quantity</strong>
         </th>   
 </tr>
