@@ -173,11 +173,9 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
-
         //AcceptDisbursement
         public static void AcceptDisbursement(int empId, List<ItemVM> iList)
         {
-
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 string vNum = AdjustmentBL.GenerateVoucherNo();
@@ -193,8 +191,6 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                         int index = iList.FindIndex(x => x.ItemCode.Equals(i.ItemCode));
 
-
-
                         a.QtyChange = i.TempQtyAcpt - i.TempQtyReq ?? default(int);
 
                         a.Reason = i.TempReason;
@@ -202,33 +198,33 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                         a.Status = "Submitted";
                         a.Reason = i.TempReason;
-                        entities.Adjustments.Add(a);
-                        entities.SaveChanges();
 
+                        Employee emp = new Employee();
+                        emp = entities.Employees.Where(x => x.Role.Equals("Store Supervisor")).FirstOrDefault();
                         double chgVal = a.QtyChange * i.Price1;
-
                         if (chgVal >= 250)
                         {
                             //Notify Manager
                             NotificationBL.AddNewNotification(empId, 104, "Adjustment Request", vNum + " has been raised");
+                            emp = entities.Employees.Where(x => x.Role.Equals("Store Manager")).FirstOrDefault();
                         }
                         else
                         {
                             //Notify Supervisor
                             NotificationBL.AddNewNotification(empId, 105, "Adjustment Request", vNum + " has been raised");
                         }
+                        a.ApproverId = emp.EmpId;
 
+                        entities.Adjustments.Add(a);
+                        entities.SaveChanges();
                     }
 
                     string deptcode = EmployeeBL.GetDeptCode(empId);
 
                     var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).Select(e => e.EmpId).ToList();
 
-
                     List<int> rList = new List<int>();
                     List<RequestDetail> rdList = new List<RequestDetail>();
-
-
 
                     foreach (var empid in EmpIds)
                     {
@@ -241,7 +237,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                         List<RequestDetail> reqdList = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
                         rdList.AddRange(reqdList);
                     }
-
 
                     int count = i.TempQtyAcpt;
 
@@ -345,19 +340,13 @@ namespace Group8AD_WebAPI.BusinessLogic
                         // NotificationBL.AddAcptNotification(r.ReqId); Noti throw exception need to fix
                     }
                     // }
-
-
                 }
             }
         }
 
-
-
-
         //AcceptDisbursement to rcvEmpID
         public static void AcceptDisbursement(int empId, int rcvEmpId, List<ItemVM> iList)
         {
-
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
                 string vNum = AdjustmentBL.GenerateVoucherNo();
@@ -373,8 +362,6 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                         int index = iList.FindIndex(x => x.ItemCode.Equals(i.ItemCode));
 
-
-
                         a.QtyChange = i.TempQtyAcpt - i.TempQtyReq ?? default(int);
 
                         a.Reason = i.TempReason;
@@ -382,33 +369,34 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                         a.Status = "Submitted";
                         a.Reason = i.TempReason;
-                        entities.Adjustments.Add(a);
-                        entities.SaveChanges();
 
+                        Employee emp = new Employee();
+                        emp = entities.Employees.Where(x => x.Role.Equals("Store Supervisor")).FirstOrDefault();
                         double chgVal = a.QtyChange * i.Price1;
 
                         if (chgVal >= 250)
                         {
                             //Notify Manager
                             NotificationBL.AddNewNotification(empId, 104, "Adjustment Request", vNum + " has been raised");
+                            emp = entities.Employees.Where(x => x.Role.Equals("Store Manager")).FirstOrDefault();
                         }
                         else
                         {
                             //Notify Supervisor
                             NotificationBL.AddNewNotification(empId, 105, "Adjustment Request", vNum + " has been raised");
                         }
+                        a.ApproverId = emp.EmpId;
 
+                        entities.Adjustments.Add(a);
+                        entities.SaveChanges();
                     }
 
                     string deptcode = EmployeeBL.GetDeptCode(empId);
 
                     var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).Select(e => e.EmpId).ToList();
 
-
                     List<int> rList = new List<int>();
                     List<RequestDetail> rdList = new List<RequestDetail>();
-
-
 
                     foreach (var empid in EmpIds)
                     {
@@ -421,7 +409,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                         List<RequestDetail> reqdList = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
                         rdList.AddRange(reqdList);
                     }
-
 
                     int count = i.TempQtyAcpt;
 
@@ -523,8 +510,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                         NotificationBL.AddNewNotification(empId, rcvEmpId, "Stationery Request", "A new stationery request has been submitted");
                     }
                     // }
-
-
                 }
             }
         }
