@@ -442,11 +442,15 @@ namespace Group8AD_WebAPI.BusinessLogic
             pdfDoc.Add(welcomeParagraph);
             //using header class ended
 
-            htmlparser.StartDocument();
-            htmlparser.Parse(sr);
 
-            htmlparser.EndDocument();
-            htmlparser.Close();
+
+            //starting xmlworker
+            XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+            //htmlparser.StartDocument();
+            //htmlparser.Parse(sr);
+
+            //htmlparser.EndDocument();
+            //htmlparser.Close();
             pdfDoc.Close();
             //adding page number
             byte[] bytes = File.ReadAllBytes(filepath + filename);
