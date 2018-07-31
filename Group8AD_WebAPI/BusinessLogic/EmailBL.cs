@@ -307,7 +307,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     var dept_head_email = entities.Employees.Where(e => e.EmpId == head_id).Select(e => e.EmpEmail).First();
                     var _to = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpName).First();
 
-                    string type = "Delegate Assignment";
+                    string type = "Purchase Order";
                     string content = "You have been assigned as delegate";
                     string content1 = "for your department by your department head";
 
