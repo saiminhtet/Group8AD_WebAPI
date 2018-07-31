@@ -335,10 +335,6 @@
     <Compile Include="Utility\ItemUtility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\aspnet-Group8AD_WebAPI-20180714033429.mdf" />
-    <Content Include="App_Data\aspnet-Group8AD_WebAPI-20180714033429_log.ldf">
-      <DependentUpon>aspnet-Group8AD_WebAPI-20180714033429.mdf</DependentUpon>
-    </Content>
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -404,6 +400,8 @@
     <Content Include="Models\SA46Team08ADProjectContext.edmx.diagram">
       <DependentUpon>SA46Team08ADProjectContext.edmx</DependentUpon>
     </Content>
+    <Content Include="App_Data\SA46Team08ADProjectExtended.bak" />
+    <Content Include="App_Data\SA46Team08ADProjectOAuthDB.bak" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
