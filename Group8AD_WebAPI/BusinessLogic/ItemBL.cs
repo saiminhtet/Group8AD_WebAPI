@@ -682,23 +682,30 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<ItemVM> iList = GetAllItems();
-                for (int i = 0; i < iList.Count; i++)
+                try
                 {
-                    iList[i].TempQtyReq = 0;
-                }
-                List<RequestVM> rList = RequestBL.GetReq("Approved");
-                for (int j = 0; j < rList.Count; j++)
-                {
-                    List<RequestDetailVM> rdList = RequestDetailBL.GetReqDetList(rList[j].ReqId);
-                    for (int k = 0; k < rdList.Count; k++)
+                    List<ItemVM> iList = GetAllItems();
+                    for (int i = 0; i < iList.Count; i++)
                     {
-                        int shortQty = rdList[k].ReqQty - rdList[k].AwaitQty - rdList[k].FulfilledQty;
-                        if (shortQty > 0)
-                            iList.Find(x => x.ItemCode.Equals(rdList[k].ItemCode)).TempQtyReq += shortQty;
+                        iList[i].TempQtyReq = 0;
                     }
+                    List<RequestVM> rList = RequestBL.GetReq("Approved");
+                    for (int j = 0; j < rList.Count; j++)
+                    {
+                        List<RequestDetailVM> rdList = RequestDetailBL.GetReqDetList(rList[j].ReqId);
+                        for (int k = 0; k < rdList.Count; k++)
+                        {
+                            int shortQty = rdList[k].ReqQty - rdList[k].AwaitQty - rdList[k].FulfilledQty;
+                            if (shortQty > 0)
+                                iList.Find(x => x.ItemCode.Equals(rdList[k].ItemCode)).TempQtyReq += shortQty;
+                        }
+                    }
+                    return iList;
                 }
-                return iList;
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
 
                 #region
                 //List<RequestDetailVM> reqdList = entities.Requests.Where(r => r.Status.Equals("Approved"))
