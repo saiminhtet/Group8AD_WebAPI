@@ -154,5 +154,19 @@ namespace Group8AD_WebAPI.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, translist);
         }
+
+        // tested
+        [AcceptVerbs("GET")]
+        [HttpPost]
+        [Route("api/Transaction/trend/{iCode}")]
+        public HttpResponseMessage ShowVolumeReport(string iCode)
+        {
+            List<ReportItemVM> translist = ReportItemBL.ShowVolumeReport(iCode);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
+        }
     }
 }

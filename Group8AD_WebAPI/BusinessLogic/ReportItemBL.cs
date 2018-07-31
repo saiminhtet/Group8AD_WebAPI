@@ -1092,5 +1092,41 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             return weekList;
         }
+
+        public static List<ReportItemVM> ShowVolumeReport(string iCode)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                List<ReportItemVM> riList = new List<ReportItemVM>();
+
+                // This is the actual implementation which will work and display a reasonable trend if we have more data
+                // List<int> rIdList = entities.Requests.Where(x => x.ReqDateTime >= DateTime.Now.AddDays(-365) && x.ReqDateTime <= DateTime.Now).Select(x => x.ReqId).ToList();
+                // List<RequestDetail> rdList = null; if (rIdList.Count > 0) rdList = entities.RequestDetails.Where(x => rIdList.Contains(x.ReqId) && x.ItemCode.Equals(iCode)).ToList();
+                // if (rdList.Count > 0)
+                // {
+                //     foreach (RequestDetail rd in rdList)
+                //     {
+                //         ReportItemVM ri = new ReportItemVM();
+                //         ri.Period = (DateTime)entities.Requests.Where(x => x.ReqId == rd.ReqId).First().ReqDateTime;
+                //         ri.Val1 = rd.ReqQty;
+                //         riList.Add(ri);
+                //     }
+                // }
+
+                // For the sake of demonstration, a random number generator is used to populate a random trend
+                Random rnd = new Random();
+                DateTime startDate = DateTime.Now.AddDays(-365);
+                for (int i = 0; i < 52; i++)
+                {
+                    ReportItemVM ri = new ReportItemVM();
+                    ri.Period = startDate.AddDays(i * 7);
+                    ri.Label = $"{ri.Period:yyyy MMM dd}";
+                    ri.Val1 = rnd.Next(0, 200);
+                    riList.Add(ri);
+                }
+
+                return riList;
+            }
+        }
     }
 }
