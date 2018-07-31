@@ -409,15 +409,15 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                             // for email
                             AdjustmentVM adj = new AdjustmentVM();
-                            adj.VoucherNo = adjList[i].VoucherNo;
-                            adj.EmpId = adjList[i].EmpId;
-                            adj.DateTimeIssued = adjList[i].DateTimeIssued;
-                            adj.ItemCode = adjList[i].ItemCode;
-                            adj.Reason = adjList[i].Reason;
-                            adj.QtyChange = adjList[i].QtyChange;
-                            adj.Status = adjList[i].Status;
-                            adj.ApproverId = (int)adjList[i].ApproverId;
-                            adj.ApproverComment = adjList[i].ApproverComment;
+                            adj.VoucherNo = a.VoucherNo;
+                            adj.EmpId = a.EmpId;
+                            adj.DateTimeIssued = a.DateTimeIssued;
+                            adj.ItemCode = a.ItemCode;
+                            adj.Reason = a.Reason;
+                            adj.QtyChange = a.QtyChange;
+                            adj.Status = a.Status;
+                            adj.ApproverId = (int)a.ApproverId;
+                            adj.ApproverComment = a.ApproverComment;
                             adjList.Add(adj);
 
                             int fromEmpIdA = empId;

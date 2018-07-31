@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="SA46Team08ADProjectModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SA46Team08ADProjectModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Adjustment">
           <Key>
             <PropertyRef Name="VoucherNo" />
@@ -98,7 +98,7 @@
           <Property Name="ReqId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="EmpId" Type="int" Nullable="false" />
           <Property Name="ApproverId" Type="int" />
-          <Property Name="ApproverComment" Type="nvarchar" MaxLength="100" />
+          <Property Name="ApproverComment" Type="nvarchar(max)" />
           <Property Name="ReqDateTime" Type="datetime" />
           <Property Name="ApprovedDateTime" Type="datetime" />
           <Property Name="CancelledDateTime" Type="datetime" />
@@ -531,7 +531,7 @@
           <Property Name="ReqId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="EmpId" Type="Int32" Nullable="false" />
           <Property Name="ApproverId" Type="Int32" />
-          <Property Name="ApproverComment" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ApproverComment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ReqDateTime" Type="DateTime" Precision="3" />
           <Property Name="ApprovedDateTime" Type="DateTime" Precision="3" />
           <Property Name="CancelledDateTime" Type="DateTime" Precision="3" />

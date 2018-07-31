@@ -10,6 +10,7 @@ using Group8AD_WebAPI.Models.ViewModels;
 
 namespace Group8AD_WebAPI.Controllers
 {
+    [Authorize]
     public class NotificationController : ApiController
     {
         // add new notification
