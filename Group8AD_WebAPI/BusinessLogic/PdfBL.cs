@@ -372,7 +372,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             StringReader sr = new StringReader(sw.ToString());
             Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
 
-            pdfDoc.SetMargins(50, 50, 50, 50);
+            pdfDoc.SetMargins(50, 50, 80, 50);
             HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
             //PdfWriter.GetInstance(pdfDoc, new FileStream(filepath + filename, FileMode.Create));
 
@@ -429,7 +429,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             StringReader sr = new StringReader(sw.ToString());
             Document pdfDoc = new Document(PageSize.A3.Rotate(), 10f, 10f, 10f, 0f);
 
-            pdfDoc.SetMargins(50, 50, 50, 50);
+            pdfDoc.SetMargins(50, 50, 80, 50);
             HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
             //PdfWriter.GetInstance(pdfDoc, new FileStream(filepath + filename, FileMode.Create));
 
@@ -501,7 +501,7 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             public override void OnEndPage(PdfWriter writer, Document doc)
             {
-                string imageurl = HttpContext.Current.Server.MapPath("~/PDF/logo.png");
+                string imageurl = HttpContext.Current.Server.MapPath("~/Content/logo.png");
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageurl);
                 logo.ScaleAbsolute(130, 22);
 
