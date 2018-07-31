@@ -1047,7 +1047,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     int empId = (int)deptlist[i].DeptRepId;
                     string deptCode = deptlist[i].DeptCode;
-                    EmailBL.SendDisbEmailForRep(empId, deptCode, dListDept, dListEmployee);
+                    EmailBL.SendDisbEmailForRep(empId, deptCode, disbursementListDept, disbursementListEmployee);
                 }
             }
 
