@@ -311,7 +311,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                     var _to = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpName).First();
 
                     string type = "Purchase Order";
-                    string content = "";
+                    string content = "I here by write to you in regards with the above order , you are been requested to send me/us the status details at earliest.";
+                    string content2 = "If you require any other information in relationship to the above, please do not hesitate to contact us/me.";
+                    string content3 = "Your early response will be highly appreciable.";
 
                     string filePath = HttpContext.Current.Server.MapPath("~/PDF/");
                     MailMessage msg = new MailMessage();
@@ -320,9 +322,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + "( " + targetDate + " ) " +  
-                                Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." + 
-                                Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + Environment.NewLine + Environment.NewLine +
+                                content2  + Environment.NewLine + Environment.NewLine + 
+                                content3 + Environment.NewLine + Environment.NewLine + 
+                                "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + 
+                                "Thank you.";
                     Attachment at = new Attachment(filePath + attachfile);
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
