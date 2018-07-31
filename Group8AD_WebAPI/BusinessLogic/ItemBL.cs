@@ -1126,23 +1126,23 @@ namespace Group8AD_WebAPI.BusinessLogic
             // call make PDF method
 
             // for email
-            List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
-            for (int i = 0; i < clerklist.Count; i++)
-            {
-                int empId = clerklist[i].EmpId;
-                EmailBL.SendDisbEmailForClerk(empId, disbursementListDept, disbursementListEmployee);
-            }
+            //List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+            //for (int i = 0; i < clerklist.Count; i++)
+            //{
+            //    int empId = clerklist[i].EmpId;
+            //    EmailBL.SendDisbEmailForClerk(empId, disbursementListDept, disbursementListEmployee);
+            //}
 
-            List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
-            for (int i = 0; i < deptlist.Count; i++)
-            {
-                if (!deptlist[i].DeptCode.Equals("STOR"))
-                {
-                    int empId = (int)deptlist[i].DeptRepId;
-                    string deptCode = deptlist[i].DeptCode;
-                    EmailBL.SendDisbEmailForRep(empId, deptCode, disbursementListDept, disbursementListEmployee);
-                }
-            }
+            //List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+            //for (int i = 0; i < deptlist.Count; i++)
+            //{
+            //    if (!deptlist[i].DeptCode.Equals("STOR"))
+            //    {
+            //        int empId = (int)deptlist[i].DeptRepId;
+            //        string deptCode = deptlist[i].DeptCode;
+            //        EmailBL.SendDisbEmailForRep(empId, deptCode, disbursementListDept, disbursementListEmployee);
+            //    }
+            //}
 
             return items;
         }
