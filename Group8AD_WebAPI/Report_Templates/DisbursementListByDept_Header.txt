@@ -1,43 +1,43 @@
 <br/>
 <table id="header">
 <tr>
-    <td style="font-size:14px;font-weight: bold;">
+    <td style="font-size:16px;font-weight: bold;">
     Disbursement List at [disb-date] for [DeptName]
     </td>
 </tr>
 <tr>
-    <td style="font-size:12px;font-weight: bold;">
+    <td style="font-size:13px;font-weight: bold;">
     Collection Point: [coll-point]
     </td>
 	<td></td>
 	<td></td>
-	<td style="font-size:12px;font-weight: bold;" >
+	<td style="font-size:13px;font-weight: bold;" >
     Collection Time: [coll-time]
     </td>
 </tr>
 <tr>
-    <td style="font-size:12px;font-weight: bold;"  >
+    <td style="font-size:13px;font-weight: bold;"  >
     Representative Name: [rep-name] 
     </td>
 </tr>
 </table>
 <br/>
-<table id="body" border='1' width='100%'style="">
+<table id="body" width='100%'>
 <thead>
 <tr>
-    	<th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;">
+    	<th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
        <strong> Item Code</strong>
         </th>            
-        <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;">
+        <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
        <strong> Item Description</strong>
         </th>        
-        <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;">
+        <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
        <strong> Request Quantity</strong>
         </th>        
-         <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;">
+         <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
        <strong> Await Quantity</strong>
         </th>    
-		 <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;">
+		 <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
       <strong>  Fulfilled Quantity</strong>
         </th>   
 </tr>
