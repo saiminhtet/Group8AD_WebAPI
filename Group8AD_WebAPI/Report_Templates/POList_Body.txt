@@ -2,14 +2,18 @@
 	<td style="border:solid 1px black;" align="center">
 		[itemcode]
 	</td>	
-	<td style="border:solid 1px black;" align="center">
+	<td style="border:solid 1px black;text-align:left;padding-left:30px;" align="center">
 		[item_desc]
+	</td>
+	<td style="border:solid 1px black;" align="center">
+		[item_uom]
 	</td>
 	<td style="border:solid 1px black;" align="center">
 		[item_order_qty]
 	</td>
 	<td style="border:solid 1px black;" align="center">
 		[item_price]	
+	</td>
 	<td style="border:solid 1px black;" align="center">
 		[item_amount]
 	</td>	

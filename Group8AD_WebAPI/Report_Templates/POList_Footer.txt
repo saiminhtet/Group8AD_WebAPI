@@ -1,57 +1,57 @@
 <tr>
-	<td style="border:solid 1px black;" align="center">
-		
-	</td>	
-	<td style="font-size:15px;font-weight: bold;" align="center">
-		<strong>Total<strong>
-	</td>
-	<td style="border:solid 1px black;" align="center">
-		[total_qty]
-	</td>
-	<td style="border:solid 1px black;" align="center">
-		[total_price]	
-	<td style="border:solid 1px black;" align="center">
-		[total_amount]
-	</td>	
+   <td style="border:solid 1px black;" align="center">
+   </td>
+   <td colspan="4" style="border:solid 1px black;" align="center">
+      <strong>Total</strong>
+   </td>   
+   <td style="border:solid 1px black;" align="center">
+      [total_amount]
+   </td>
 </tr>
 </tbody>
 </table>
 <br/>
-<table>
-  <tr>
-                <td colspan="2" style="font-size:15px;font-weight: bold; text-align: right;">
-                Ordered by:
-                </td>
-                <td colspan="2" style="font-size:15px;font-weight: bold;">
-                [order_by]
-                </td>
-                <td colspan="3" style="font-size:15px;font-weight: bold;">
-                        &nbsp;
-                </td>
-                <td colspan="1" style="font-size:15px;font-weight: bold; text-align: right;">
-                Date: 
-                </td>
-                <td colspan="2" style="font-size:15px;font-weight: bold;">
-                   [order_by_date]
-                </td>
-            </tr>
-			  <tr>
-                <td colspan="2" style="font-size:15px;font-weight: bold; text-align: right;">
-                Approved by:
-                </td>
-                <td colspan="2" style="font-size:15px;font-weight: bold;">
-                [approved_by]
-                </td>
-                <td colspan="3" style="font-size:15px;font-weight: bold;">
-                        &nbsp;
-                </td>
-                <td colspan="1" style="font-size:15px;font-weight: bold; text-align: right;">
-                Date: 
-                </td>
-                <td colspan="2" style="font-size:15px;font-weight: bold;">
-                   [approved_by_date]
-                </td>
-            </tr>
-</table>
-<br/>
-<br/>
+<div>
+<div style="float: left;">
+   <table>
+      <tr>
+         <td colspan="2" style="font-size:15px;font-weight: bold; text-align: left;">
+            Ordered by:
+         </td>
+         <td colspan="2" style="font-size:15px;font-weight: bold;">
+            [order_by]
+         </td>
+      </tr>
+      <tr>
+         <td colspan="2" style="font-size:15px;font-weight: bold; text-align: left;">
+            Approved by:
+         </td>
+         <td colspan="2" style="font-size:15px;font-weight: bold;">
+            [approved_by]
+         </td>
+      </tr>   
+   </table>
+   </div>
+   <div style="float:right; padding-right: 210px;">
+   <table>
+      <tr>
+         <td colspan="1" style="font-size:15px;font-weight: bold; text-align: left;">
+            Date: 
+         </td>
+         <td colspan="2" style="font-size:15px;font-weight: bold;">
+            [order_by_date]
+         </td>
+      </tr>
+      <tr>
+         <td colspan="1" style="font-size:15px;font-weight: bold; text-align: left;">
+            Date: 
+         </td>
+         <td colspan="2" style="font-size:15px;font-weight: bold;">
+            ________________
+         </td>
+      </tr>
+   </table>
+   </div>
+</div>
+<div style="page-break-after:always;"></div>
+

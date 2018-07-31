@@ -1,4 +1,4 @@
-<br/>
+
 <table id="header">
 <tr>
     <td style="font-size:16px;font-weight: bold;">
@@ -22,7 +22,7 @@
 </tr>
 </table>
 <br/>
-<table id="body" width='100%'>
+<table id="body" width='100%' style="border: 1px;">
 <thead>
 <tr>
     	<th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">

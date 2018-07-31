@@ -450,11 +450,16 @@ namespace Group8AD_WebAPI.Controllers
             List<DisbursementDetailVM> disbursementListDept = new List<DisbursementDetailVM>();
             List<ItemVM> itemlist = BusinessLogic.ItemBL.GetAllItems();
             string filename = "disbursementListDept" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
-             PdfBL.GenerateDisbursementListbyDept(disbursementListDept,filename);
+            string filename2 = "disbursementListDeptByOrder" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+            PdfBL.GenerateDisbursementListbyDept(disbursementListDept,filename);
+            PdfBL.GenerateDisbursementListby_Dept_Employee_OrderNo(disbursementListDept, filename2);
             int empId = 101;
             DateTime expt_date = System.DateTime.Now;
             List<ItemVM> iList = new List<ItemVM>();
-            //PdfBL.GeneratePurchaseOrderList(empId, expt_date,iList);
+
+            PdfBL.GenerateLowStockItemList(empId);
+            PdfBL.GenerateInventoryItemList(empId);
+            PdfBL.GeneratePurchaseOrderList(empId, expt_date, iList);
             return Request.CreateResponse(HttpStatusCode.OK);
             //try
             //{

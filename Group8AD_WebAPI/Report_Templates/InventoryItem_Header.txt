@@ -9,37 +9,37 @@
 <table border='1' width='100%'>
 <thead>
 <tr>
-		<th bgcolor="#ECECEC" align="center"  width="3%">
+		<th bgcolor="#ECECEC" align="center"  width="3%" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
         <strong>#</strong>
         </th>  
-    	<th bgcolor="#ECECEC" align="center">
+    	<th bgcolor="#ECECEC" align="center style="background-color:#ECECEC;font-size:13px;font-weight: bold;"">
         <strong>Item Code</strong>
         </th>         
-        <th bgcolor="#ECECEC" align="center">
+        <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
        <strong> Item Description</strong>
         </th>  
-		 <th bgcolor="#ECECEC" align="center">
+		 <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
 		<strong>Location</strong>
         </th> 
-		 <th bgcolor="#ECECEC" align="center">
+		 <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
 		<strong>Unit of measurement</strong>
         </th> 
-         <th bgcolor="#ECECEC" align="center">
+         <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
 		<strong>Current Balance</strong>
         </th>    
-		 <th bgcolor="#ECECEC" align="center">
+		 <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
        <strong> Reorder Level</strong>
         </th> 	
-		 <th bgcolor="#ECECEC" align="center">
+		 <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
       <strong>  Reorder Quantity </strong>
         </th>
-		 <th bgcolor="#ECECEC" align="center">
+		 <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
        <strong> Supplier 1</strong>
         </th>		   
-		 <th bgcolor="#ECECEC" align="center">
+		 <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
 		<strong> Supplier 2</strong>
         </th>		 
-		 <th bgcolor="#ECECEC" align="center">
+		 <th bgcolor="#ECECEC" align="center" style="background-color:#ECECEC;font-size:13px;font-weight: bold;">
        <strong> Supplier 3</strong>
         </th>	
 </tr>
