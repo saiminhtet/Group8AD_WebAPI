@@ -456,13 +456,11 @@ namespace Group8AD_WebAPI.BusinessLogic
             pdfDoc.Open();
 
             //using header class started
-            writer.PageEvent = new Header_Landscape();
+            writer.PageEvent = new Header_Landscape_A4();
             Paragraph welcomeParagraph = new Paragraph();
             pdfDoc.Add(welcomeParagraph);
             //using header class ended
-
-
-
+            
             //starting xmlworker
             XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
             //htmlparser.StartDocument();
@@ -482,7 +480,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     int pages = reader.NumberOfPages;
                     for (int i = 1; i <= pages; i++)
                     {
-                        ColumnText.ShowTextAligned(stamper.GetUnderContent(i), Element.ALIGN_RIGHT, new Phrase("Page " + i.ToString() + " of " + pages.ToString(), blackFont), 568f, 15f, 0);
+                        ColumnText.ShowTextAligned(stamper.GetUnderContent(i), Element.ALIGN_CENTER, new Phrase("Page " + i.ToString() + " of " + pages.ToString(), blackFont), 440f, 15f, 0);
                     }
                 }
                 bytes = stream.ToArray();
@@ -572,7 +570,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
-        //Header all pages(Landscape)
+        //Header all pages(LandscapeA3)
         public partial class Header_Landscape : PdfPageEventHelper
         {
             public override void OnEndPage(PdfWriter writer, Document doc)
@@ -598,6 +596,35 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 headerTbl.AddCell(cell);
                 headerTbl.WriteSelectedRows(0, -1, 430, 800, writer.DirectContent);
+            }
+        }
+
+        //Header all pages(LandscapeA4)
+        public partial class Header_Landscape_A4 : PdfPageEventHelper
+        {
+            public override void OnEndPage(PdfWriter writer, Document doc)
+            {
+                string imageurl = HttpContext.Current.Server.MapPath("~/Content/logo.png");
+                iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageurl);
+                logo.ScaleAbsolute(140, 15);
+
+                //Paragraph header = new Paragraph("LOGIC UNIVERSITY", FontFactory.GetFont(FontFactory.TIMES, 25, iTextSharp.text.Font.NORMAL));
+                //header.Alignment = Element.ALIGN_LEFT;
+                //logo.Alignment = iTextSharp.text.Image.ALIGN_CENTER;
+                logo.Alignment = Element.ALIGN_CENTER;
+                PdfPTable headerTbl = new PdfPTable(1);
+                headerTbl.TotalWidth = 300;
+                headerTbl.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PdfPCell cell = new PdfPCell(logo);
+                cell.Border = 0;
+                cell.PaddingLeft = 10;
+
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell.VerticalAlignment = Element.ALIGN_MIDDLE;
+
+                headerTbl.AddCell(cell);
+                headerTbl.WriteSelectedRows(0, -1, 270, 550, writer.DirectContent);
             }
         }
     }
