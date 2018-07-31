@@ -1058,7 +1058,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 int count = 0;
                 if (items[i].TempQtyDisb > items[i].Balance) count = items[i].Balance;
                 else count = (int)items[i].TempQtyDisb;
-                List<RequestVM> rvmList = RequestBL.GetReq("Approved");
+                List<RequestVM> rvmList = RequestBL.GetReq(empId, "Approved");
                 for (int j = 0; j < rvmList.Count; j++)
                 {
                     if (count > 0)
