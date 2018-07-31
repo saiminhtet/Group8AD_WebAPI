@@ -943,12 +943,12 @@ namespace Group8AD_WebAPI.BusinessLogic
             #endregion
 
             SA46Team08ADProjectContext context = new SA46Team08ADProjectContext();
-            List<RequestDetail> rdlist = new List<RequestDetail>();
             List<DepartmentVM> deptList = DepartmentBL.GetAllDept();
             List<Request> rList = context.Requests.Where(x => x.Status.Equals("Approved")).ToList();
             for (int i = 0; i < deptList.Count; i++) deptList[i].FulfilledQty = 0;
             for (int i = 0; i < items.Count; i++)
             {
+                List<RequestDetail> rdlist = new List<RequestDetail>();
                 int count = 0;
                 if (items[i].TempQtyDisb > items[i].Balance) count = items[i].Balance;
                 else count = (int)items[i].TempQtyDisb;
