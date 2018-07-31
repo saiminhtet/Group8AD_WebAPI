@@ -409,16 +409,19 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                         string deptcode = EmployeeBL.GetDeptCode(empId);
 
-                        var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).Select(e => e.EmpId).ToList();
+                        //var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).Select(e => e.EmpId).ToList();
 
                         List<int> rList = new List<int>();
                         List<RequestDetail> rdList = new List<RequestDetail>();
 
-                        foreach (var empid in EmpIds)
-                        {
-                            var reqList = entities.Requests.Where(x => x.EmpId == empid && x.Status.Equals("Approved")).Select(x => x.ReqId).ToList<int>();
-                            rList.AddRange(reqList);
-                        }
+                        //foreach (var empid in EmpIds)
+                        //{
+                        //    var reqList = entities.Requests.Where(x => x.EmpId == empid && x.Status.Equals("Approved")).Select(x => x.ReqId).ToList<int>();
+                        //    rList.AddRange(reqList);
+                        //}
+
+                        var reqList = entities.Requests.Where(x => x.EmpId == rcvEmpId && x.Status.Equals("Approved")).Select(x => x.ReqId).ToList();
+                        rList.AddRange(reqList);
 
                         foreach (int reqId in rList)
                         {
@@ -1338,7 +1341,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             List<DisbursementDetailVM> disbursementListDept = dListDept.OrderBy(x => x.ItemCode).OrderBy(x => x.DeptCode).ToList();
             // disbursementListDept, list of disbursement sorted by deptCode and then itemCode, to be used for pdf export
             string filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
-            PdfBL.GenerateDisbursementListbyDept(disbursementListDept, filename);
+            //PdfBL.GenerateDisbursementListbyDept(disbursementListDept, filename);
 
             ////Group By Department then By Item
             for (int i = 0; i < fulfilledList.Count; i++)
