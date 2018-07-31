@@ -176,7 +176,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         //SendDisbEmailForRep
         //with attach
-        public static bool SendDisbEmailForRep(int empId, string deptCode, string attachfile1 , string attachfile2)
+        public static bool SendDisbEmailForRep(int empId, string deptCode)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -200,15 +200,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                _to + "," + content + " " + location + " " + "on" + " " + time + "???" +
-                                Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." +
+                                _to + "," + content + " " + location + " " + "on" + " " + time  +
                                 Environment.NewLine + Environment.NewLine + "Thank you.";
 
-
-                    Attachment at = new Attachment(filePath + attachfile1);
-                    Attachment at1 = new Attachment(filePath + attachfile2);
-                    msg.Attachments.Add(at);
-                    msg.Attachments.Add(at1);
 
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
