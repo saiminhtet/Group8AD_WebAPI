@@ -154,15 +154,21 @@ namespace Group8AD_WebAPI.Controllers
         [Route("api/Item/AcceptDisbursement/")]
         public HttpResponseMessage AcceptDisbursement(int empId, List<ItemVM> iList)
         {
-            try
+            List<string> errorMessages = BusinessLogic.ItemBL.AcceptDisbursement(empId, iList);
+            if (errorMessages == null)
             {
-                BusinessLogic.ItemBL.AcceptDisbursement(empId, iList);
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
-            }
+            return Request.CreateResponse(HttpStatusCode.OK, errorMessages);
+            //try
+            //{
+            //    BusinessLogic.ItemBL.AcceptDisbursement(empId, iList);
+            //    return Request.CreateResponse(HttpStatusCode.OK);
+            //}
+            //catch (Exception e)
+            //{
+            //    return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            //}
 
         }
 
