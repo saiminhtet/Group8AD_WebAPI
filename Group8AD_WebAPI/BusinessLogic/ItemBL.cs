@@ -1029,7 +1029,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             for (int i = 0; i < clerklist.Count; i++)
             {
                 int empId = clerklist[i].EmpId;
-                EmailBL.SendDisbEmailForClerk(empId, dListDept, dListEmployee);
+                EmailBL.SendDisbEmailForClerk(empId, disbursementListDept, disbursementListEmployee);
             }
 
             List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
