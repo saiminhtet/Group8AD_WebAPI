@@ -1076,7 +1076,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
 
         //FulfillRequestUrgent
-        public static List<ItemVM> FulfillRequestUrgent(int empId, List<ItemVM> items)
+        public static List<ItemVM> FulfillRequestUrgent(int empId, List<ItemVM> items, DateTime requested_time, int ColId)
         {
             List<RequestDetailVM> fulfilledList = new List<RequestDetailVM>();
             List<DepartmentVM> deptList = DepartmentBL.GetAllDept();
