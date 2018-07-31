@@ -142,7 +142,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     var to_email_103 = entities.Employees.Where(e => e.EmpId == 103).Select(e => e.EmpEmail).First();
 
                     string type = "Weekly Disbursement";
-                    string content = " Disbursement Notification: Disbursement has recently been conducted by ";
+                    string content = " Disbursement has recently been conducted by ";
 
                     MailMessage msg = new MailMessage();
                     msg.From = new MailAddress(from_email);//101's email
@@ -152,7 +152,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + _from + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + " " + _from + Environment.NewLine + Environment.NewLine + 
+                                "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
 
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
@@ -192,7 +193,8 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                _to + " " + content + " " + location + " " + "on" + " " + time + "???" +
+                                _to + "," + content + " " + location + " " + "on" + " " + time + "???" +
+                                Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." +
                                 Environment.NewLine + Environment.NewLine + "Thank you.";
 
                     msg.Priority = MailPriority.High;
@@ -277,7 +279,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.To.Add(to_email_103);//103
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
-                    msg.Body = "Hi" + " " + dept_head_name + "," + Environment.NewLine + Environment.NewLine + _from +
+                    msg.Body = "Hi" + " " + dept_head_name + "," + Environment.NewLine + Environment.NewLine + _from + " " +
                                 content + " " + dept + Environment.NewLine + Environment.NewLine + "Thank you.";
 
                     msg.Priority = MailPriority.High;
@@ -303,22 +305,28 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     var to_email = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpEmail).First();
                     var deptCode = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.DeptCode).First();
-                    var head_id = entities.Departments.Where(d => d.DeptCode == deptCode).Select(d => d.DeptHeadId).First();
-                    var dept_head_email = entities.Employees.Where(e => e.EmpId == head_id).Select(e => e.EmpEmail).First();
+                    //var head_id = entities.Departments.Where(d => d.DeptCode == deptCode).Select(d => d.DeptHeadId).First();
+                    var clerk_email = entities.Employees.Where(e => e.EmpId == 101).Select(e => e.EmpEmail).First();
+                    //var dept_head_email = entities.Employees.Where(e => e.EmpId == head_id).Select(e => e.EmpEmail).First();
                     var _to = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpName).First();
 
-                    string type = "Delegate Assignment";
-                    string content = "You have been assigned as delegate";
-                    string content1 = "for your department by your department head";
+                    string type = "Purchase Order";
+                    string content = "I here by write to you in regards with the above order , you are been requested to send me/us the status details at earliest.";
+                    string content2 = "If you require any other information in relationship to the above, please do not hesitate to contact us/me.";
+                    string content3 = "Your early response will be highly appreciable.";
 
                     string filePath = HttpContext.Current.Server.MapPath("~/PDF/");
                     MailMessage msg = new MailMessage();
-                    msg.From = new MailAddress(dept_head_email);//DepartmentHead
+                    msg.From = new MailAddress(clerk_email);
                     msg.To.Add(to_email);
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + " " + "( " + targetDate + " ) " + " " + content1 + Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + Environment.NewLine + Environment.NewLine +
+                                content2  + Environment.NewLine + Environment.NewLine + 
+                                content3 + Environment.NewLine + Environment.NewLine + 
+                                "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + 
+                                "Thank you.";
                     Attachment at = new Attachment(filePath + attachfile);
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
@@ -467,7 +475,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     var dept = entities.Departments.Where(d => d.DeptCode == deptCode).Select(d => d.DeptName).First();
                     //var collpt = entities.CollectionPoints.Where(d => d. == deptCode).Select(d => d.DeptName).First();
                     
-                    string type = "Inventory ";
+                    string type = "Inventory List";
                     string content = "You have recently requested for a list of inventory item for the Logic University on ";
                     // CollectionPoint.Location +  + CollectionPoint.Location;
                     string filePath = HttpContext.Current.Server.MapPath("~/PDF/");

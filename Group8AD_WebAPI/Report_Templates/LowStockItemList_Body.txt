@@ -1,9 +1,9 @@
 <tr>
 	<td style="border:solid 1px black;" align="center">
-		[itemcode]
-	</td>	
+		[#]
+	</td>
 	<td style="border:solid 1px black;" align="center">
-		[item_cat]
+		[itemcode]
 	</td>
 	<td style="border:solid 1px black;" align="center">
 		[item_desc]

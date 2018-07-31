@@ -1,0 +1,96 @@
+        <table style="width: 100%; margin: auto;">
+            <tr>
+                <td colspan="1" style="font-size:12px;font-weight: bold; text-align: right;">
+                Supplier:
+                </td>
+                <td colspan="3" style="font-size:12px;font-weight: bold;">
+                [supp_name]
+                </td>
+                <td colspan="1" style="font-size:12px;font-weight: bold;">
+                        &nbsp;
+                </td>
+                <td colspan="1" style="font-size:12px;font-weight: bold; text-align: right;">
+                Deliver to: 
+                </td>
+                <td colspan="3" style="font-size:12px;font-weight: bold;">
+                    Institute of Systems Science
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" style="font-size:12px;font-weight: bold;">
+                        &nbsp;
+                </td>
+                <td colspan="3" style="font-size:12px;font-weight: bold;">
+                [supp_ctx_name]
+                </td>
+                <td colspan="1"style="font-size:12px;font-weight: bold;">
+                        &nbsp;
+                </td>
+                <td colspan="1" style="font-size:12px;font-weight: bold;">
+                        &nbsp;
+                </td>
+                <td colspan="3" style="font-size:12px;font-weight: bold;">
+                    25 Heng Mui Keng Terrace
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" style="font-size:12px;font-weight: bold;">
+                        &nbsp;
+                </td>
+                <td colspan="3" style="font-size:12px;font-weight: bold;">
+                [supp_addr_1]
+                </td>
+                <td colspan="1" style="font-size:12px;font-weight: bold;">
+                        &nbsp;
+                </td>
+                <td colspan="1" valign="middle" style="font-size:12px;font-weight: bold; text-align: right; vertical-align:middle;">
+                 
+                </td>
+                <td colspan="3" valign="top" style="font-size:12px;font-weight: bold; vertical-align:top;">
+                    Singapore 119615 <br/>
+					 
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" style="font-size:12px;font-weight: bold;">
+                        &nbsp;
+                </td>
+                <td colspan="3" style="font-size:12px;font-weight: bold;">
+               &nbsp;
+                </td>
+                <td colspan="1" style="font-size:12px;font-weight: bold;">
+                   
+                </td>
+                <td colspan="1" valign="top" style="font-size:12px;font-weight: bold; text-align: right;  vertical-align:top;" >
+                Attn:
+                </td>
+                <td colspan="3" style="font-size:12px;font-weight: bold; vertical-align:top;">
+                    Mr.Jhon Smith
+                </td>
+            </tr>
+            </table>
+            
+            <br/>
+<p>Please supply the following items by [expected_date]</p>
+<br/>
+            <table border='1' width='100%'>
+            <thead>
+            <tr>
+                    <th bgcolor="#ECECEC" align="center">
+                    <strong>Item Code</strong>
+                    </th>     
+                    <th bgcolor="#ECECEC" align="center">
+                   <strong> Item Description</strong>
+                    </th>        
+                     <th bgcolor="#ECECEC" align="center">
+                    <strong>Quantity</strong>
+                    </th>    
+                     <th bgcolor="#ECECEC" align="center">
+                   <strong>Price</strong>
+                    </th>   	  
+                     <th bgcolor="#ECECEC" align="center">
+                   <strong> Amount Quantity</strong>
+                    </th>                    
+            </tr>
+            </thead>
+            <tbody>
