@@ -15,32 +15,39 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<DateTime> monthList = GetMonthList(fromDate, toDate);
-                List<ReportItemVM> riList = new List<ReportItemVM>();
-                List<Transaction> transList = entities.Transactions.ToList();
-                for (int i = 0; i < monthList.Count; i++)
+                try
                 {
-                    double chargeBack = 0;
-                    for (int j = 0; j < transList.Count; j++)
+                    List<DateTime> monthList = GetMonthList(fromDate, toDate);
+                    List<ReportItemVM> riList = new List<ReportItemVM>();
+                    List<Transaction> transList = entities.Transactions.ToList();
+                    for (int i = 0; i < monthList.Count; i++)
                     {
-                        if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
-                            && DateTime.Compare(transList[j].TranDateTime, monthList[i]) >= 0
-                            && DateTime.Compare(transList[j].TranDateTime, monthList[i].AddMonths(1)) < 0)
+                        double chargeBack = 0;
+                        for (int j = 0; j < transList.Count; j++)
                         {
-                            chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                            if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
+                                && DateTime.Compare(transList[j].TranDateTime, monthList[i]) >= 0
+                                && DateTime.Compare(transList[j].TranDateTime, monthList[i].AddMonths(1)) < 0)
+                            {
+                                chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                            }
                         }
+                        chargeBack = Math.Round(chargeBack, 2);
+                        string format = "yyyy MMM";
+                        string label = monthList[i].ToString(format);
+                        ReportItemVM ri = new ReportItemVM();
+                        ri.Period = monthList[i];
+                        ri.Label = label;
+                        ri.Val1 = chargeBack * -1;
+                        ri.Val2 = 0;
+                        riList.Add(ri);
                     }
-                    chargeBack = Math.Round(chargeBack, 2);
-                    string format = "yyyy MMM";
-                    string label = monthList[i].ToString(format);
-                    ReportItemVM ri = new ReportItemVM();
-                    ri.Period = monthList[i];
-                    ri.Label = label;
-                    ri.Val1 = chargeBack * -1;
-                    ri.Val2 = 0;
-                    riList.Add(ri);
+                    return riList;
                 }
-                return riList;
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -48,35 +55,41 @@ namespace Group8AD_WebAPI.BusinessLogic
         // done
         public static List<ReportItemVM> GetCBByRng(string deptCode, DateTime fromDate, DateTime toDate)
         {
-
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<DateTime> weekList = GetWeekList(fromDate, toDate);
-                List<ReportItemVM> riList = new List<ReportItemVM>();
-                List<Transaction> transList = entities.Transactions.ToList();
-                for (int i = 0; i < weekList.Count; i++)
+                try
                 {
-                    double chargeBack = 0;
-                    for (int j = 0; j < transList.Count; j++)
+                    List<DateTime> weekList = GetWeekList(fromDate, toDate);
+                    List<ReportItemVM> riList = new List<ReportItemVM>();
+                    List<Transaction> transList = entities.Transactions.ToList();
+                    for (int i = 0; i < weekList.Count; i++)
                     {
-                        if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
-                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                        double chargeBack = 0;
+                        for (int j = 0; j < transList.Count; j++)
                         {
-                            chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                            if (transList[j].UnitPrice != null && transList[j].DeptCode == deptCode
+                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                            {
+                                chargeBack = chargeBack + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                            }
                         }
+                        chargeBack = Math.Round(chargeBack, 2);
+                        string format = "yyyy MMM d";
+                        string label = weekList[i].ToString(format);
+                        ReportItemVM ri = new ReportItemVM();
+                        ri.Period = weekList[i];
+                        ri.Label = label;
+                        ri.Val1 = chargeBack * -1;
+                        ri.Val2 = 0;
+                        riList.Add(ri);
                     }
-                    chargeBack = Math.Round(chargeBack, 2);
-                    string format = "yyyy MMM d";
-                    string label = weekList[i].ToString(format);
-                    ReportItemVM ri = new ReportItemVM();
-                    ri.Period = weekList[i];
-                    ri.Label = label;
-                    ri.Val1 = chargeBack * -1;
-                    ri.Val2 = 0;
-                    riList.Add(ri);
+                    return riList;
                 }
-                return riList;
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -84,33 +97,40 @@ namespace Group8AD_WebAPI.BusinessLogic
         // done
         public static List<TransactionVM> GetLastTenTrans(string itemCode)
         {
-            List<TransactionVM> translist = new List<TransactionVM>();
-            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            try
             {
-                List<Transaction> list = entities.Transactions.Where(t => t.ItemCode == itemCode).
-                    OrderByDescending(t => t.TranDateTime).ToList();
-                if (list != null)
+                List<TransactionVM> translist = new List<TransactionVM>();
+                using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
                 {
-                    for (int i = 0; i < 10 && i < list.Count; i++)
+                    List<Transaction> list = entities.Transactions.Where(t => t.ItemCode == itemCode).
+                        OrderByDescending(t => t.TranDateTime).ToList();
+                    if (list != null)
                     {
-                        TransactionVM t = new TransactionVM();
-                        t.TranId = list[i].TranId;
-                        t.TranDateTime = list[i].TranDateTime;
-                        t.ItemCode = list[i].ItemCode;
-                        t.QtyChange = list[i].QtyChange;
-                        if (list[i].UnitPrice != null)
-                            t.UnitPrice = (double)list[i].UnitPrice;
-                        else
-                            t.UnitPrice = 0;
-                        t.Desc = list[i].Desc;
-                        t.DeptCode = list[i].DeptCode;
-                        t.SuppCode = list[i].SuppCode;
-                        t.VoucherNo = list[i].VoucherNo;
-                        translist.Add(t);
+                        for (int i = 0; i < 10 && i < list.Count; i++)
+                        {
+                            TransactionVM t = new TransactionVM();
+                            t.TranId = list[i].TranId;
+                            t.TranDateTime = list[i].TranDateTime;
+                            t.ItemCode = list[i].ItemCode;
+                            t.QtyChange = list[i].QtyChange;
+                            if (list[i].UnitPrice != null)
+                                t.UnitPrice = (double)list[i].UnitPrice;
+                            else
+                                t.UnitPrice = 0;
+                            t.Desc = list[i].Desc;
+                            t.DeptCode = list[i].DeptCode;
+                            t.SuppCode = list[i].SuppCode;
+                            t.VoucherNo = list[i].VoucherNo;
+                            translist.Add(t);
+                        }
                     }
                 }
+                return translist;
             }
-            return translist;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         // get monthly chargeback by a single date
@@ -119,34 +139,41 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                int year = toDate.Year;
-                int month = toDate.Month;
-                DateTime startDate = new DateTime(year, month, 01, 00, 00, 00);
-                DateTime endDate = startDate.AddMonths(1);
-                List<ReportItemVM> rilist = new List<ReportItemVM>();
-                List<Transaction> translist = entities.Transactions.ToList();
-                List<Department> deptlist = entities.Departments.Where(d => d.DeptCode != "STOR").ToList();
-                for (int i = 0; i < deptlist.Count; i++)
+                try
                 {
-                    double chargeBack = 0;
-                    for (int j = 0; j < translist.Count; j++)
+                    int year = toDate.Year;
+                    int month = toDate.Month;
+                    DateTime startDate = new DateTime(year, month, 01, 00, 00, 00);
+                    DateTime endDate = startDate.AddMonths(1);
+                    List<ReportItemVM> rilist = new List<ReportItemVM>();
+                    List<Transaction> translist = entities.Transactions.ToList();
+                    List<Department> deptlist = entities.Departments.Where(d => d.DeptCode != "STOR").ToList();
+                    for (int i = 0; i < deptlist.Count; i++)
                     {
-                        if (translist[j].UnitPrice != null && deptlist[i].DeptCode == translist[j].DeptCode &&
-                            DateTime.Compare(translist[j].TranDateTime, startDate) >= 0 &&
-                            DateTime.Compare(translist[j].TranDateTime, endDate) < 0)
+                        double chargeBack = 0;
+                        for (int j = 0; j < translist.Count; j++)
                         {
-                            chargeBack = chargeBack + translist[j].QtyChange * (double)translist[j].UnitPrice;
+                            if (translist[j].UnitPrice != null && deptlist[i].DeptCode == translist[j].DeptCode &&
+                                DateTime.Compare(translist[j].TranDateTime, startDate) >= 0 &&
+                                DateTime.Compare(translist[j].TranDateTime, endDate) < 0)
+                            {
+                                chargeBack = chargeBack + translist[j].QtyChange * (double)translist[j].UnitPrice;
+                            }
                         }
+                        ReportItemVM ri = new ReportItemVM();
+                        chargeBack = Math.Round(chargeBack, 2);
+                        ri.Period = startDate;
+                        ri.Label = deptlist[i].DeptName;
+                        ri.Val1 = chargeBack * -1;
+                        ri.Val2 = 0;
+                        rilist.Add(ri);
                     }
-                    ReportItemVM ri = new ReportItemVM();
-                    chargeBack = Math.Round(chargeBack, 2);
-                    ri.Period = startDate;
-                    ri.Label = deptlist[i].DeptName;
-                    ri.Val1 = chargeBack * -1;
-                    ri.Val2 = 0;
-                    rilist.Add(ri);
+                    return rilist;
                 }
-                return rilist;
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -157,30 +184,37 @@ namespace Group8AD_WebAPI.BusinessLogic
             // by default, fromDate will be the first day of the month and toDate will be the last day of the month
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<ReportItemVM> rilist = new List<ReportItemVM>();
-                List<Transaction> translist = entities.Transactions.ToList();
-                List<Department> deptlist = entities.Departments.Where(d => d.DeptCode != "STOR").ToList();
-                for (int i = 0; i < deptlist.Count; i++)
+                try
                 {
-                    double chargeBack = 0;
-                    for (int j = 0; j < translist.Count; j++)
+                    List<ReportItemVM> rilist = new List<ReportItemVM>();
+                    List<Transaction> translist = entities.Transactions.ToList();
+                    List<Department> deptlist = entities.Departments.Where(d => d.DeptCode != "STOR").ToList();
+                    for (int i = 0; i < deptlist.Count; i++)
                     {
-                        if (translist[j].UnitPrice != null && deptlist[i].DeptCode == translist[j].DeptCode &&
-                            DateTime.Compare(translist[j].TranDateTime, fromDate) >= 0 &&
-                            DateTime.Compare(translist[j].TranDateTime, toDate) < 0)
+                        double chargeBack = 0;
+                        for (int j = 0; j < translist.Count; j++)
                         {
-                            chargeBack = chargeBack + translist[j].QtyChange * (double)translist[j].UnitPrice;
+                            if (translist[j].UnitPrice != null && deptlist[i].DeptCode == translist[j].DeptCode &&
+                                DateTime.Compare(translist[j].TranDateTime, fromDate) >= 0 &&
+                                DateTime.Compare(translist[j].TranDateTime, toDate) < 0)
+                            {
+                                chargeBack = chargeBack + translist[j].QtyChange * (double)translist[j].UnitPrice;
+                            }
                         }
+                        ReportItemVM ri = new ReportItemVM();
+                        chargeBack = Math.Round(chargeBack, 2);
+                        ri.Period = fromDate;
+                        ri.Label = deptlist[i].DeptName;
+                        ri.Val1 = chargeBack * -1;
+                        ri.Val2 = 0;
+                        rilist.Add(ri);
                     }
-                    ReportItemVM ri = new ReportItemVM();
-                    chargeBack = Math.Round(chargeBack, 2);
-                    ri.Period = fromDate;
-                    ri.Label = deptlist[i].DeptName;
-                    ri.Val1 = chargeBack * -1;
-                    ri.Val2 = 0;
-                    rilist.Add(ri);
+                    return rilist;
                 }
-                return rilist;
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -190,39 +224,46 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                int year = toDate.Year;
-                int month = toDate.Month;
-                DateTime startDate = new DateTime(year, month, 01, 00, 00, 00);
-                DateTime endDate = startDate.AddMonths(1);
-                List<ReportItemVM> rilist = new List<ReportItemVM>();
-                //List<Request> rlist = entities.Requests.ToList();
-                List<Item> ilist = entities.Items.ToList();
-                //List<Transaction> tlist = entities.Transactions.ToList();
-                for (int i = 0; i < ilist.Count; i++)
+                try
                 {
-                    ReportItemVM ri = new ReportItemVM();
-                    ri.Period = startDate;
-                    ri.Label = ilist[i].ItemCode;
-                    ri.Val1 = 0;
-                    ri.Val2 = 0;
-                    rilist.Add(ri);
-                }
-
-                // Loop through all Requests Fulfilling Criteria
-                List<Request> rlist = entities.Requests.Where(x => (x.Status.Equals("Fulfilled") || x.Status.Equals("Approved")) && (x.ReqDateTime <= endDate && x.ReqDateTime >= startDate)).ToList();
-                for (int j = 0; j < rlist.Count; j++)
-                {
-                    int reqId = rlist[j].ReqId;
-
-                    // Loop through all RequestDetails And Add ReqQty to Respective Item in ivmlist
-                    List<RequestDetail> rdlist = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
-                    for (int k = 0; k < rdlist.Count; k++)
+                    int year = toDate.Year;
+                    int month = toDate.Month;
+                    DateTime startDate = new DateTime(year, month, 01, 00, 00, 00);
+                    DateTime endDate = startDate.AddMonths(1);
+                    List<ReportItemVM> rilist = new List<ReportItemVM>();
+                    //List<Request> rlist = entities.Requests.ToList();
+                    List<Item> ilist = entities.Items.ToList();
+                    //List<Transaction> tlist = entities.Transactions.ToList();
+                    for (int i = 0; i < ilist.Count; i++)
                     {
-                        if (rdlist[k].ReqQty != 0) { rilist.Find(x => x.Label.Equals(rdlist[k].ItemCode)).Val1 += rdlist[k].ReqQty; }
-                    } // Loop through rd
-                } // Loop through r
+                        ReportItemVM ri = new ReportItemVM();
+                        ri.Period = startDate;
+                        ri.Label = ilist[i].ItemCode;
+                        ri.Val1 = 0;
+                        ri.Val2 = 0;
+                        rilist.Add(ri);
+                    }
 
-                return rilist;
+                    // Loop through all Requests Fulfilling Criteria
+                    List<Request> rlist = entities.Requests.Where(x => (x.Status.Equals("Fulfilled") || x.Status.Equals("Approved")) && (x.ReqDateTime <= endDate && x.ReqDateTime >= startDate)).ToList();
+                    for (int j = 0; j < rlist.Count; j++)
+                    {
+                        int reqId = rlist[j].ReqId;
+
+                        // Loop through all RequestDetails And Add ReqQty to Respective Item in ivmlist
+                        List<RequestDetail> rdlist = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
+                        for (int k = 0; k < rdlist.Count; k++)
+                        {
+                            if (rdlist[k].ReqQty != 0) { rilist.Find(x => x.Label.Equals(rdlist[k].ItemCode)).Val1 += rdlist[k].ReqQty; }
+                        } // Loop through rd
+                    } // Loop through r
+
+                    return rilist;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -232,50 +273,57 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                // Create Item List and Clear TempQyuReq
-                List<Item> ilist = entities.Items.ToList();
-                List<ItemVM> ivmlist = new List<ItemVM>();
-                for (int i = 0; i < ilist.Count; i++)
+                try
                 {
-                    ItemVM item = new ItemVM();
-                    item.ItemCode = ilist[i].ItemCode;
-                    item.Cat = ilist[i].Cat;
-                    item.Desc = ilist[i].Desc;
-                    item.Location = ilist[i].Location;
-                    item.UOM = ilist[i].UOM;
-                    item.IsActive = ilist[i].IsActive;
-                    item.Balance = ilist[i].Balance;
-                    item.ReorderLevel = ilist[i].ReorderLevel;
-                    item.ReorderQty = ilist[i].ReorderQty;
-                    item.TempQtyDisb = ilist[i].TempQtyDisb;
-                    item.TempQtyCheck = ilist[i].TempQtyCheck;
-                    item.SuppCode1 = ilist[i].SuppCode1;
-                    item.Price1 = ilist[i].Price1 ?? default(double);
-                    item.SuppCode2 = ilist[i].SuppCode2;
-                    item.Price2 = ilist[i].Price2 ?? default(double);
-                    item.SuppCode3 = ilist[i].SuppCode3;
-                    item.Price3 = ilist[i].Price3 ?? default(double);
-
-                    item.TempQtyReq = 0;
-
-                    ivmlist.Add(item);
-                }
-
-                // Loop through all Requests Fulfilling Criteria
-                List<Request> rlist = entities.Requests.Where(x => (x.Status.Equals("Fulfilled") || x.Status.Equals("Approved")) && (x.ReqDateTime <= toDate && x.ReqDateTime >= fromDate)).ToList();
-                for (int j = 0; j < rlist.Count; j++)
-                {
-                    int reqId = rlist[j].ReqId;
-
-                    // Loop through all RequestDetails And Add ReqQty to Respective Item in ivmlist
-                    List<RequestDetail> rdlist = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
-                    for (int k = 0; k < rdlist.Count; k++)
+                    // Create Item List and Clear TempQyuReq
+                    List<Item> ilist = entities.Items.ToList();
+                    List<ItemVM> ivmlist = new List<ItemVM>();
+                    for (int i = 0; i < ilist.Count; i++)
                     {
-                        if (rdlist[k].ReqQty != 0) { ivmlist.Find(x => x.ItemCode.Equals(rdlist[k].ItemCode)).TempQtyReq += rdlist[k].ReqQty; }
-                    } // Loop through rd
-                } // Loop through r
+                        ItemVM item = new ItemVM();
+                        item.ItemCode = ilist[i].ItemCode;
+                        item.Cat = ilist[i].Cat;
+                        item.Desc = ilist[i].Desc;
+                        item.Location = ilist[i].Location;
+                        item.UOM = ilist[i].UOM;
+                        item.IsActive = ilist[i].IsActive;
+                        item.Balance = ilist[i].Balance;
+                        item.ReorderLevel = ilist[i].ReorderLevel;
+                        item.ReorderQty = ilist[i].ReorderQty;
+                        item.TempQtyDisb = ilist[i].TempQtyDisb;
+                        item.TempQtyCheck = ilist[i].TempQtyCheck;
+                        item.SuppCode1 = ilist[i].SuppCode1;
+                        item.Price1 = ilist[i].Price1 ?? default(double);
+                        item.SuppCode2 = ilist[i].SuppCode2;
+                        item.Price2 = ilist[i].Price2 ?? default(double);
+                        item.SuppCode3 = ilist[i].SuppCode3;
+                        item.Price3 = ilist[i].Price3 ?? default(double);
 
-                return ivmlist;
+                        item.TempQtyReq = 0;
+
+                        ivmlist.Add(item);
+                    }
+
+                    // Loop through all Requests Fulfilling Criteria
+                    List<Request> rlist = entities.Requests.Where(x => (x.Status.Equals("Fulfilled") || x.Status.Equals("Approved")) && (x.ReqDateTime <= toDate && x.ReqDateTime >= fromDate)).ToList();
+                    for (int j = 0; j < rlist.Count; j++)
+                    {
+                        int reqId = rlist[j].ReqId;
+
+                        // Loop through all RequestDetails And Add ReqQty to Respective Item in ivmlist
+                        List<RequestDetail> rdlist = entities.RequestDetails.Where(x => x.ReqId == reqId).ToList();
+                        for (int k = 0; k < rdlist.Count; k++)
+                        {
+                            if (rdlist[k].ReqQty != 0) { ivmlist.Find(x => x.ItemCode.Equals(rdlist[k].ItemCode)).TempQtyReq += rdlist[k].ReqQty; }
+                        } // Loop through rd
+                    } // Loop through r
+
+                    return ivmlist;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -286,124 +334,42 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<ReportItemVM> riList = new List<ReportItemVM>();
-                if (dept1 != null && dept2 != null && (supp1 == null || supp2 == null))
+                try
                 {
-                    if (byMonth == true)
+                    List<ReportItemVM> riList = new List<ReportItemVM>();
+                    if (dept1 != null && dept2 != null && (supp1 == null || supp2 == null))
                     {
-                        List<DateTime> dtList = GetMonthList(dates);
-                        List<Transaction> transList = entities.Transactions.ToList();
-                        if (cat == "All")
+                        if (byMonth == true)
                         {
-                            for (int i = 0; i < dtList.Count; i++)
-                            {
-                                double chargeBack1 = 0;
-                                double chargeBack2 = 0;
-                                for (int j = 0; j < transList.Count; j++)
-                                {
-                                    if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
-                                    {
-                                        chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
-                                    }
-                                    if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
-                                    {
-                                        chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
-                                    }
-                                }
-                                chargeBack1 = Math.Round(chargeBack1, 2);
-                                chargeBack2 = Math.Round(chargeBack2, 2);
-                                string format = "yyyy MMM";
-                                string label = dtList[i].ToString(format);
-                                ReportItemVM ri = new ReportItemVM();
-                                ri.Period = dtList[i];
-                                ri.Label = label;
-                                ri.Val1 = chargeBack1 * -1;
-                                ri.Val2 = chargeBack2 * -1;
-                                riList.Add(ri);
-                            }
-                        }
-                        else
-                        {
-                            List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
-                            for (int i = 0; i < dtList.Count; i++)
-                            {
-                                double chargeBack1 = 0;
-                                double chargeBack2 = 0;
-                                for (int j = 0; j < transList.Count; j++)
-                                {
-                                    if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
-                                        && InItemList(transList[j].ItemCode, iList) == true)
-                                    {
-                                        chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
-                                    }
-                                    if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
-                                        && InItemList(transList[j].ItemCode, iList) == true)
-                                    {
-                                        chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
-                                    }
-                                }
-                                chargeBack1 = Math.Round(chargeBack1, 2);
-                                chargeBack2 = Math.Round(chargeBack2, 2);
-                                string format = "yyyy MMM";
-                                string label = dtList[i].ToString(format);
-                                ReportItemVM ri = new ReportItemVM();
-                                ri.Period = dtList[i];
-                                ri.Label = label;
-                                ri.Val1 = chargeBack1 * -1;
-                                ri.Val2 = chargeBack2 * -1;
-                                riList.Add(ri);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (dates.Count >= 2)
-                        {
-                            DateTime dt1 = dates[0];
-                            DateTime dt2 = dates[1];
-                            if (DateTime.Compare(dt1, dt2) > 0)
-                            {
-                                DateTime temp = dt1;
-                                dt1 = dt2;
-                                dt2 = temp;
-                            }
-                            List<DateTime> weekList = GetWeekList(dt1, dt2);
+                            List<DateTime> dtList = GetMonthList(dates);
                             List<Transaction> transList = entities.Transactions.ToList();
                             if (cat == "All")
                             {
-                                for (int i = 0; i < weekList.Count; i++)
+                                for (int i = 0; i < dtList.Count; i++)
                                 {
                                     double chargeBack1 = 0;
                                     double chargeBack2 = 0;
                                     for (int j = 0; j < transList.Count; j++)
                                     {
                                         if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
                                         {
                                             chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
                                         }
                                         if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
                                         {
                                             chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
                                         }
                                     }
                                     chargeBack1 = Math.Round(chargeBack1, 2);
                                     chargeBack2 = Math.Round(chargeBack2, 2);
-                                    string format = "yyyy MMM d";
-                                    string label = weekList[i].ToString(format);
+                                    string format = "yyyy MMM";
+                                    string label = dtList[i].ToString(format);
                                     ReportItemVM ri = new ReportItemVM();
-                                    ri.Period = weekList[i];
+                                    ri.Period = dtList[i];
                                     ri.Label = label;
                                     ri.Val1 = chargeBack1 * -1;
                                     ri.Val2 = chargeBack2 * -1;
@@ -413,22 +379,22 @@ namespace Group8AD_WebAPI.BusinessLogic
                             else
                             {
                                 List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
-                                for (int i = 0; i < weekList.Count; i++)
+                                for (int i = 0; i < dtList.Count; i++)
                                 {
                                     double chargeBack1 = 0;
                                     double chargeBack2 = 0;
                                     for (int j = 0; j < transList.Count; j++)
                                     {
                                         if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
                                             && InItemList(transList[j].ItemCode, iList) == true)
                                         {
                                             chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
                                         }
                                         if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
                                             && InItemList(transList[j].ItemCode, iList) == true)
                                         {
                                             chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
@@ -436,10 +402,10 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     }
                                     chargeBack1 = Math.Round(chargeBack1, 2);
                                     chargeBack2 = Math.Round(chargeBack2, 2);
-                                    string format = "yyyy MMM d";
-                                    string label = weekList[i].ToString(format);
+                                    string format = "yyyy MMM";
+                                    string label = dtList[i].ToString(format);
                                     ReportItemVM ri = new ReportItemVM();
-                                    ri.Period = weekList[i];
+                                    ri.Period = dtList[i];
                                     ri.Label = label;
                                     ri.Val1 = chargeBack1 * -1;
                                     ri.Val2 = chargeBack2 * -1;
@@ -447,125 +413,125 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 }
                             }
                         }
-                    }
-                }
-                else if (supp1 != null && supp2 != null && (dept1 == null || dept2 == null))
-                {
-                    if (byMonth == true)
-                    {
-                        List<DateTime> dtList = GetMonthList(dates);
-                        List<Transaction> transList = entities.Transactions.ToList();
-                        if (cat == "All")
-                        {
-                            for (int i = 0; i < dtList.Count; i++)
-                            {
-                                double chargeBack1 = 0;
-                                double chargeBack2 = 0;
-                                for (int j = 0; j < transList.Count; j++)
-                                {
-                                    if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
-                                    {
-                                        chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
-                                    }
-                                    if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
-                                    {
-                                        chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
-                                    }
-                                }
-                                chargeBack1 = Math.Round(chargeBack1, 2);
-                                chargeBack2 = Math.Round(chargeBack2, 2);
-                                string format = "yyyy MMM";
-                                string label = dtList[i].ToString(format);
-                                ReportItemVM ri = new ReportItemVM();
-                                ri.Period = dtList[i];
-                                ri.Label = label;
-                                ri.Val1 = chargeBack1;
-                                ri.Val2 = chargeBack2;
-                                riList.Add(ri);
-                            }
-                        }
                         else
                         {
-                            List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
-                            for (int i = 0; i < dtList.Count; i++)
+                            if (dates.Count >= 2)
                             {
-                                double chargeBack1 = 0;
-                                double chargeBack2 = 0;
-                                for (int j = 0; j < transList.Count; j++)
+                                DateTime dt1 = dates[0];
+                                DateTime dt2 = dates[1];
+                                if (DateTime.Compare(dt1, dt2) > 0)
                                 {
-                                    if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
-                                        && InItemList(transList[j].ItemCode, iList) == true)
+                                    DateTime temp = dt1;
+                                    dt1 = dt2;
+                                    dt2 = temp;
+                                }
+                                List<DateTime> weekList = GetWeekList(dt1, dt2);
+                                List<Transaction> transList = entities.Transactions.ToList();
+                                if (cat == "All")
+                                {
+                                    for (int i = 0; i < weekList.Count; i++)
                                     {
-                                        chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
-                                    }
-                                    if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
-                                        && InItemList(transList[j].ItemCode, iList) == true)
-                                    {
-                                        chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                                        double chargeBack1 = 0;
+                                        double chargeBack2 = 0;
+                                        for (int j = 0; j < transList.Count; j++)
+                                        {
+                                            if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            {
+                                                chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                                            }
+                                            if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            {
+                                                chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                                            }
+                                        }
+                                        chargeBack1 = Math.Round(chargeBack1, 2);
+                                        chargeBack2 = Math.Round(chargeBack2, 2);
+                                        string format = "yyyy MMM d";
+                                        string label = weekList[i].ToString(format);
+                                        ReportItemVM ri = new ReportItemVM();
+                                        ri.Period = weekList[i];
+                                        ri.Label = label;
+                                        ri.Val1 = chargeBack1 * -1;
+                                        ri.Val2 = chargeBack2 * -1;
+                                        riList.Add(ri);
                                     }
                                 }
-                                chargeBack1 = Math.Round(chargeBack1, 2);
-                                chargeBack2 = Math.Round(chargeBack2, 2);
-                                string format = "yyyy MMM";
-                                string label = dtList[i].ToString(format);
-                                ReportItemVM ri = new ReportItemVM();
-                                ri.Period = dtList[i];
-                                ri.Label = label;
-                                ri.Val1 = chargeBack1;
-                                ri.Val2 = chargeBack2;
-                                riList.Add(ri);
+                                else
+                                {
+                                    List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
+                                    for (int i = 0; i < weekList.Count; i++)
+                                    {
+                                        double chargeBack1 = 0;
+                                        double chargeBack2 = 0;
+                                        for (int j = 0; j < transList.Count; j++)
+                                        {
+                                            if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                                && InItemList(transList[j].ItemCode, iList) == true)
+                                            {
+                                                chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                                            }
+                                            if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                                && InItemList(transList[j].ItemCode, iList) == true)
+                                            {
+                                                chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                                            }
+                                        }
+                                        chargeBack1 = Math.Round(chargeBack1, 2);
+                                        chargeBack2 = Math.Round(chargeBack2, 2);
+                                        string format = "yyyy MMM d";
+                                        string label = weekList[i].ToString(format);
+                                        ReportItemVM ri = new ReportItemVM();
+                                        ri.Period = weekList[i];
+                                        ri.Label = label;
+                                        ri.Val1 = chargeBack1 * -1;
+                                        ri.Val2 = chargeBack2 * -1;
+                                        riList.Add(ri);
+                                    }
+                                }
                             }
                         }
                     }
-                    else
+                    else if (supp1 != null && supp2 != null && (dept1 == null || dept2 == null))
                     {
-                        if (dates.Count >= 2)
+                        if (byMonth == true)
                         {
-                            DateTime dt1 = dates[0];
-                            DateTime dt2 = dates[1];
-                            if (DateTime.Compare(dt1, dt2) > 0)
-                            {
-                                DateTime temp = dt1;
-                                dt1 = dt2;
-                                dt2 = temp;
-                            }
-                            List<DateTime> weekList = GetWeekList(dt1, dt2);
+                            List<DateTime> dtList = GetMonthList(dates);
                             List<Transaction> transList = entities.Transactions.ToList();
                             if (cat == "All")
                             {
-                                for (int i = 0; i < weekList.Count; i++)
+                                for (int i = 0; i < dtList.Count; i++)
                                 {
                                     double chargeBack1 = 0;
                                     double chargeBack2 = 0;
                                     for (int j = 0; j < transList.Count; j++)
                                     {
                                         if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
                                         {
                                             chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
                                         }
                                         if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
                                         {
                                             chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
                                         }
                                     }
                                     chargeBack1 = Math.Round(chargeBack1, 2);
                                     chargeBack2 = Math.Round(chargeBack2, 2);
-                                    string format = "yyyy MMM d";
-                                    string label = weekList[i].ToString(format);
+                                    string format = "yyyy MMM";
+                                    string label = dtList[i].ToString(format);
                                     ReportItemVM ri = new ReportItemVM();
-                                    ri.Period = weekList[i];
+                                    ri.Period = dtList[i];
                                     ri.Label = label;
                                     ri.Val1 = chargeBack1;
                                     ri.Val2 = chargeBack2;
@@ -575,22 +541,22 @@ namespace Group8AD_WebAPI.BusinessLogic
                             else
                             {
                                 List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
-                                for (int i = 0; i < weekList.Count; i++)
+                                for (int i = 0; i < dtList.Count; i++)
                                 {
                                     double chargeBack1 = 0;
                                     double chargeBack2 = 0;
                                     for (int j = 0; j < transList.Count; j++)
                                     {
                                         if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
                                             && InItemList(transList[j].ItemCode, iList) == true)
                                         {
                                             chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
                                         }
                                         if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
                                             && InItemList(transList[j].ItemCode, iList) == true)
                                         {
                                             chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
@@ -598,10 +564,10 @@ namespace Group8AD_WebAPI.BusinessLogic
                                     }
                                     chargeBack1 = Math.Round(chargeBack1, 2);
                                     chargeBack2 = Math.Round(chargeBack2, 2);
-                                    string format = "yyyy MMM d";
-                                    string label = weekList[i].ToString(format);
+                                    string format = "yyyy MMM";
+                                    string label = dtList[i].ToString(format);
                                     ReportItemVM ri = new ReportItemVM();
-                                    ri.Period = weekList[i];
+                                    ri.Period = dtList[i];
                                     ri.Label = label;
                                     ri.Val1 = chargeBack1;
                                     ri.Val2 = chargeBack2;
@@ -609,9 +575,98 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 }
                             }
                         }
+                        else
+                        {
+                            if (dates.Count >= 2)
+                            {
+                                DateTime dt1 = dates[0];
+                                DateTime dt2 = dates[1];
+                                if (DateTime.Compare(dt1, dt2) > 0)
+                                {
+                                    DateTime temp = dt1;
+                                    dt1 = dt2;
+                                    dt2 = temp;
+                                }
+                                List<DateTime> weekList = GetWeekList(dt1, dt2);
+                                List<Transaction> transList = entities.Transactions.ToList();
+                                if (cat == "All")
+                                {
+                                    for (int i = 0; i < weekList.Count; i++)
+                                    {
+                                        double chargeBack1 = 0;
+                                        double chargeBack2 = 0;
+                                        for (int j = 0; j < transList.Count; j++)
+                                        {
+                                            if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            {
+                                                chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                                            }
+                                            if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            {
+                                                chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                                            }
+                                        }
+                                        chargeBack1 = Math.Round(chargeBack1, 2);
+                                        chargeBack2 = Math.Round(chargeBack2, 2);
+                                        string format = "yyyy MMM d";
+                                        string label = weekList[i].ToString(format);
+                                        ReportItemVM ri = new ReportItemVM();
+                                        ri.Period = weekList[i];
+                                        ri.Label = label;
+                                        ri.Val1 = chargeBack1;
+                                        ri.Val2 = chargeBack2;
+                                        riList.Add(ri);
+                                    }
+                                }
+                                else
+                                {
+                                    List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
+                                    for (int i = 0; i < weekList.Count; i++)
+                                    {
+                                        double chargeBack1 = 0;
+                                        double chargeBack2 = 0;
+                                        for (int j = 0; j < transList.Count; j++)
+                                        {
+                                            if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                                && InItemList(transList[j].ItemCode, iList) == true)
+                                            {
+                                                chargeBack1 = chargeBack1 + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                                            }
+                                            if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                                && InItemList(transList[j].ItemCode, iList) == true)
+                                            {
+                                                chargeBack2 = chargeBack2 + transList[j].QtyChange * (double)transList[j].UnitPrice;
+                                            }
+                                        }
+                                        chargeBack1 = Math.Round(chargeBack1, 2);
+                                        chargeBack2 = Math.Round(chargeBack2, 2);
+                                        string format = "yyyy MMM d";
+                                        string label = weekList[i].ToString(format);
+                                        ReportItemVM ri = new ReportItemVM();
+                                        ri.Period = weekList[i];
+                                        ri.Label = label;
+                                        ri.Val1 = chargeBack1;
+                                        ri.Val2 = chargeBack2;
+                                        riList.Add(ri);
+                                    }
+                                }
+                            }
+                        }
                     }
+                    return riList;
                 }
-                return riList;
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -622,118 +677,40 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                List<ReportItemVM> riList = new List<ReportItemVM>();
-                if (dept1 != null && dept2 != null && (supp1 == null || supp2 == null))
+                try
                 {
-                    if (byMonth == true)
+                    List<ReportItemVM> riList = new List<ReportItemVM>();
+                    if (dept1 != null && dept2 != null && (supp1 == null || supp2 == null))
                     {
-                        List<DateTime> dtList = GetMonthList(dates);
-                        List<Transaction> transList = entities.Transactions.ToList();
-                        if (cat == "All")
+                        if (byMonth == true)
                         {
-                            for (int i = 0; i < dtList.Count; i++)
-                            {
-                                double volume1 = 0;
-                                double volume2 = 0;
-                                for (int j = 0; j < transList.Count; j++)
-                                {
-                                    if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
-                                    {
-                                        volume1 = volume1 + transList[j].QtyChange;
-                                    }
-                                    if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
-                                    {
-                                        volume2 = volume2 + transList[j].QtyChange;
-                                    }
-                                }
-                                string format = "yyyy MMM";
-                                string label = dtList[i].ToString(format);
-                                ReportItemVM ri = new ReportItemVM();
-                                ri.Period = dtList[i];
-                                ri.Label = label;
-                                ri.Val1 = volume1 * -1;
-                                ri.Val2 = volume2 * -1;
-                                riList.Add(ri);
-                            }
-                        }
-                        else
-                        {
-                            List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
-                            for (int i = 0; i < dtList.Count; i++)
-                            {
-                                double volume1 = 0;
-                                double volume2 = 0;
-                                for (int j = 0; j < transList.Count; j++)
-                                {
-                                    if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
-                                        && InItemList(transList[j].ItemCode, iList) == true)
-                                    {
-                                        volume1 = volume1 + transList[j].QtyChange;
-                                    }
-                                    if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
-                                        && InItemList(transList[j].ItemCode, iList) == true)
-                                    {
-                                        volume2 = volume2 + transList[j].QtyChange;
-                                    }
-                                }
-                                string format = "yyyy MMM";
-                                string label = dtList[i].ToString(format);
-                                ReportItemVM ri = new ReportItemVM();
-                                ri.Period = dtList[i];
-                                ri.Label = label;
-                                ri.Val1 = volume1 * -1;
-                                ri.Val2 = volume2 * -1;
-                                riList.Add(ri);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (dates.Count >= 2)
-                        {
-                            DateTime dt1 = dates[0];
-                            DateTime dt2 = dates[1];
-                            if (DateTime.Compare(dt1, dt2) > 0)
-                            {
-                                DateTime temp = dt1;
-                                dt1 = dt2;
-                                dt2 = temp;
-                            }
-                            List<DateTime> weekList = GetWeekList(dt1, dt2);
+                            List<DateTime> dtList = GetMonthList(dates);
                             List<Transaction> transList = entities.Transactions.ToList();
                             if (cat == "All")
                             {
-                                for (int i = 0; i < weekList.Count; i++)
+                                for (int i = 0; i < dtList.Count; i++)
                                 {
                                     double volume1 = 0;
                                     double volume2 = 0;
                                     for (int j = 0; j < transList.Count; j++)
                                     {
                                         if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
                                         {
                                             volume1 = volume1 + transList[j].QtyChange;
                                         }
                                         if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
                                         {
                                             volume2 = volume2 + transList[j].QtyChange;
                                         }
                                     }
-                                    string format = "yyyy MMM d";
-                                    string label = weekList[i].ToString(format);
+                                    string format = "yyyy MMM";
+                                    string label = dtList[i].ToString(format);
                                     ReportItemVM ri = new ReportItemVM();
-                                    ri.Period = weekList[i];
+                                    ri.Period = dtList[i];
                                     ri.Label = label;
                                     ri.Val1 = volume1 * -1;
                                     ri.Val2 = volume2 * -1;
@@ -743,31 +720,31 @@ namespace Group8AD_WebAPI.BusinessLogic
                             else
                             {
                                 List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
-                                for (int i = 0; i < weekList.Count; i++)
+                                for (int i = 0; i < dtList.Count; i++)
                                 {
                                     double volume1 = 0;
                                     double volume2 = 0;
                                     for (int j = 0; j < transList.Count; j++)
                                     {
                                         if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
                                             && InItemList(transList[j].ItemCode, iList) == true)
                                         {
                                             volume1 = volume1 + transList[j].QtyChange;
                                         }
                                         if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
                                             && InItemList(transList[j].ItemCode, iList) == true)
                                         {
                                             volume2 = volume2 + transList[j].QtyChange;
                                         }
                                     }
-                                    string format = "yyyy MMM d";
-                                    string label = weekList[i].ToString(format);
+                                    string format = "yyyy MMM";
+                                    string label = dtList[i].ToString(format);
                                     ReportItemVM ri = new ReportItemVM();
-                                    ri.Period = weekList[i];
+                                    ri.Period = dtList[i];
                                     ri.Label = label;
                                     ri.Val1 = volume1 * -1;
                                     ri.Val2 = volume2 * -1;
@@ -775,119 +752,119 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 }
                             }
                         }
-                    }
-                }
-                else if (supp1 != null && supp2 != null && (dept1 == null || dept2 == null))
-                {
-                    if (byMonth == true)
-                    {
-                        List<DateTime> dtList = GetMonthList(dates);
-                        List<Transaction> transList = entities.Transactions.ToList();
-                        if (cat == "All")
-                        {
-                            for (int i = 0; i < dtList.Count; i++)
-                            {
-                                double volume1 = 0;
-                                double volume2 = 0;
-                                for (int j = 0; j < transList.Count; j++)
-                                {
-                                    if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
-                                    {
-                                        volume1 = volume1 + transList[j].QtyChange;
-                                    }
-                                    if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
-                                    {
-                                        volume2 = volume2 + transList[j].QtyChange;
-                                    }
-                                }
-                                string format = "yyyy MMM";
-                                string label = dtList[i].ToString(format);
-                                ReportItemVM ri = new ReportItemVM();
-                                ri.Period = dtList[i];
-                                ri.Label = label;
-                                ri.Val1 = volume1;
-                                ri.Val2 = volume2;
-                                riList.Add(ri);
-                            }
-                        }
                         else
                         {
-                            List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
-                            for (int i = 0; i < dtList.Count; i++)
+                            if (dates.Count >= 2)
                             {
-                                double volume1 = 0;
-                                double volume2 = 0;
-                                for (int j = 0; j < transList.Count; j++)
+                                DateTime dt1 = dates[0];
+                                DateTime dt2 = dates[1];
+                                if (DateTime.Compare(dt1, dt2) > 0)
                                 {
-                                    if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
-                                        && InItemList(transList[j].ItemCode, iList) == true)
+                                    DateTime temp = dt1;
+                                    dt1 = dt2;
+                                    dt2 = temp;
+                                }
+                                List<DateTime> weekList = GetWeekList(dt1, dt2);
+                                List<Transaction> transList = entities.Transactions.ToList();
+                                if (cat == "All")
+                                {
+                                    for (int i = 0; i < weekList.Count; i++)
                                     {
-                                        volume1 = volume1 + transList[j].QtyChange;
-                                    }
-                                    if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
-                                        && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
-                                        && InItemList(transList[j].ItemCode, iList) == true)
-                                    {
-                                        volume2 = volume2 + transList[j].QtyChange;
+                                        double volume1 = 0;
+                                        double volume2 = 0;
+                                        for (int j = 0; j < transList.Count; j++)
+                                        {
+                                            if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            {
+                                                volume1 = volume1 + transList[j].QtyChange;
+                                            }
+                                            if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            {
+                                                volume2 = volume2 + transList[j].QtyChange;
+                                            }
+                                        }
+                                        string format = "yyyy MMM d";
+                                        string label = weekList[i].ToString(format);
+                                        ReportItemVM ri = new ReportItemVM();
+                                        ri.Period = weekList[i];
+                                        ri.Label = label;
+                                        ri.Val1 = volume1 * -1;
+                                        ri.Val2 = volume2 * -1;
+                                        riList.Add(ri);
                                     }
                                 }
-                                string format = "yyyy MMM";
-                                string label = dtList[i].ToString(format);
-                                ReportItemVM ri = new ReportItemVM();
-                                ri.Period = dtList[i];
-                                ri.Label = label;
-                                ri.Val1 = volume1;
-                                ri.Val2 = volume2;
-                                riList.Add(ri);
+                                else
+                                {
+                                    List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
+                                    for (int i = 0; i < weekList.Count; i++)
+                                    {
+                                        double volume1 = 0;
+                                        double volume2 = 0;
+                                        for (int j = 0; j < transList.Count; j++)
+                                        {
+                                            if (transList[j].UnitPrice != null && transList[j].DeptCode == dept1
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                                && InItemList(transList[j].ItemCode, iList) == true)
+                                            {
+                                                volume1 = volume1 + transList[j].QtyChange;
+                                            }
+                                            if (transList[j].UnitPrice != null && transList[j].DeptCode == dept2
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                                && InItemList(transList[j].ItemCode, iList) == true)
+                                            {
+                                                volume2 = volume2 + transList[j].QtyChange;
+                                            }
+                                        }
+                                        string format = "yyyy MMM d";
+                                        string label = weekList[i].ToString(format);
+                                        ReportItemVM ri = new ReportItemVM();
+                                        ri.Period = weekList[i];
+                                        ri.Label = label;
+                                        ri.Val1 = volume1 * -1;
+                                        ri.Val2 = volume2 * -1;
+                                        riList.Add(ri);
+                                    }
+                                }
                             }
                         }
                     }
-                    else
+                    else if (supp1 != null && supp2 != null && (dept1 == null || dept2 == null))
                     {
-                        if (dates.Count >= 2)
+                        if (byMonth == true)
                         {
-                            DateTime dt1 = dates[0];
-                            DateTime dt2 = dates[1];
-                            if (DateTime.Compare(dt1, dt2) > 0)
-                            {
-                                DateTime temp = dt1;
-                                dt1 = dt2;
-                                dt2 = temp;
-                            }
-                            List<DateTime> weekList = GetWeekList(dt1, dt2);
+                            List<DateTime> dtList = GetMonthList(dates);
                             List<Transaction> transList = entities.Transactions.ToList();
                             if (cat == "All")
                             {
-                                for (int i = 0; i < weekList.Count; i++)
+                                for (int i = 0; i < dtList.Count; i++)
                                 {
                                     double volume1 = 0;
                                     double volume2 = 0;
                                     for (int j = 0; j < transList.Count; j++)
                                     {
                                         if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
                                         {
                                             volume1 = volume1 + transList[j].QtyChange;
                                         }
                                         if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0)
                                         {
                                             volume2 = volume2 + transList[j].QtyChange;
                                         }
                                     }
-                                    string format = "yyyy MMM d";
-                                    string label = weekList[i].ToString(format);
+                                    string format = "yyyy MMM";
+                                    string label = dtList[i].ToString(format);
                                     ReportItemVM ri = new ReportItemVM();
-                                    ri.Period = weekList[i];
+                                    ri.Period = dtList[i];
                                     ri.Label = label;
                                     ri.Val1 = volume1;
                                     ri.Val2 = volume2;
@@ -897,31 +874,31 @@ namespace Group8AD_WebAPI.BusinessLogic
                             else
                             {
                                 List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
-                                for (int i = 0; i < weekList.Count; i++)
+                                for (int i = 0; i < dtList.Count; i++)
                                 {
                                     double volume1 = 0;
                                     double volume2 = 0;
                                     for (int j = 0; j < transList.Count; j++)
                                     {
                                         if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
                                             && InItemList(transList[j].ItemCode, iList) == true)
                                         {
                                             volume1 = volume1 + transList[j].QtyChange;
                                         }
                                         if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
-                                            && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i]) >= 0
+                                            && DateTime.Compare(transList[j].TranDateTime, dtList[i].AddMonths(1)) < 0
                                             && InItemList(transList[j].ItemCode, iList) == true)
                                         {
                                             volume2 = volume2 + transList[j].QtyChange;
                                         }
                                     }
-                                    string format = "yyyy MMM d";
-                                    string label = weekList[i].ToString(format);
+                                    string format = "yyyy MMM";
+                                    string label = dtList[i].ToString(format);
                                     ReportItemVM ri = new ReportItemVM();
-                                    ri.Period = weekList[i];
+                                    ri.Period = dtList[i];
                                     ri.Label = label;
                                     ri.Val1 = volume1;
                                     ri.Val2 = volume2;
@@ -929,9 +906,94 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 }
                             }
                         }
+                        else
+                        {
+                            if (dates.Count >= 2)
+                            {
+                                DateTime dt1 = dates[0];
+                                DateTime dt2 = dates[1];
+                                if (DateTime.Compare(dt1, dt2) > 0)
+                                {
+                                    DateTime temp = dt1;
+                                    dt1 = dt2;
+                                    dt2 = temp;
+                                }
+                                List<DateTime> weekList = GetWeekList(dt1, dt2);
+                                List<Transaction> transList = entities.Transactions.ToList();
+                                if (cat == "All")
+                                {
+                                    for (int i = 0; i < weekList.Count; i++)
+                                    {
+                                        double volume1 = 0;
+                                        double volume2 = 0;
+                                        for (int j = 0; j < transList.Count; j++)
+                                        {
+                                            if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            {
+                                                volume1 = volume1 + transList[j].QtyChange;
+                                            }
+                                            if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0)
+                                            {
+                                                volume2 = volume2 + transList[j].QtyChange;
+                                            }
+                                        }
+                                        string format = "yyyy MMM d";
+                                        string label = weekList[i].ToString(format);
+                                        ReportItemVM ri = new ReportItemVM();
+                                        ri.Period = weekList[i];
+                                        ri.Label = label;
+                                        ri.Val1 = volume1;
+                                        ri.Val2 = volume2;
+                                        riList.Add(ri);
+                                    }
+                                }
+                                else
+                                {
+                                    List<Item> iList = entities.Items.Where(x => x.Cat == cat).ToList();
+                                    for (int i = 0; i < weekList.Count; i++)
+                                    {
+                                        double volume1 = 0;
+                                        double volume2 = 0;
+                                        for (int j = 0; j < transList.Count; j++)
+                                        {
+                                            if (transList[j].UnitPrice != null && transList[j].SuppCode == supp1
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                                && InItemList(transList[j].ItemCode, iList) == true)
+                                            {
+                                                volume1 = volume1 + transList[j].QtyChange;
+                                            }
+                                            if (transList[j].UnitPrice != null && transList[j].SuppCode == supp2
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i]) >= 0
+                                                && DateTime.Compare(transList[j].TranDateTime, weekList[i].AddDays(7)) < 0
+                                                && InItemList(transList[j].ItemCode, iList) == true)
+                                            {
+                                                volume2 = volume2 + transList[j].QtyChange;
+                                            }
+                                        }
+                                        string format = "yyyy MMM d";
+                                        string label = weekList[i].ToString(format);
+                                        ReportItemVM ri = new ReportItemVM();
+                                        ri.Period = weekList[i];
+                                        ri.Label = label;
+                                        ri.Val1 = volume1;
+                                        ri.Val2 = volume2;
+                                        riList.Add(ri);
+                                    }
+                                }
+                            }
+                        }
                     }
+                    return riList;
                 }
-                return riList;
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 

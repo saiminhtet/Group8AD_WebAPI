@@ -15,23 +15,30 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                Transaction tran = new Transaction();
-                tran.TranDateTime = t.TranDateTime;
-                tran.ItemCode = t.ItemCode;
-                tran.QtyChange = t.QtyChange;
-                tran.UnitPrice = t.UnitPrice;
-                tran.Desc = t.Desc;
-                tran.DeptCode = t.DeptCode;
-                tran.SuppCode = t.SuppCode;
-                tran.VoucherNo = t.VoucherNo;
+                try
+                {
+                    Transaction tran = new Transaction();
+                    tran.TranDateTime = t.TranDateTime;
+                    tran.ItemCode = t.ItemCode;
+                    tran.QtyChange = t.QtyChange;
+                    tran.UnitPrice = t.UnitPrice;
+                    tran.Desc = t.Desc;
+                    tran.DeptCode = t.DeptCode;
+                    tran.SuppCode = t.SuppCode;
+                    tran.VoucherNo = t.VoucherNo;
 
-                entities.Transactions.Add(tran);
-                entities.SaveChanges();
+                    entities.Transactions.Add(tran);
+                    entities.SaveChanges();
 
-                List<Transaction> translist = entities.Transactions.ToList();
-                int transId = translist[translist.Count - 1].TranId;
-                t.TranId = transId;
-                return t;
+                    List<Transaction> translist = entities.Transactions.ToList();
+                    int transId = translist[translist.Count - 1].TranId;
+                    t.TranId = transId;
+                    return t;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
     }
