@@ -126,7 +126,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         //SendDisbEmailForClerk
         //with attach
-        public static bool SendDisbEmailForClerk(int empId, List<DisbursementDetailVM> ListByDept, List<DisbursementDetailVM> ListByReq)
+        public static bool SendDisbEmailForClerk(int empId, string attachfile1, string attachfile2)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -143,6 +143,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                     string type = "Weekly Disbursement";
                     string content = " Disbursement has recently been conducted by ";
+                    string filePath = HttpContext.Current.Server.MapPath("~/PDF/");
 
                     MailMessage msg = new MailMessage();
                     msg.From = new MailAddress(from_email);//101's email
@@ -155,6 +156,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 content + " " + _from + Environment.NewLine + Environment.NewLine + 
                                 "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
 
+                    Attachment at = new Attachment(filePath + attachfile1);
+                    Attachment at1 = new Attachment(filePath + attachfile2);
+                    msg.Attachments.Add(at);
+                    msg.Attachments.Add(at1);
+                   
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
                     client.Send(msg);
@@ -170,7 +176,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
         //SendDisbEmailForRep
         //with attach
-        public static bool SendDisbEmailForRep(int empId, string deptCode, List<DisbursementDetailVM> ListByDept, List<DisbursementDetailVM> ListByReq)
+        public static bool SendDisbEmailForRep(int empId, string deptCode, string attachfile1 , string attachfile2)
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
@@ -186,6 +192,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                     string type = "Weekly Disbursement";
                     string content = "Please collect stationery for your department at";
+                    string filePath = HttpContext.Current.Server.MapPath("~/PDF/");
 
                     MailMessage msg = new MailMessage();
                     msg.From = new MailAddress(from_email);//101's email
@@ -196,6 +203,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                                 _to + "," + content + " " + location + " " + "on" + " " + time + "???" +
                                 Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." +
                                 Environment.NewLine + Environment.NewLine + "Thank you.";
+
+
+                    Attachment at = new Attachment(filePath + attachfile1);
+                    Attachment at1 = new Attachment(filePath + attachfile2);
+                    msg.Attachments.Add(at);
+                    msg.Attachments.Add(at1);
 
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
