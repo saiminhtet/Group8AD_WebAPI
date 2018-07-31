@@ -503,7 +503,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 string imageurl = HttpContext.Current.Server.MapPath("~/Content/logo.png");
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageurl);
-                logo.ScaleAbsolute(130, 22);
+                logo.ScaleAbsolute(140, 15);
 
                 //Paragraph header = new Paragraph("LOGIC UNIVERSITY", FontFactory.GetFont(FontFactory.TIMES, 25, iTextSharp.text.Font.NORMAL));
                 //header.Alignment = Element.ALIGN_LEFT;
