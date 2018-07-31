@@ -10,10 +10,9 @@ using Group8AD_WebAPI.Models.ViewModels;
 
 namespace Group8AD_WebAPI.Controllers
 {
+    [Authorize]
     public class ItemController : ApiController
     {
-
-
         //get All Item list
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]
@@ -432,11 +431,11 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Item/FulfillRequestUrgent")]
-        public HttpResponseMessage FulfillRequestUrgent(int empId, List<ItemVM> items)
+        public HttpResponseMessage FulfillRequestUrgent(int empId, List<ItemVM> items, DateTime requested_time, int ColId)
         {
             try
             {
-                BusinessLogic.ItemBL.FulfillRequestUrgent(empId, items);
+                BusinessLogic.ItemBL.FulfillRequestUrgent(empId, items, requested_time, ColId);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)

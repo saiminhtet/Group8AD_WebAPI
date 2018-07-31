@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace Group8AD_WebAPI.Controllers
 {
+    [Authorize]
     public class TransactionController : ApiController
     {
         // tested
@@ -147,6 +148,20 @@ namespace Group8AD_WebAPI.Controllers
             string cat, List<DateTime> dates, bool byMonth)
         {
             List<ReportItemVM> translist = ReportItemBL.ShowVolumeReport(dept1, dept2, supp1, supp2, cat, dates, byMonth);
+            if (translist == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, translist);
+        }
+
+        // tested
+        [AcceptVerbs("GET")]
+        [HttpPost]
+        [Route("api/Transaction/trend/{iCode}")]
+        public HttpResponseMessage ShowVolumeReport(string iCode)
+        {
+            List<ReportItemVM> translist = ReportItemBL.ShowVolumeReport(iCode);
             if (translist == null)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);

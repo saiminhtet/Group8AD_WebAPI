@@ -323,10 +323,10 @@ namespace Group8AD_WebAPI.Controllers
         [Route("Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
             var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
 
@@ -346,10 +346,10 @@ namespace Group8AD_WebAPI.Controllers
         [Route("RegisterExternal")]
         public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
             var info = await Authentication.GetExternalLoginInfoAsync();
             if (info == null)

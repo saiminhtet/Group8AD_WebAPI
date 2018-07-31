@@ -8,6 +8,7 @@ using System.Web.Http;
 
 namespace Group8AD_WebAPI.Controllers
 {
+    [Authorize]
     public class ReportController : ApiController
     {
         //Inventory Status Report

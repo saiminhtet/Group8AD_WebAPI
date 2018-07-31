@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 
 namespace Group8AD_WebAPI.Controllers
 {
+    [Authorize]
     public class DepartmentController : ApiController
     {
         //removeDelegate by deptCode

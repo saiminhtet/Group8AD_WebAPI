@@ -9,9 +9,10 @@ using System.Web.Http;
 
 namespace Group8AD_WebAPI.Controllers
 {
- 
+    [Authorize]
     public class EmployeeController : ApiController
     {
+        
         //Get All Employeelist
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]

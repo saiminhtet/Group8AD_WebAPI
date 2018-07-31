@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace Group8AD_WebAPI.Controllers
 {
+    [Authorize]
     public class CollectionPointController : ApiController
     {
         // GET api/<controller>
