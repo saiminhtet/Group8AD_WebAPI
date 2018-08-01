@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-// Author: Sai
+// Author: Sai Min Htet
 // Author: Tang Shenqi: A0114523U
 
 namespace Group8AD_WebAPI.BusinessLogic
@@ -600,7 +600,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
             }
         }
-
 
         //get All Category list
         public static List<String> GetCatList()
@@ -1345,10 +1344,11 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
 
             SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
-            int urgentFromId = ctx.Employees.Where(x => x.Role == "Store Clerk").First().EmpId;
+            CollectionPoint cp = ctx.CollectionPoints.Where(x => x.ColPtId == ColId).FirstOrDefault();
+            int urgentFromId = cp.ClerkId;
             int urgentToId = empId;
             string urgentType = "Urgent Request";
-            string urgentContent = "Your urgent request has been fulfilled, please wait for disbursement";
+            string urgentContent = "Your urgent request will be disbursed on " + requested_time.ToString() + " at " + cp.Location;
             NotificationBL.AddNewNotification(urgentFromId, urgentToId, urgentType, urgentContent);
 
             ////Making PDF Reports
