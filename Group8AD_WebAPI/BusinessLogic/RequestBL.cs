@@ -455,7 +455,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                     Department dept = entities.Departments.Where(x => x.DeptCode == deptCode).FirstOrDefault();
 
                     int fromEmpId = req.EmpId;
-                    int toEmpId = (int)dept.DeptHeadId;
+                    int toEmpId;
+                    if (dept.DelegateApproverId != null && DateTime.Compare(DateTime.Now, (DateTime)dept.DelegateFromDate) >= 0 &&
+                        DateTime.Compare(DateTime.Now, (DateTime)dept.DelegateToDate) >= 0)
+                        toEmpId = (int)dept.DelegateApproverId;
+                    else
+                        toEmpId = (int)dept.DeptHeadId;
                     string type = "Stationery Request";
                     string content = "A new stationery request has been submitted";
                     NotificationBL.AddNewNotification(fromEmpId, toEmpId, type, content);
@@ -525,11 +530,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                             reqVM.EmpId = req.EmpId;
                             reqVM.ApproverId = req.ApproverId;
                             reqVM.ApproverComment = req.ApproverComment;
-                            reqVM.ReqDateTime = (DateTime)req.ApprovedDateTime;
+                            reqVM.ReqDateTime = (DateTime)req.ReqDateTime;
                             reqVM.ApprovedDateTime = (DateTime)req.ApprovedDateTime;
-                            reqVM.CancelledDateTime = (DateTime)req.CancelledDateTime;
+                            //reqVM.CancelledDateTime = (DateTime)req.CancelledDateTime;
                             reqVM.Status = req.Status;
-                            reqVM.FulfilledDateTime = (DateTime)req.FulfilledDateTime;
+                            //reqVM.FulfilledDateTime = (DateTime)req.FulfilledDateTime;
                         }
                     }
                 }
@@ -578,11 +583,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                             reqVM.EmpId = req.EmpId;
                             reqVM.ApproverId = req.ApproverId;
                             reqVM.ApproverComment = req.ApproverComment;
-                            reqVM.ReqDateTime = (DateTime)req.ApprovedDateTime;
+                            reqVM.ReqDateTime = (DateTime)req.ReqDateTime;
                             reqVM.ApprovedDateTime = (DateTime)req.ApprovedDateTime;
-                            reqVM.CancelledDateTime = (DateTime)req.CancelledDateTime;
+                            //reqVM.CancelledDateTime = (DateTime)req.CancelledDateTime;
                             reqVM.Status = req.Status;
-                            reqVM.FulfilledDateTime = (DateTime)req.FulfilledDateTime;
+                            //reqVM.FulfilledDateTime = (DateTime)req.FulfilledDateTime;
                         }
                     }
                 }
