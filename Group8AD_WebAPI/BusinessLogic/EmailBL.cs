@@ -228,8 +228,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                     var from_email = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpEmail).First();
                     var to_email = entities.Employees.Where(e => e.EmpId == 101).Select(e => e.EmpEmail).First();
                     var _to = entities.Employees.Where(e => e.EmpId == 101).Select(e => e.EmpName).First();
+                    var date = DateTime.Now.ToString("dd MMMM yyyy h:mm tt");
                     string type = "Low Stock";
-                    string content = "In a recent stationery request disbursement, there are some items with balance below reorder level. Action required";
+                    string content = "You have recently requested for a low stock item report for the Logic University on";
 
                     string filePath = HttpContext.Current.Server.MapPath("~/PDF/");
                     MailMessage msg = new MailMessage();
@@ -238,7 +239,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+                                content + " " + date + Environment.NewLine + Environment.NewLine + "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
                     Attachment at = new Attachment(filePath + attachfile);
                     msg.Attachments.Add(at);
                     msg.Priority = MailPriority.High;
@@ -318,9 +319,9 @@ namespace Group8AD_WebAPI.BusinessLogic
                     var _to = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpName).First();
 
                     string type = "Purchase Order";
-                    string content = "I here by write to you in regards with the above order , you are been requested to send me/us the status details at earliest.";
-                    string content2 = "If you require any other information in relationship to the above, please do not hesitate to contact us/me.";
-                    string content3 = "Your early response will be highly appreciable.";
+                    string content = "You have recently requested to generate a Purchase Order for some items for the Logic University on";
+                    //string content2 = "If you require any other information in relationship to the above, please do not hesitate to contact us/me.";
+                    //string content3 = "Your early response will be highly appreciable.";
 
                     string filePath = HttpContext.Current.Server.MapPath("~/PDF/");
                     MailMessage msg = new MailMessage();
@@ -329,9 +330,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     msg.Subject = type;
                     msg.IsBodyHtml = false;
                     msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
-                                content + Environment.NewLine + Environment.NewLine +
-                                content2  + Environment.NewLine + Environment.NewLine + 
-                                content3 + Environment.NewLine + Environment.NewLine + 
+                                content + " " + targetDate + Environment.NewLine + Environment.NewLine +
                                 "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + 
                                 "Thank you.";
                     Attachment at = new Attachment(filePath + attachfile);
@@ -497,6 +496,38 @@ namespace Group8AD_WebAPI.BusinessLogic
                     //Attachment at1 = new Attachment(filePath+attachfile);
                     msg.Attachments.Add(at);
                     //msg.Attachments.Add(at1);
+                    msg.Priority = MailPriority.High;
+                    SmtpClient client = new SmtpClient();
+                    client.Send(msg);
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+        }
+
+        public static bool AddNewEmailToEmp(int empId, string type, string content)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                try
+                {                    
+                    var from_email = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpEmail).First();
+                    var to_email = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpEmail).First();
+                    var _to = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpName).First();
+
+                    MailMessage msg = new MailMessage();
+                    msg.From = new MailAddress(from_email);
+                    msg.To.Add(to_email);
+                    msg.Subject = type;
+                    msg.IsBodyHtml = false;
+                    msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
+                                content + Environment.NewLine + Environment.NewLine + "Thank you.";
+
                     msg.Priority = MailPriority.High;
                     SmtpClient client = new SmtpClient();
                     client.Send(msg);
