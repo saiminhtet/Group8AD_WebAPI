@@ -9,6 +9,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 {
     public static class NotificationBL
     {
+        // Author: Tang Shenqi: A0114523U
         // add new notification
         public static void AddNewNotification(int fromEmpId, int toEmpId, string type, string content)
         {
