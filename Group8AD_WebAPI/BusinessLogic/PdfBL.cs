@@ -21,7 +21,16 @@ namespace Group8AD_WebAPI.BusinessLogic
 {
     public class PdfBL
     {
-
+        /* 
+        * Class Name       :       PdfBL
+        * Created by       :       Sai Min Htet
+        * Created date     :       27/Jul/2018
+        * Student No.      :       
+        * ////////////////////////////////////
+        * Modify by        :       Noel Noel Han
+        * Modify date      :       31/Jul/2018
+        * Student No.      :       A0180529B
+        */
 
         public static string GenerateDisbursementListbyDept(List<DisbursementDetailVM> disbList, string filename)
         {

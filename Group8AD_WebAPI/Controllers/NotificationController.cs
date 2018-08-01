@@ -8,6 +8,13 @@ using Group8AD_WebAPI.BusinessLogic;
 using Group8AD_WebAPI.Models;
 using Group8AD_WebAPI.Models.ViewModels;
 
+/* 
+* Class Name       :       NotificationController
+* Created by       :       Noel Noel Han
+* Created date     :       19/Jul/2018
+* Student No.      :       A0180529B
+*/
+
 namespace Group8AD_WebAPI.Controllers
 {
     [Authorize]

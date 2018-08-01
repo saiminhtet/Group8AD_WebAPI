@@ -7,8 +7,19 @@ using Group8AD_WebAPI.Models.ViewModels;
 
 namespace Group8AD_WebAPI.BusinessLogic
 {
+    /* 
+    * Class Name       :       NotificationBL
+    * Created by       :       Noel Noel Han
+    * Created date     :       19/Jul/2018
+    * Student No.      :       A0180529B
+    * ////////////////////////////////////
+    * Modify by        :       Tang Shenqi
+    * Modify date      :       27/Jul/2018
+    * Student No.      :       A0114523U
+    */
+
     public static class NotificationBL
-    {
+    {              
         // add new notification
         public static void AddNewNotification(int fromEmpId, int toEmpId, string type, string content)
         {

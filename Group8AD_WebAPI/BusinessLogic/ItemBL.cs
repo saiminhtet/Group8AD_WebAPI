@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
+// Author: Sai Min Htet
+// Author: Tang Shenqi: A0114523U
+
 namespace Group8AD_WebAPI.BusinessLogic
 {
     public static class ItemBL
@@ -181,6 +184,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 List<string> errorMessages = new List<string>();
                 try
                 {
+                    string deptcode = EmployeeBL.GetDeptCode(empId);
                     string vNum = AdjustmentBL.GenerateVoucherNo();
                     foreach (ItemVM i in iList)
                     {
@@ -221,8 +225,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                             entities.Adjustments.Add(a);
                             entities.SaveChanges();
                         }
-
-                        string deptcode = EmployeeBL.GetDeptCode(empId);
 
                         var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).Select(e => e.EmpId).ToList();
 
@@ -341,6 +343,35 @@ namespace Group8AD_WebAPI.BusinessLogic
                         }
                         // }
                     }
+                    // send notification to rep, head, clerk * 3
+
+                    // notification to rep
+                    int fromIdRep = 101;
+                    int toIdRep = empId;
+                    string typeRep = "Accept Disbursement";
+                    string contentRep = "You have accepted disbursement for this week";
+                    NotificationBL.AddNewNotification(fromIdRep, toIdRep, typeRep, contentRep);
+
+                    // notification to head
+                    int fromIdHead = 101;
+                    Department dept = entities.Departments.Where(x => x.DeptCode.Equals(deptcode)).FirstOrDefault();
+                    int toIdHead;
+                    if (dept.DelegateApproverId != null && DateTime.Compare(DateTime.Now, (DateTime)dept.DelegateFromDate) >= 0 &&
+                        DateTime.Compare(DateTime.Now, (DateTime)dept.DelegateToDate) >= 0)
+                        toIdHead = (int)dept.DelegateApproverId;
+                    else
+                        toIdHead = (int)dept.DeptHeadId;
+                    string typeHead = "Accept Disbursement";
+                    string contentHead = "Your department has accepted disbursement for this week";
+                    NotificationBL.AddNewNotification(fromIdHead, toIdHead, typeHead, contentHead);
+
+                    // notification to clerk
+                    string deptName = dept.DeptName;
+                    string typeClerk = "Accept Disbursement";
+                    string contentClerk = deptName + " has accepted their disbursement for this week";
+                    NotificationBL.AddNewNotification(101, 101, typeClerk, contentClerk);
+                    NotificationBL.AddNewNotification(101, 102, typeClerk, contentClerk);
+                    NotificationBL.AddNewNotification(101, 103, typeClerk, contentClerk);
                 }
                 catch (System.Data.Entity.Validation.DbEntityValidationException ex)
                 {
@@ -365,6 +396,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 try
                 {
+                    string deptcode = EmployeeBL.GetDeptCode(empId);
                     string vNum = AdjustmentBL.GenerateVoucherNo();
                     foreach (ItemVM i in iList)
                     {
@@ -406,8 +438,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                             entities.Adjustments.Add(a);
                             entities.SaveChanges();
                         }
-
-                        string deptcode = EmployeeBL.GetDeptCode(empId);
 
                         //var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).Select(e => e.EmpId).ToList();
 
@@ -526,10 +556,36 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                             //send email acknowledgement to rep, specific head and all clerks
                             // NotificationBL.AddAcptNotification(r.ReqId); 
-                            NotificationBL.AddNewNotification(empId, rcvEmpId, "Stationery Request", "A new stationery request has been submitted");
+                            //NotificationBL.AddNewNotification(empId, rcvEmpId, "Stationery Request", "A new stationery request has been submitted");
                         }
                         // }
                     }
+                    // send notification to rep, emp, clerk * 3
+
+                    // notification to rep
+                    int fromIdRep = 101;
+                    int toIdRep = empId;
+                    string typeRep = "Urgent Disbursement";
+                    string contentRep = "You have accepted an urgent disbursement";
+                    NotificationBL.AddNewNotification(fromIdRep, toIdRep, typeRep, contentRep);
+
+                    // notification to emp
+                    int fromIdEmp = 101;
+                    Department dept = entities.Departments.Where(x => x.DeptCode.Equals(deptcode)).FirstOrDefault();
+                    int toIdEmp = rcvEmpId;
+                    string typeEmp = "Urgent Disbursement";
+                    string contentEmp = "Your urgent request disbursement has been accepted";
+                    NotificationBL.AddNewNotification(fromIdEmp, toIdEmp, typeEmp, contentEmp);
+
+                    // notification to clerk
+                    Employee empUrg = entities.Employees.Where(x => x.EmpId == rcvEmpId).FirstOrDefault();
+                    string empName = empUrg.EmpName;
+                    string deptName = dept.DeptName;
+                    string typeClerk = "Urgent Disbursement";
+                    string contentClerk = "An urgent disbursement for " + empName + " from " + deptName + " has been accepted";
+                    NotificationBL.AddNewNotification(101, 101, typeClerk, contentClerk);
+                    NotificationBL.AddNewNotification(101, 102, typeClerk, contentClerk);
+                    NotificationBL.AddNewNotification(101, 103, typeClerk, contentClerk);
                 }
                 catch (System.Data.Entity.Validation.DbEntityValidationException ex)
                 {
@@ -544,7 +600,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
             }
         }
-
 
         //get All Category list
         public static List<String> GetCatList()
@@ -1310,10 +1365,11 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
 
             SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
-            int urgentFromId = ctx.Employees.Where(x => x.Role == "Store Clerk").First().EmpId;
+            CollectionPoint cp = ctx.CollectionPoints.Where(x => x.ColPtId == ColId).FirstOrDefault();
+            int urgentFromId = cp.ClerkId;
             int urgentToId = empId;
             string urgentType = "Urgent Request";
-            string urgentContent = "Your urgent request has been fulfilled, please wait for disbursement";
+            string urgentContent = "Your urgent request will be disbursed on " + requested_time.ToString() + " at " + cp.Location;
             NotificationBL.AddNewNotification(urgentFromId, urgentToId, urgentType, urgentContent);
 
             ////Making PDF Reports
