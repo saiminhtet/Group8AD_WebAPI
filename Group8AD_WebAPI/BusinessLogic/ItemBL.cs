@@ -1211,14 +1211,14 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             else
             {
-                string urgentType = "Urgent Request";
-                string urgentContent = "Your urgent request has been fulfilled, please wait for disbursement";
+                string Type = "Weekly Disbursement";
+                string Content = "";
                 //for email
                 List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
                 for (int i = 0; i < clerklist.Count; i++)
                 {
                     int empId = clerklist[i].EmpId;
-                   // EmailBL.s;
+                    EmailBL.AddNewEmailToEmp(empId, Type, Content);
                 }
 
             }           
