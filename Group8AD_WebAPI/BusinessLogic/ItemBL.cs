@@ -1181,12 +1181,13 @@ namespace Group8AD_WebAPI.BusinessLogic
             // disbursementListEmployee, list of disbursement sorted by deptCode, empId, reqId, and then itemCode, to be used for pdf export
 
             // call make PDF method
+            // call make PDF method
             if (disbursementListDept.Count() > 0 && disbursementListEmployee.Count() > 0)
             {
                 string disbursementListDept_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListbyDept(disbursementListDept, disbursementListDept_filename);
 
-                     string disbursementListEmployee_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+                string disbursementListEmployee_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListby_Dept_Employee_OrderNo(disbursementListEmployee, disbursementListEmployee_filename);
 
 
@@ -1196,6 +1197,54 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     int empId = clerklist[i].EmpId;
                     EmailBL.SendDisbEmailForClerk(empId, disbursementListDept_filename, disbursementListEmployee_filename);
+                }
+
+                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                for (int i = 0; i < deptlist.Count; i++)
+                {
+                    if (!deptlist[i].DeptCode.Equals("STOR"))
+                    {
+                        int empId = (int)deptlist[i].DeptRepId;
+                        string deptCode = deptlist[i].DeptCode;
+                        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                    }
+                }
+            }
+            else if (disbursementListEmployee.Count() > 0 && disbursementListDept.Count() == 0)
+            {
+                string disbursementListEmployee_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+                PdfBL.GenerateDisbursementListby_Dept_Employee_OrderNo(disbursementListEmployee, disbursementListEmployee_filename);
+
+                //for email
+                List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+                for (int i = 0; i < clerklist.Count; i++)
+                {
+                    int empId = clerklist[i].EmpId;
+                    EmailBL.SendDisbEmailForClerk(empId, disbursementListEmployee_filename);
+                }
+
+                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                for (int i = 0; i < deptlist.Count; i++)
+                {
+                    if (!deptlist[i].DeptCode.Equals("STOR"))
+                    {
+                        int empId = (int)deptlist[i].DeptRepId;
+                        string deptCode = deptlist[i].DeptCode;
+                        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                    }
+                }
+            }
+            else if (disbursementListEmployee.Count() == 0 && disbursementListDept.Count() > 0)
+            {
+                string disbursementListDept_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+                PdfBL.GenerateDisbursementListbyDept(disbursementListDept, disbursementListDept_filename);
+
+                //for email
+                List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+                for (int i = 0; i < clerklist.Count; i++)
+                {
+                    int empId = clerklist[i].EmpId;
+                    EmailBL.SendDisbEmailForClerk(empId, disbursementListDept_filename);
                 }
 
                 List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
@@ -1221,7 +1270,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     EmailBL.AddNewEmailToEmp(empId, Type, Content);
                 }
 
-            }           
+            }
 
             return items;
         }
@@ -1293,7 +1342,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             string urgentType = "Urgent Request";
             string urgentContent = "Your urgent request will be disbursed on " + requested_time.ToString() + " at " + cp.Location;
             NotificationBL.AddNewNotification(urgentFromId, urgentToId, urgentType, urgentContent);
-            EmailBL.AddNewEmail(urgentFromId, urgentToId,urgentType,urgentContent);
+            EmailBL.AddNewEmail(urgentFromId, urgentToId, urgentType, urgentContent);
             ////Making PDF Reports
             ////Group By Department then By Item
             List<RequestDetailVM> rdList = new List<RequestDetailVM>();
@@ -1339,7 +1388,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             List<DisbursementDetailVM> disbursementListDept = dListDept.OrderBy(x => x.ItemCode).OrderBy(x => x.DeptCode).ToList();
             // disbursementListDept, list of disbursement sorted by deptCode and then itemCode, to be used for pdf export
-           // string filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+            // string filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
             //PdfBL.GenerateDisbursementListbyDept(disbursementListDept, filename);
 
             //Group By Department then By Item
@@ -1394,15 +1443,53 @@ namespace Group8AD_WebAPI.BusinessLogic
                     }
                 }
             }
-            else if (disbursementListEmployee.Count()>0 && disbursementListDept.Count() == 0 )
+            else if (disbursementListEmployee.Count() > 0 && disbursementListDept.Count() == 0)
             {
                 string disbursementListEmployee_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListby_Dept_Employee_OrderNo(disbursementListEmployee, disbursementListEmployee_filename);
+
+                //for email
+                List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+                for (int i = 0; i < clerklist.Count; i++)
+                {
+                    int employeeId = clerklist[i].EmpId;
+                    EmailBL.SendDisbEmailForClerk(empId, disbursementListEmployee_filename);
+                }
+
+                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                for (int i = 0; i < deptlist.Count; i++)
+                {
+                    if (!deptlist[i].DeptCode.Equals("STOR"))
+                    {
+                        int employeeId = (int)deptlist[i].DeptRepId;
+                        string deptCode = deptlist[i].DeptCode;
+                        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                    }
+                }
             }
             else if (disbursementListEmployee.Count() == 0 && disbursementListDept.Count() > 0)
             {
                 string disbursementListDept_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListbyDept(disbursementListDept, disbursementListDept_filename);
+
+                //for email
+                List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+                for (int i = 0; i < clerklist.Count; i++)
+                {
+                    int employeeId = clerklist[i].EmpId;
+                    EmailBL.SendDisbEmailForClerk(empId, disbursementListDept_filename);
+                }
+
+                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                for (int i = 0; i < deptlist.Count; i++)
+                {
+                    if (!deptlist[i].DeptCode.Equals("STOR"))
+                    {
+                        int employeeId = (int)deptlist[i].DeptRepId;
+                        string deptCode = deptlist[i].DeptCode;
+                        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                    }
+                }
             }
             else
             {
