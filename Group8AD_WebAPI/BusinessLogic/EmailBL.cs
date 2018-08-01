@@ -180,6 +180,52 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
         }
 
+        public static bool SendDisbEmailForClerk(int empId, string attachfile)
+        {
+            using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
+            {
+                try
+                {
+                    //var to_email = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpEmail).First();
+                    var _to = entities.Employees.Where(e => e.EmpId == empId).Select(e => e.EmpName).First();
+                    var from_email = entities.Employees.Where(e => e.EmpId == 101).Select(e => e.EmpEmail).First();
+                    var _from = entities.Employees.Where(e => e.EmpId == 101).Select(e => e.EmpName).First();
+
+                    var to_email_101 = entities.Employees.Where(e => e.EmpId == 101).Select(e => e.EmpEmail).First();
+                    var to_email_102 = entities.Employees.Where(e => e.EmpId == 102).Select(e => e.EmpEmail).First();
+                    var to_email_103 = entities.Employees.Where(e => e.EmpId == 103).Select(e => e.EmpEmail).First();
+
+                    string type = "Disbursement For Clerk";
+                    string content = "You have recently requested for Disbursement email for clerk the Logic University on ";
+                    string filePath = HttpContext.Current.Server.MapPath("~/PDF/");
+
+                    MailMessage msg = new MailMessage();
+                    msg.From = new MailAddress(from_email);//101's email
+                    msg.To.Add(to_email_101);//storeclerk1
+                    msg.To.Add(to_email_102);//storeclerk2
+                    msg.To.Add(to_email_103);//storeclerk3
+                    msg.Subject = type;
+                    msg.IsBodyHtml = false;
+                    msg.Body = "Hi" + " " + _to + "," + Environment.NewLine + Environment.NewLine +
+                                content + " " + System.DateTime.Now.ToString("dd MMMM yyyy h:mm tt") + Environment.NewLine + Environment.NewLine +
+                                "Kindly refer to the attachment." + Environment.NewLine + Environment.NewLine + "Thank you.";
+
+                    Attachment at = new Attachment(filePath + attachfile);
+                    msg.Attachments.Add(at);
+
+                    msg.Priority = MailPriority.High;
+                    SmtpClient client = new SmtpClient();
+                    client.Send(msg);
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
         //SendDisbEmailForRep
         //with attach
         public static bool SendDisbEmailForRep(int empId, string deptCode)
