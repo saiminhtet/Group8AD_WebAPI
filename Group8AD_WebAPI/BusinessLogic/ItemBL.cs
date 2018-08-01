@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
+// Author: Sai
+// Author: Tang Shenqi: A0114523U
+
 namespace Group8AD_WebAPI.BusinessLogic
 {
     public static class ItemBL
@@ -181,6 +184,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 List<string> errorMessages = new List<string>();
                 try
                 {
+                    string deptcode = EmployeeBL.GetDeptCode(empId);
                     string vNum = AdjustmentBL.GenerateVoucherNo();
                     foreach (ItemVM i in iList)
                     {
@@ -221,8 +225,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                             entities.Adjustments.Add(a);
                             entities.SaveChanges();
                         }
-
-                        string deptcode = EmployeeBL.GetDeptCode(empId);
 
                         var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).Select(e => e.EmpId).ToList();
 
@@ -341,6 +343,30 @@ namespace Group8AD_WebAPI.BusinessLogic
                         }
                         // }
                     }
+                    // send notification to rep, head, clerk * 3
+
+                    // notification to rep
+                    int fromIdRep = 101;
+                    int toIdRep = empId;
+                    string typeRep = "Accept Disbursement";
+                    string contentRep = "You have accepted disbursement for this week";
+                    NotificationBL.AddNewNotification(fromIdRep, toIdRep, typeRep, contentRep);
+
+                    // notification to head
+                    int fromIdHead = 101;
+                    Department dept = entities.Departments.Where(x => x.DeptCode.Equals(deptcode)).FirstOrDefault();
+                    int toIdHead = (int)dept.DeptHeadId;
+                    string typeHead = "Accept Disbursement";
+                    string contentHead = "Your department has accepted disbursement for this week";
+                    NotificationBL.AddNewNotification(fromIdHead, toIdHead, typeHead, contentHead);
+
+                    // notification to clerk
+                    string deptName = dept.DeptName;
+                    string typeClerk = "Accept Disbursement";
+                    string contentClerk = deptName + " has accepted their disbursement for this week";
+                    NotificationBL.AddNewNotification(101, 101, typeClerk, contentClerk);
+                    NotificationBL.AddNewNotification(101, 102, typeClerk, contentClerk);
+                    NotificationBL.AddNewNotification(101, 103, typeClerk, contentClerk);
                 }
                 catch (System.Data.Entity.Validation.DbEntityValidationException ex)
                 {
@@ -365,6 +391,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 try
                 {
+                    string deptcode = EmployeeBL.GetDeptCode(empId);
                     string vNum = AdjustmentBL.GenerateVoucherNo();
                     foreach (ItemVM i in iList)
                     {
@@ -407,18 +434,19 @@ namespace Group8AD_WebAPI.BusinessLogic
                             entities.SaveChanges();
                         }
 
-                        string deptcode = EmployeeBL.GetDeptCode(empId);
-
-                        var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).Select(e => e.EmpId).ToList();
+                        //var EmpIds = entities.Employees.Where(e => e.DeptCode.Equals(deptcode)).Select(e => e.EmpId).ToList();
 
                         List<int> rList = new List<int>();
                         List<RequestDetail> rdList = new List<RequestDetail>();
 
-                        foreach (var empid in EmpIds)
-                        {
-                            var reqList = entities.Requests.Where(x => x.EmpId == empid && x.Status.Equals("Approved")).Select(x => x.ReqId).ToList<int>();
-                            rList.AddRange(reqList);
-                        }
+                        //foreach (var empid in EmpIds)
+                        //{
+                        //    var reqList = entities.Requests.Where(x => x.EmpId == empid && x.Status.Equals("Approved")).Select(x => x.ReqId).ToList<int>();
+                        //    rList.AddRange(reqList);
+                        //}
+
+                        var reqList = entities.Requests.Where(x => x.EmpId == rcvEmpId && x.Status.Equals("Approved")).Select(x => x.ReqId).ToList();
+                        rList.AddRange(reqList);
 
                         foreach (int reqId in rList)
                         {
@@ -523,10 +551,36 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                             //send email acknowledgement to rep, specific head and all clerks
                             // NotificationBL.AddAcptNotification(r.ReqId); 
-                            NotificationBL.AddNewNotification(empId, rcvEmpId, "Stationery Request", "A new stationery request has been submitted");
+                            //NotificationBL.AddNewNotification(empId, rcvEmpId, "Stationery Request", "A new stationery request has been submitted");
                         }
                         // }
                     }
+                    // send notification to rep, emp, clerk * 3
+
+                    // notification to rep
+                    int fromIdRep = 101;
+                    int toIdRep = empId;
+                    string typeRep = "Urgent Disbursement";
+                    string contentRep = "You have accepted an urgent disbursement";
+                    NotificationBL.AddNewNotification(fromIdRep, toIdRep, typeRep, contentRep);
+
+                    // notification to emp
+                    int fromIdHead = 101;
+                    Department dept = entities.Departments.Where(x => x.DeptCode.Equals(deptcode)).FirstOrDefault();
+                    int toIdHead = rcvEmpId;
+                    string typeHead = "Urgent Disbursement";
+                    string contentHead = "Your urgent request disbursement has been accepted";
+                    NotificationBL.AddNewNotification(fromIdHead, toIdHead, typeHead, contentHead);
+
+                    // notification to clerk
+                    Employee empUrg = entities.Employees.Where(x => x.EmpId == rcvEmpId).FirstOrDefault();
+                    string empName = empUrg.EmpName;
+                    string deptName = dept.DeptName;
+                    string typeClerk = "Urgent Disbursement";
+                    string contentClerk = "An urgent disbursement for " + empName + " from " + deptName + " has been accepted";
+                    NotificationBL.AddNewNotification(101, 101, typeClerk, contentClerk);
+                    NotificationBL.AddNewNotification(101, 102, typeClerk, contentClerk);
+                    NotificationBL.AddNewNotification(101, 103, typeClerk, contentClerk);
                 }
                 catch (System.Data.Entity.Validation.DbEntityValidationException ex)
                 {
@@ -1126,23 +1180,23 @@ namespace Group8AD_WebAPI.BusinessLogic
             // call make PDF method
 
             // for email
-            List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
-            for (int i = 0; i < clerklist.Count; i++)
-            {
-                int empId = clerklist[i].EmpId;
-                EmailBL.SendDisbEmailForClerk(empId, disbursementListDept, disbursementListEmployee);
-            }
+            //List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+            //for (int i = 0; i < clerklist.Count; i++)
+            //{
+            //    int empId = clerklist[i].EmpId;
+            //    EmailBL.SendDisbEmailForClerk(empId, disbursementListDept, disbursementListEmployee);
+            //}
 
-            List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
-            for (int i = 0; i < deptlist.Count; i++)
-            {
-                if (!deptlist[i].DeptCode.Equals("STOR"))
-                {
-                    int empId = (int)deptlist[i].DeptRepId;
-                    string deptCode = deptlist[i].DeptCode;
-                    EmailBL.SendDisbEmailForRep(empId, deptCode, disbursementListDept, disbursementListEmployee);
-                }
-            }
+            //List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+            //for (int i = 0; i < deptlist.Count; i++)
+            //{
+            //    if (!deptlist[i].DeptCode.Equals("STOR"))
+            //    {
+            //        int empId = (int)deptlist[i].DeptRepId;
+            //        string deptCode = deptlist[i].DeptCode;
+            //        EmailBL.SendDisbEmailForRep(empId, deptCode, disbursementListDept, disbursementListEmployee);
+            //    }
+            //}
 
             return items;
         }
@@ -1338,15 +1392,17 @@ namespace Group8AD_WebAPI.BusinessLogic
             List<DisbursementDetailVM> disbursementListDept = dListDept.OrderBy(x => x.ItemCode).OrderBy(x => x.DeptCode).ToList();
             // disbursementListDept, list of disbursement sorted by deptCode and then itemCode, to be used for pdf export
             string filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
-            PdfBL.GenerateDisbursementListbyDept(disbursementListDept, filename);
+            //PdfBL.GenerateDisbursementListbyDept(disbursementListDept, filename);
 
-            ////Group By Department then By Item
+            //Group By Department then By Item
             for (int i = 0; i < fulfilledList.Count; i++)
             {
                 DisbursementDetailVM disDet = new DisbursementDetailVM();
-                Request req = ctx.Requests.Where(x => x.ReqId == fulfilledList[i].ReqId).FirstOrDefault();
+                int reqId = fulfilledList[i].ReqId;
+                Request req = ctx.Requests.Where(x => x.ReqId == reqId).FirstOrDefault();
                 Employee emp = ctx.Employees.Where(x => x.EmpId == req.EmpId).FirstOrDefault();
-                Item item = ctx.Items.Where(x => x.ItemCode.Equals(fulfilledList[i].ItemCode)).FirstOrDefault();
+                string itemCode = fulfilledList[i].ItemCode;
+                Item item = ctx.Items.Where(x => x.ItemCode.Equals(itemCode)).FirstOrDefault();
                 disDet.DeptCode = emp.DeptCode;
                 disDet.ItemCode = fulfilledList[i].ItemCode;
                 disDet.Category = item.Cat;
@@ -1359,7 +1415,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 dListEmployee.Add(disDet);
             }
             List<DisbursementDetailVM> disbursementListEmployee = dListEmployee.OrderBy(x => x.ItemCode).OrderBy(x => x.ReqId).OrderBy(x => x.EmpId).OrderBy(x => x.DeptCode).ToList();
-            // disbursementListEmployee, list of disbursement sorted by deptCode, empId, reqId, and then itemCode, to be used for pdf export
+            //disbursementListEmployee, list of disbursement sorted by deptCode, empId, reqId, and then itemCode, to be used for pdf export
 
             return items;
         }

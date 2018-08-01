@@ -29,7 +29,6 @@ namespace Group8AD_WebAPI.Models
         public Nullable<System.DateTime> CancelledDateTime { get; set; }
         public string Status { get; set; }
         public Nullable<System.DateTime> FulfilledDateTime { get; set; }
-        public string DeptCode { get; set; }
     
         public virtual Employee Employee { get; set; }
         public virtual Employee Employee1 { get; set; }

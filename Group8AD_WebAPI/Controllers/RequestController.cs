@@ -8,6 +8,8 @@ using Group8AD_WebAPI.BusinessLogic;
 using Group8AD_WebAPI.Models;
 using Group8AD_WebAPI.Models.ViewModels;
 
+// Author: Tang Shenqi: A0114523U
+
 namespace Group8AD_WebAPI.Controllers
 {
     [Authorize]

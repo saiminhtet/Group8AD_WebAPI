@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
+// Author: Tang Shenqi: A0114523U
+
 namespace Group8AD_WebAPI.BusinessLogic
 {
     public class RequestBL
@@ -23,7 +25,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                     employee = entities.Employees.Where(e => e.EmpId == empId).FirstOrDefault();
                     string role = employee.Role;
                     string deptCode = employee.DeptCode;
-                    Department dept = entities.Departments.Where(x => x.DeptCode == deptCode).FirstOrDefault();
+                    Department dept = entities.Departments.Where(x => x.DeptCode.Equals(deptCode)).FirstOrDefault();
                     if (empId == dept.DeptHeadId || empId == dept.DelegateApproverId)
                     {
                         reqlist = GetReq(deptCode, status);

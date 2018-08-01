@@ -431,11 +431,12 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Item/FulfillRequestUrgent")]
-        public HttpResponseMessage FulfillRequestUrgent(int empId, List<ItemVM> items, DateTime requested_time, int ColId)
+        public HttpResponseMessage FulfillRequestUrgent(int empId, List<ItemVM> items, string fromDate, int ColId)
         {
+            DateTime fromdate = Convert.ToDateTime(fromDate);
             try
             {
-                BusinessLogic.ItemBL.FulfillRequestUrgent(empId, items, requested_time, ColId);
+                BusinessLogic.ItemBL.FulfillRequestUrgent(empId, items, Convert.ToDateTime(fromDate), ColId);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
@@ -443,7 +444,6 @@ namespace Group8AD_WebAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
             }
         }
-        
 
 
         //For Testing 
