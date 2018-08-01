@@ -1096,12 +1096,11 @@ namespace Group8AD_WebAPI.BusinessLogic
                             dListDept.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).FulfilledQty += fulfilledList[j].FulfilledQty;
                         }
                     }
-                }                  
+                }
             }
             List<DisbursementDetailVM> disbursementListDept = dListDept.OrderBy(x => x.ItemCode).OrderBy(x => x.DeptCode).ToList();
             // disbursementListDept, list of disbursement sorted by deptCode and then itemCode, to be used for pdf export
-            string filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
-            //PdfBL.GenerateDisbursementListbyDept(disbursementListDept, filename);
+
 
             ////Group By Department then By Item
             for (int i = 0; i < fulfilledList.Count; i++)
@@ -1127,25 +1126,47 @@ namespace Group8AD_WebAPI.BusinessLogic
             // disbursementListEmployee, list of disbursement sorted by deptCode, empId, reqId, and then itemCode, to be used for pdf export
 
             // call make PDF method
+            if (disbursementListDept.Count() > 0 && disbursementListEmployee.Count() > 0)
+            {
+                string disbursementListDept_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+                PdfBL.GenerateDisbursementListbyDept(disbursementListDept, disbursementListDept_filename);
 
-            // for email
-            //List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
-            //for (int i = 0; i < clerklist.Count; i++)
-            //{
-            //    int empId = clerklist[i].EmpId;
-            //    EmailBL.SendDisbEmailForClerk(empId, disbursementListDept, disbursementListEmployee);
-            //}
+                     string disbursementListEmployee_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+                PdfBL.GenerateDisbursementListbyDept(disbursementListEmployee, disbursementListEmployee_filename);
 
-            //List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
-            //for (int i = 0; i < deptlist.Count; i++)
-            //{
-            //    if (!deptlist[i].DeptCode.Equals("STOR"))
-            //    {
-            //        int empId = (int)deptlist[i].DeptRepId;
-            //        string deptCode = deptlist[i].DeptCode;
-            //        EmailBL.SendDisbEmailForRep(empId, deptCode, disbursementListDept, disbursementListEmployee);
-            //    }
-            //}
+
+                //for email
+                List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+                for (int i = 0; i < clerklist.Count; i++)
+                {
+                    int empId = clerklist[i].EmpId;
+                    EmailBL.SendDisbEmailForClerk(empId, disbursementListDept_filename, disbursementListEmployee_filename);
+                }
+
+                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                for (int i = 0; i < deptlist.Count; i++)
+                {
+                    if (!deptlist[i].DeptCode.Equals("STOR"))
+                    {
+                        int empId = (int)deptlist[i].DeptRepId;
+                        string deptCode = deptlist[i].DeptCode;
+                        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                    }
+                }
+            }
+            else
+            {
+                string urgentType = "Urgent Request";
+                string urgentContent = "Your urgent request has been fulfilled, please wait for disbursement";
+                //for email
+                List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
+                for (int i = 0; i < clerklist.Count; i++)
+                {
+                    int empId = clerklist[i].EmpId;
+                   // EmailBL.s;
+                }
+
+            }           
 
             return items;
         }
@@ -1482,7 +1503,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
 
         }
-       
+
         //Update Balnce
         public static void UpdateBal(string iCode, int bal)
         {
