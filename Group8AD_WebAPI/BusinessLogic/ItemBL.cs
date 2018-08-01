@@ -355,7 +355,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                     // notification to head
                     int fromIdHead = 101;
                     Department dept = entities.Departments.Where(x => x.DeptCode.Equals(deptcode)).FirstOrDefault();
-                    int toIdHead = (int)dept.DeptHeadId;
+                    int toIdHead;
+                    if (dept.DelegateApproverId != null && DateTime.Compare(DateTime.Now, (DateTime)dept.DelegateFromDate) >= 0 &&
+                        DateTime.Compare(DateTime.Now, (DateTime)dept.DelegateToDate) >= 0)
+                        toIdHead = (int)dept.DelegateApproverId;
+                    else
+                        toIdHead = (int)dept.DeptHeadId;
                     string typeHead = "Accept Disbursement";
                     string contentHead = "Your department has accepted disbursement for this week";
                     NotificationBL.AddNewNotification(fromIdHead, toIdHead, typeHead, contentHead);
@@ -565,12 +570,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                     NotificationBL.AddNewNotification(fromIdRep, toIdRep, typeRep, contentRep);
 
                     // notification to emp
-                    int fromIdHead = 101;
+                    int fromIdEmp = 101;
                     Department dept = entities.Departments.Where(x => x.DeptCode.Equals(deptcode)).FirstOrDefault();
-                    int toIdHead = rcvEmpId;
-                    string typeHead = "Urgent Disbursement";
-                    string contentHead = "Your urgent request disbursement has been accepted";
-                    NotificationBL.AddNewNotification(fromIdHead, toIdHead, typeHead, contentHead);
+                    int toIdEmp = rcvEmpId;
+                    string typeEmp = "Urgent Disbursement";
+                    string contentEmp = "Your urgent request disbursement has been accepted";
+                    NotificationBL.AddNewNotification(fromIdEmp, toIdEmp, typeEmp, contentEmp);
 
                     // notification to clerk
                     Employee empUrg = entities.Employees.Where(x => x.EmpId == rcvEmpId).FirstOrDefault();
