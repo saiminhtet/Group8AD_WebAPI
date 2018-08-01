@@ -8,6 +8,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
+// Author: Tang Shenqi: A0114523U
+
 namespace Group8AD_WebAPI.Controllers
 {
     [Authorize]

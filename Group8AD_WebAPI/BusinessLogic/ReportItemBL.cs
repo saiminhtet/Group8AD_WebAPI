@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
+// Author: Tang Shenqi: A0114523U
+
 namespace Group8AD_WebAPI.BusinessLogic
 {
     public class ReportItemBL
