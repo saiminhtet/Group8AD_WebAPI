@@ -351,7 +351,7 @@ namespace Group8AD_WebAPI.BusinessLogic
 
             SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext();
 
-            List<ItemVM> InventoryItemList = ItemBL.GetLowStockItems();
+            List<ItemVM> InventoryItemList = ItemBL.GetAllItems();
 
             string filePath = HttpContext.Current.Server.MapPath("~/Report_Templates/");
 
