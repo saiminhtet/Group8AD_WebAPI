@@ -42,6 +42,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                 department.DelegateToDate = toDate;
                 department.DelegateApproverId = empId;
                 entities.SaveChanges();
+
+                string startDate = (department.DelegateFromDate ?? default(DateTime)).ToString("dd MMMM yyyy");
+                string endDate = (department.DelegateToDate ?? default(DateTime)).ToString("dd MMMM yyyy");
+
+                EmailBL.AddNewEmailToEmp(empId, "Assign Delegate", "You have been assigned as delegate from " + startDate + " to " + endDate);
+
             }
         }
 
@@ -55,6 +61,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 {
                     department.DeptRepId = empId;
                     entities.SaveChanges();
+                    EmailBL.AddNewEmailToEmp(empId, "Assign Reprsentative", "You have been assigned as reprsentative for your department.");
                 }
             }
             return;
