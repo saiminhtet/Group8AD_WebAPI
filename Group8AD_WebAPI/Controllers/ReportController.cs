@@ -53,12 +53,12 @@ namespace Group8AD_WebAPI.Controllers
         [System.Web.Http.AcceptVerbs("POST")]
         [System.Web.Http.HttpPost]
         [Route("api/Report/PurchaseOrder/")]
-        public HttpResponseMessage GeneratePurchaseOrderItemList(int empId, DateTime expected_date, List<ItemVM> PoiList)
+        public HttpResponseMessage GeneratePurchaseOrderItemList(int empId, string expected_date, List<ItemVM> PoiList)
         {
             //int emp_id = Convert.ToInt16(empId);
             try
             {
-                BusinessLogic.PdfBL.GeneratePurchaseOrderList(empId,expected_date, PoiList);
+                BusinessLogic.PdfBL.GeneratePurchaseOrderList(empId, Convert.ToDateTime(expected_date), PoiList);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
