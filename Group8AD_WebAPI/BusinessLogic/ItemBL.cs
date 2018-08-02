@@ -925,22 +925,25 @@ namespace Group8AD_WebAPI.BusinessLogic
                             if (items[i].ItemCode.Equals(rdvmList[k].ItemCode))
                             {
                                 int shortQty = rdvmList[k].ReqQty - rdvmList[k].AwaitQty - rdvmList[k].FulfilledQty;
-                                if (shortQty <= count)
+                                if (shortQty > 0)
                                 {
-                                    count = count - shortQty;
-                                    items[i].Balance = items[i].Balance - shortQty;
-                                    rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + shortQty;
+                                    if (shortQty <= count)
+                                    {
+                                        count = count - shortQty;
+                                        items[i].Balance = items[i].Balance - shortQty;
+                                        rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + shortQty;
+                                    }
+                                    else
+                                    {
+                                        items[i].Balance = items[i].Balance - count;
+                                        rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + count;
+                                        count = 0;
+                                    }
+                                    fulfilledList.Add(rdvmList[k]);
+                                    UpdateBal(items[i].ItemCode, items[i].Balance);
+                                    UpdateAwait(rdvmList[k].ReqId, rdvmList[k].ItemCode, rdvmList[k].AwaitQty);
+                                    deptList.Find(x => x.DeptCode == deptCode).FulfilledQty += shortQty;
                                 }
-                                else
-                                {
-                                    items[i].Balance = items[i].Balance - count;
-                                    rdvmList[k].AwaitQty = rdvmList[k].AwaitQty + count;
-                                    count = 0;
-                                }
-                                fulfilledList.Add(rdvmList[k]);
-                                UpdateBal(items[i].ItemCode, items[i].Balance);
-                                UpdateAwait(rdvmList[k].ReqId, rdvmList[k].ItemCode, rdvmList[k].AwaitQty);
-                                deptList.Find(x => x.DeptCode == deptCode).FulfilledQty += shortQty;
                             }
                         }
                     }
@@ -1110,54 +1113,13 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
 
             ////Making PDF Reports
-            ////Group By Department then By Item
             SA46Team08ADProjectContext ctx = new SA46Team08ADProjectContext();
             List<RequestDetailVM> rdList = new List<RequestDetailVM>();
 
             List<DisbursementDetailVM> dListDept = new List<DisbursementDetailVM>();
             List<DisbursementDetailVM> dListEmployee = new List<DisbursementDetailVM>();
 
-            for (int i = 0; i < deptList.Count; i++)
-            {
-                if (!deptList[i].DeptCode.Equals("STOR"))
-                {
-                    for (int j = 0; j < fulfilledList.Count; j++)
-                    {
-                        if (GetDeptCode(fulfilledList[j].ReqId).Equals(deptList[i].DeptCode) && !rdList.Contains(fulfilledList[j]))
-                        {
-                            rdList.Add(fulfilledList[j]);
-
-                            DisbursementDetailVM disDet = new DisbursementDetailVM();
-                            disDet.DeptCode = deptList[i].DeptCode;
-                            string itemCode = fulfilledList[j].ItemCode;
-                            disDet.ItemCode = itemCode;
-                            Item item = ctx.Items.Where(x => x.ItemCode.Equals(itemCode)).FirstOrDefault();
-                            disDet.Category = item.Cat;
-                            disDet.Description = item.Desc;
-                            disDet.ReqQty = fulfilledList[i].ReqQty;
-                            disDet.AwaitQty = fulfilledList[i].AwaitQty;
-                            disDet.FulfilledQty = fulfilledList[i].FulfilledQty;
-                            disDet.EmpId = 0;
-                            disDet.ReqId = 0;
-                            dListDept.Add(disDet);
-                        }
-                        else if (GetDeptCode(fulfilledList[j].ReqId).Equals(deptList[i].DeptCode) && rdList.Contains(fulfilledList[j]))
-                        {
-                            rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).ReqQty += fulfilledList[j].ReqQty;
-                            rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).AwaitQty += fulfilledList[j].AwaitQty;
-                            rdList.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).FulfilledQty += fulfilledList[j].FulfilledQty;
-                            dListDept.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).ReqQty += fulfilledList[j].ReqQty;
-                            dListDept.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).AwaitQty += fulfilledList[j].AwaitQty;
-                            dListDept.Find(x => x.ItemCode.Equals(fulfilledList[j].ItemCode)).FulfilledQty += fulfilledList[j].FulfilledQty;
-                        }
-                    }
-                }
-            }
-            List<DisbursementDetailVM> disbursementListDept = dListDept.OrderBy(x => x.ItemCode).OrderBy(x => x.DeptCode).ToList();
-            // disbursementListDept, list of disbursement sorted by deptCode and then itemCode, to be used for pdf export
-
-
-            ////Group By Department then By Item
+            ////Group By Department then By Employee
             for (int i = 0; i < fulfilledList.Count; i++)
             {
                 DisbursementDetailVM disDet = new DisbursementDetailVM();
@@ -1178,9 +1140,35 @@ namespace Group8AD_WebAPI.BusinessLogic
                 dListEmployee.Add(disDet);
             }
             List<DisbursementDetailVM> disbursementListEmployee = dListEmployee.OrderBy(x => x.ItemCode).OrderBy(x => x.ReqId).OrderBy(x => x.EmpId).OrderBy(x => x.DeptCode).ToList();
-            // disbursementListEmployee, list of disbursement sorted by deptCode, empId, reqId, and then itemCode, to be used for pdf export
 
-            // call make PDF method
+            ////Group By Department then By Item
+            for (int i = 0; i < deptList.Count; i++)
+            {
+                if (!deptList[i].DeptCode.Equals("STOR"))
+                {
+                    for (int j = 0; j < disbursementListEmployee.Count; j++)
+                    {
+                        bool isContain = false;
+                        for (int k = 0; k < dListDept.Count; k++)
+                        {
+                            if (dListDept[k].ItemCode.Equals(disbursementListEmployee[j].ItemCode) && dListDept[k].DeptCode.Equals(disbursementListEmployee[j].DeptCode))
+                                isContain = true;
+                        }
+                        if (GetDeptCode(disbursementListEmployee[j].ReqId).Equals(deptList[i].DeptCode) && !isContain)
+                        {
+                            dListDept.Add(disbursementListEmployee[j]);
+                        }
+                        else if (GetDeptCode(disbursementListEmployee[j].ReqId).Equals(deptList[i].DeptCode) && isContain)
+                        {
+                            dListDept.Find(x => x.ItemCode.Equals(disbursementListEmployee[j].ItemCode) && x.DeptCode.Equals(disbursementListEmployee[j].DeptCode)).ReqQty += disbursementListEmployee[j].ReqQty;
+                            dListDept.Find(x => x.ItemCode.Equals(disbursementListEmployee[j].ItemCode) && x.DeptCode.Equals(disbursementListEmployee[j].DeptCode)).AwaitQty += disbursementListEmployee[j].AwaitQty;
+                            dListDept.Find(x => x.ItemCode.Equals(disbursementListEmployee[j].ItemCode) && x.DeptCode.Equals(disbursementListEmployee[j].DeptCode)).FulfilledQty += disbursementListEmployee[j].FulfilledQty;
+                        }
+                    }
+                }
+            }
+            List<DisbursementDetailVM> disbursementListDept = dListDept.OrderBy(x => x.ItemCode).OrderBy(x => x.DeptCode).ToList();
+
             // call make PDF method
             if (disbursementListDept.Count() > 0 && disbursementListEmployee.Count() > 0)
             {
@@ -1189,7 +1177,6 @@ namespace Group8AD_WebAPI.BusinessLogic
 
                 string disbursementListEmployee_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListby_Dept_Employee_OrderNo(disbursementListEmployee, disbursementListEmployee_filename);
-
 
                 //for email
                 List<Employee> clerklist = ctx.Employees.Where(x => x.Role.Equals("Store Clerk")).ToList();
@@ -1271,7 +1258,6 @@ namespace Group8AD_WebAPI.BusinessLogic
                 }
 
             }
-
             return items;
         }
 
@@ -1614,12 +1600,10 @@ namespace Group8AD_WebAPI.BusinessLogic
         {
             using (SA46Team08ADProjectContext entities = new SA46Team08ADProjectContext())
             {
-                string DeptCode = entities.Requests.Where(r => r.ReqId == reqId)
-                                   .Join(entities.Employees, r => r.EmpId, e => e.EmpId, (r, e) => new { r, e })
-                                   .Select(d => d.e.DeptCode).ToString();
-                return DeptCode;
+                Request req = entities.Requests.Where(x => x.ReqId == reqId).First();
+                Employee emp = entities.Employees.Where(x => x.EmpId == req.EmpId).First();
+                return emp.DeptCode;
             }
-
         }
 
         //Update Balnce
