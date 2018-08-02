@@ -1,5 +1,6 @@
 ﻿using Group8AD_WebAPI.Models;
 using Group8AD_WebAPI.Models.ViewModels;
+using Group8AD_WebAPI.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -551,6 +552,28 @@ namespace Group8AD_WebAPI.BusinessLogic
                             adj.ApproverId = (int)adjList[i].ApproverId;
                             adj.ApproverComment = adjList[i].ApproverComment;
                             adjListEmail.Add(adj);
+
+                            string itemCode = adjList[i].ItemCode;
+                            Item item = entities.Items.Where(x => x.ItemCode.Equals(itemCode)).First();
+                            item.Balance += adjList[i].QtyChange;
+
+                            TransactionVM trans = new TransactionVM();
+                            trans.TranDateTime = DateTime.Now;
+                            trans.ItemCode = itemCode;
+                            trans.QtyChange = adjList[i].QtyChange;
+                            trans.UnitPrice = (double)item.Price1;
+                            trans.Desc = "Adjustment";
+                            trans.DeptCode = "";
+                            trans.SuppCode = "";
+                            trans.VoucherNo = adjList[i].VoucherNo;
+                            TransactionBL.AddTran(trans);
+
+                            bool status = ItemBL.CheckLowStk(ItemUtility.Convert_ItemObj_To_ItemVMObj(item));
+
+                            if (status)
+                            {
+                                NotificationBL.AddLowStkNotification(empId, item);
+                            }
                         }
                     }
                     entities.SaveChanges();
