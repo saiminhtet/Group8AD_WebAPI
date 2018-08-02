@@ -194,7 +194,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                             a.VoucherNo = vNum;
                             a.EmpId = empId;
                             a.DateTimeIssued = DateTime.Now;
+                            string itemCode = i.ItemCode;
                             a.ItemCode = i.ItemCode;
+
+                            Item item = entities.Items.Where(x => x.ItemCode.Equals(itemCode)).First();
+                            int qty = (int)i.TempQtyReq - i.TempQtyAcpt;
+                            item.Balance += qty;
 
                             int index = iList.FindIndex(x => x.ItemCode.Equals(i.ItemCode));
 
@@ -406,7 +411,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                             a.VoucherNo = vNum;
                             a.EmpId = empId;
                             a.DateTimeIssued = DateTime.Now;
+                            string itemCode = i.ItemCode;
                             a.ItemCode = i.ItemCode;
+
+                            Item item = entities.Items.Where(x => x.ItemCode.Equals(itemCode)).First();
+                            int qty = (int)i.TempQtyReq - i.TempQtyAcpt;
+                            item.Balance += qty;
 
                             int index = iList.FindIndex(x => x.ItemCode.Equals(i.ItemCode));
 
