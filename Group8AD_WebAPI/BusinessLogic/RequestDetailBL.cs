@@ -7,6 +7,12 @@ using System.Web;
 
 namespace Group8AD_WebAPI.BusinessLogic
 {
+    /* 
+    * Class Name       :       RequestDetailBL
+    * Created by       :       Noel Noel Han
+    * Created date     :       13/Jul/2018
+    * Student No.      :       A0180529B
+    */
     public static class RequestDetailBL
     {
         //add RequestDetail with empId , reqDet and status
