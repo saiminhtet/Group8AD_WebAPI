@@ -1186,16 +1186,17 @@ namespace Group8AD_WebAPI.BusinessLogic
                     EmailBL.SendDisbEmailForClerk(empId, disbursementListDept_filename, disbursementListEmployee_filename);
                 }
 
-                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
-                for (int i = 0; i < deptlist.Count; i++)
-                {
-                    if (!deptlist[i].DeptCode.Equals("STOR"))
-                    {
-                        int empId = (int)deptlist[i].DeptRepId;
-                        string deptCode = deptlist[i].DeptCode;
-                        EmailBL.SendDisbEmailForRep(empId, deptCode);
-                    }
-                }
+                EmailBL.SendDisbEmailForRep(23,"FINN");
+                //List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                //for (int i = 0; i < deptlist.Count; i++)
+                //{
+                //    if (!deptlist[i].DeptCode.Equals("STOR"))
+                //    {
+                //        int empId = (int)deptlist[i].DeptRepId;
+                //        string deptCode = deptlist[i].DeptCode;
+                //        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                //    }
+                //}
             }
             else if (disbursementListEmployee.Count() > 0 && disbursementListDept.Count() == 0)
             {
@@ -1210,16 +1211,17 @@ namespace Group8AD_WebAPI.BusinessLogic
                     EmailBL.SendDisbEmailForClerk(empId, disbursementListEmployee_filename);
                 }
 
-                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
-                for (int i = 0; i < deptlist.Count; i++)
-                {
-                    if (!deptlist[i].DeptCode.Equals("STOR"))
-                    {
-                        int empId = (int)deptlist[i].DeptRepId;
-                        string deptCode = deptlist[i].DeptCode;
-                        EmailBL.SendDisbEmailForRep(empId, deptCode);
-                    }
-                }
+                EmailBL.SendDisbEmailForRep(23, "FINN");
+                //List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                //for (int i = 0; i < deptlist.Count; i++)
+                //{
+                //    if (!deptlist[i].DeptCode.Equals("STOR"))
+                //    {
+                //        int empId = (int)deptlist[i].DeptRepId;
+                //        string deptCode = deptlist[i].DeptCode;
+                //        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                //    }
+                //}
             }
             else if (disbursementListEmployee.Count() == 0 && disbursementListDept.Count() > 0)
             {
@@ -1233,17 +1235,18 @@ namespace Group8AD_WebAPI.BusinessLogic
                     int empId = clerklist[i].EmpId;
                     EmailBL.SendDisbEmailForClerk(empId, disbursementListDept_filename);
                 }
+                EmailBL.SendDisbEmailForRep(23, "FINN");
 
-                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
-                for (int i = 0; i < deptlist.Count; i++)
-                {
-                    if (!deptlist[i].DeptCode.Equals("STOR"))
-                    {
-                        int empId = (int)deptlist[i].DeptRepId;
-                        string deptCode = deptlist[i].DeptCode;
-                        EmailBL.SendDisbEmailForRep(empId, deptCode);
-                    }
-                }
+                //List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                //for (int i = 0; i < deptlist.Count; i++)
+                //{
+                //    if (!deptlist[i].DeptCode.Equals("STOR"))
+                //    {
+                //        int empId = (int)deptlist[i].DeptRepId;
+                //        string deptCode = deptlist[i].DeptCode;
+                //        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                //    }
+                //}
             }
             else
             {
@@ -1407,16 +1410,17 @@ namespace Group8AD_WebAPI.BusinessLogic
                     EmailBL.SendDisbEmailForClerk(empId, disbursementListDept_filename, disbursementListEmployee_filename);
                 }
 
-                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
-                for (int i = 0; i < deptlist.Count; i++)
-                {
-                    if (!deptlist[i].DeptCode.Equals("STOR"))
-                    {
-                        int employeeId = (int)deptlist[i].DeptRepId;
-                        string deptCode = deptlist[i].DeptCode;
-                        EmailBL.SendDisbEmailForRep(empId, deptCode);
-                    }
-                }
+                EmailBL.SendDisbEmailForRep(23, "FINN");
+                //List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                //for (int i = 0; i < deptlist.Count; i++)
+                //{
+                //    if (!deptlist[i].DeptCode.Equals("STOR"))
+                //    {
+                //        int employeeId = (int)deptlist[i].DeptRepId;
+                //        string deptCode = deptlist[i].DeptCode;
+                //        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                //    }
+                //}
             }
             else if (disbursementListEmployee.Count() > 0 && disbursementListDept.Count() == 0)
             {
@@ -1430,17 +1434,17 @@ namespace Group8AD_WebAPI.BusinessLogic
                     int employeeId = clerklist[i].EmpId;
                     EmailBL.SendDisbEmailForClerk(empId, disbursementListEmployee_filename);
                 }
-
-                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
-                for (int i = 0; i < deptlist.Count; i++)
-                {
-                    if (!deptlist[i].DeptCode.Equals("STOR"))
-                    {
-                        int employeeId = (int)deptlist[i].DeptRepId;
-                        string deptCode = deptlist[i].DeptCode;
-                        EmailBL.SendDisbEmailForRep(empId, deptCode);
-                    }
-                }
+                EmailBL.SendDisbEmailForRep(23, "FINN");
+                //List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                //for (int i = 0; i < deptlist.Count; i++)
+                //{
+                //    if (!deptlist[i].DeptCode.Equals("STOR"))
+                //    {
+                //        int employeeId = (int)deptlist[i].DeptRepId;
+                //        string deptCode = deptlist[i].DeptCode;
+                //        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                //    }
+                //}
             }
             else if (disbursementListEmployee.Count() == 0 && disbursementListDept.Count() > 0)
             {
@@ -1454,17 +1458,17 @@ namespace Group8AD_WebAPI.BusinessLogic
                     int employeeId = clerklist[i].EmpId;
                     EmailBL.SendDisbEmailForClerk(empId, disbursementListDept_filename);
                 }
-
-                List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
-                for (int i = 0; i < deptlist.Count; i++)
-                {
-                    if (!deptlist[i].DeptCode.Equals("STOR"))
-                    {
-                        int employeeId = (int)deptlist[i].DeptRepId;
-                        string deptCode = deptlist[i].DeptCode;
-                        EmailBL.SendDisbEmailForRep(empId, deptCode);
-                    }
-                }
+                EmailBL.SendDisbEmailForRep(23, "FINN");
+                //List<DepartmentVM> deptlist = DepartmentBL.GetAllDept();
+                //for (int i = 0; i < deptlist.Count; i++)
+                //{
+                //    if (!deptlist[i].DeptCode.Equals("STOR"))
+                //    {
+                //        int employeeId = (int)deptlist[i].DeptRepId;
+                //        string deptCode = deptlist[i].DeptCode;
+                //        EmailBL.SendDisbEmailForRep(empId, deptCode);
+                //    }
+                //}
             }
             else
             {
