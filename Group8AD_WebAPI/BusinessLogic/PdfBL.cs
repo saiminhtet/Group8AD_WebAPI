@@ -93,7 +93,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 foreach (DisbursementDetailVM dis in disbList.Where(d => d.DeptCode.Equals(dept)))
                 {
                     // HTML = File.ReadAllText(filePath + "DisbursementListByDept_Header.txt");
-                   
+
 
                     HTML = string.Concat(HTML, File.ReadAllText(filePath + "DisbursementListByDept_Body.txt", System.Text.Encoding.UTF8));
 
@@ -158,40 +158,42 @@ namespace Group8AD_WebAPI.BusinessLogic
                 List<int> EmpList = new List<int>();
 
 
-            
+
 
 
                 List<int> empIds = disbList.Select(d => d.EmpId).Distinct().ToList();
                 foreach (int emp in empIds)
                 {
-                    HTML = string.Concat(HTML, File.ReadAllText(filePath + "DisbursementListByDept_Emp_Order_Header.txt", System.Text.Encoding.UTF8));
-                    HTML = HTML.Replace("[disb-date]", DateTime.Now.ToString("dd MMMM yyyy"));
-                    HTML = HTML.Replace("[coll-point]", collectionpint);
-                    HTML = HTML.Replace("[coll-time]", collectiontime);
-                    HTML = HTML.Replace("[DeptName]", deptname);
-                    HTML = HTML.Replace("[rep-name]", repname);
-
-                    string empName = EmployeeBL.GetEmp(emp).EmpName;
-                    HTML = string.Concat(HTML, File.ReadAllText(filePath + "DisbursementListByDept_Emp_Order_Sub_Header.txt", System.Text.Encoding.UTF8));
-                    HTML = HTML.Replace("[emp-name]", empName);
-
-
-                    foreach (DisbursementDetailVM dis in disbList.Where(d => d.EmpId == emp && d.DeptCode.Equals(dept)))
+                    if (disbList.Where(d => d.EmpId == emp && d.DeptCode.Equals(dept)).ToList().Count > 0)
                     {
-                        HTML = string.Concat(HTML, File.ReadAllText(filePath + "DisbursementListByDept_Emp_Order_Body.txt", System.Text.Encoding.UTF8));
-                        HTML = HTML.Replace("[orderNo]", dis.ReqId.ToString());
-                        HTML = HTML.Replace("[itemcode]", dis.ItemCode);
-                        HTML = HTML.Replace("[item_desc]", dis.Description);
-                        HTML = HTML.Replace("[request_qty]", dis.ReqQty.ToString());
-                        HTML = HTML.Replace("[await_qty]", dis.AwaitQty.ToString());
-                        HTML = HTML.Replace("[fulfilled_qty]", dis.FulfilledQty.ToString());
 
-                    }
-                    HTML = string.Concat(HTML, File.ReadAllText(filePath + "DisbursementListByDept_Emp_Order_Footer.txt", System.Text.Encoding.UTF8));
+                        HTML = string.Concat(HTML, File.ReadAllText(filePath + "DisbursementListByDept_Emp_Order_Header.txt", System.Text.Encoding.UTF8));
+                        HTML = HTML.Replace("[disb-date]", DateTime.Now.ToString("dd MMMM yyyy"));
+                        HTML = HTML.Replace("[coll-point]", collectionpint);
+                        HTML = HTML.Replace("[coll-time]", collectiontime);
+                        HTML = HTML.Replace("[DeptName]", deptname);
+                        HTML = HTML.Replace("[rep-name]", repname);
 
+                        string empName = EmployeeBL.GetEmp(emp).EmpName;
+                        HTML = string.Concat(HTML, File.ReadAllText(filePath + "DisbursementListByDept_Emp_Order_Sub_Header.txt", System.Text.Encoding.UTF8));
+                        HTML = HTML.Replace("[emp-name]", empName);
+
+
+                        foreach (DisbursementDetailVM dis in disbList.Where(d => d.EmpId == emp && d.DeptCode.Equals(dept)))
+                        {
+                            HTML = string.Concat(HTML, File.ReadAllText(filePath + "DisbursementListByDept_Emp_Order_Body.txt", System.Text.Encoding.UTF8));
+                            HTML = HTML.Replace("[orderNo]", dis.ReqId.ToString());
+                            HTML = HTML.Replace("[itemcode]", dis.ItemCode);
+                            HTML = HTML.Replace("[item_desc]", dis.Description);
+                            HTML = HTML.Replace("[request_qty]", dis.ReqQty.ToString());
+                            HTML = HTML.Replace("[await_qty]", dis.AwaitQty.ToString());
+                            HTML = HTML.Replace("[fulfilled_qty]", dis.FulfilledQty.ToString());
+
+                        }
+                        HTML = string.Concat(HTML, File.ReadAllText(filePath + "DisbursementListByDept_Emp_Order_Footer.txt", System.Text.Encoding.UTF8));
+
+                    }                    
                 }
-
-
 
 
             }
@@ -256,8 +258,8 @@ namespace Group8AD_WebAPI.BusinessLogic
             string filePath = HttpContext.Current.Server.MapPath("~/Report_Templates/");
 
             string HTML = string.Empty;
-           
-          
+
+
             List<string> suppcodes1 = iList.Select(x => x.SuppCode1).Distinct().ToList();
             List<string> suppcodes2 = iList.Select(x => x.SuppCode2).Distinct().ToList();
             List<string> suppcodes3 = iList.Select(x => x.SuppCode3).Distinct().ToList();
@@ -270,15 +272,15 @@ namespace Group8AD_WebAPI.BusinessLogic
             {
                 List<Supplier> suppl = entities.Suppliers.Where(s => s.SuppCode.Equals(supp)).ToList();
 
-                if (suppliers.Where(x=>x.SuppCode.Equals(supp)).ToList().Count()==0)
+                if (suppliers.Where(x => x.SuppCode.Equals(supp)).ToList().Count() == 0)
                 {
                     suppliers.AddRange(suppl);
                 }
-               
+
             }
             foreach (string supp in suppcodes3)
             {
-                List<Supplier> suppl = entities.Suppliers.Where(s => s.SuppCode.Equals(supp)).ToList();                
+                List<Supplier> suppl = entities.Suppliers.Where(s => s.SuppCode.Equals(supp)).ToList();
                 if (suppliers.Where(x => x.SuppCode.Equals(supp)).ToList().Count() == 0)
                 {
                     suppliers.AddRange(suppl);
@@ -295,14 +297,14 @@ namespace Group8AD_WebAPI.BusinessLogic
                 HTML = HTML.Replace("[supp_addr_1]", sup.SuppAddr);
                 HTML = HTML.Replace("[expected_date]", expected_Date.ToString("dd MMMM yyyy"));
 
-                  int total_qyantity = 0; 
-                double total_amount=0;
+                int total_qyantity = 0;
+                double total_amount = 0;
 
                 foreach (ItemVM item in iList.Where(i => i.SuppCode1.Equals(sup.SuppCode) || i.SuppCode2.Equals(sup.SuppCode) || i.SuppCode3.Equals(sup.SuppCode)))
                 {
                     if (item != null)
                     {
-                        double price = 0;                        
+                        double price = 0;
                         if (sup.SuppCode.Equals(item.SuppCode1))
                         {
                             price = item.Price1;
@@ -316,10 +318,10 @@ namespace Group8AD_WebAPI.BusinessLogic
                             price = item.Price3;
                         }
                         HTML = string.Concat(HTML, File.ReadAllText(filePath + "POList_Body.txt", System.Text.Encoding.UTF8));
-                        HTML = HTML.Replace("[itemcode]", item.ItemCode);                       
+                        HTML = HTML.Replace("[itemcode]", item.ItemCode);
                         HTML = HTML.Replace("[item_desc]", item.Desc);
                         HTML = HTML.Replace("[item_uom]", item.UOM);
-                        HTML = HTML.Replace("[item_order_qty]", item.TempOrderQty.ToString());                      
+                        HTML = HTML.Replace("[item_order_qty]", item.TempOrderQty.ToString());
                         HTML = HTML.Replace("[item_price]", price.ToString("C"));
                         HTML = HTML.Replace("[item_amount]", (item.TempOrderQty * price).ToString("C"));
 
@@ -327,7 +329,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                         //total_price += price;
                         total_amount += item.ReorderQty * price;
                     }
-                    else {break; }
+                    else { break; }
 
 
 
@@ -337,12 +339,12 @@ namespace Group8AD_WebAPI.BusinessLogic
                 //HTML = HTML.Replace("[total_price]", total_price.ToString("C"));   
                 HTML = HTML.Replace("[total_amount]", total_amount.ToString("C"));
                 HTML = HTML.Replace("[order_by]", orderby_name);
-                HTML = HTML.Replace("[approved_by]", total_qyantity >= 250 ? approvedby_name_mgr : approvedby_name_rep );
+                HTML = HTML.Replace("[approved_by]", total_qyantity >= 250 ? approvedby_name_mgr : approvedby_name_rep);
                 HTML = HTML.Replace("[order_by_date]", System.DateTime.Now.ToString("dd MMMM yyyy"));
                 HTML = HTML.Replace("[approved_by_date]", System.DateTime.Now.ToString("dd MMMM yyyy"));
             }
             PDFGenerator_A4Landscape(filename, HTML);
-            EmailBL.SendPOEmail(empId,expected_Date,filename);
+            EmailBL.SendPOEmail(empId, expected_Date, filename);
         }
 
         public static void GenerateInventoryItemList(int empId)
@@ -469,7 +471,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             Paragraph welcomeParagraph = new Paragraph();
             pdfDoc.Add(welcomeParagraph);
             //using header class ended
-            
+
             //starting xmlworker
             XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
             //htmlparser.StartDocument();

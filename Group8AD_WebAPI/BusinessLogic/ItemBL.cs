@@ -1185,7 +1185,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 string disbursementListDept_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListbyDept(disbursementListDept, disbursementListDept_filename);
 
-                string disbursementListEmployee_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+                string disbursementListEmployee_filename = "DisbursementListByOrder_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListby_Dept_Employee_OrderNo(disbursementListEmployee, disbursementListEmployee_filename);
 
                 //for email
@@ -1210,7 +1210,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             else if (disbursementListEmployee.Count() > 0 && disbursementListDept.Count() == 0)
             {
-                string disbursementListEmployee_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+                string disbursementListEmployee_filename = "DisbursementListByOrder_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListby_Dept_Employee_OrderNo(disbursementListEmployee, disbursementListEmployee_filename);
 
                 //for email
@@ -1408,7 +1408,7 @@ namespace Group8AD_WebAPI.BusinessLogic
                 string disbursementListDept_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListbyDept(disbursementListDept, disbursementListDept_filename);
 
-                string disbursementListEmployee_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+                string disbursementListEmployee_filename = "DisbursementListByOrder_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListby_Dept_Employee_OrderNo(disbursementListEmployee, disbursementListEmployee_filename);
 
 
@@ -1434,7 +1434,7 @@ namespace Group8AD_WebAPI.BusinessLogic
             }
             else if (disbursementListEmployee.Count() > 0 && disbursementListDept.Count() == 0)
             {
-                string disbursementListEmployee_filename = "DisbursementListByDepartment_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
+                string disbursementListEmployee_filename = "DisbursementListByOrder_" + DateTime.Now.ToString("yyyMMddHHmmss") + ".pdf";
                 PdfBL.GenerateDisbursementListby_Dept_Employee_OrderNo(disbursementListEmployee, disbursementListEmployee_filename);
 
                 //for email
